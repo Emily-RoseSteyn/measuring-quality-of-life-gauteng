@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "measuring-quality-of-life"
+version = "0.1.0"
+description = ""
+authors = ["Emily <emilyrosesteyn@gmail.com>"]
+license = "GNU General Public License"
+readme = "README.md"
+packages = [{include = "measuring_quality_of_life"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
