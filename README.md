@@ -9,3 +9,14 @@ Once you have Poetry installed, you can run the following to install all require
 ```shell
 poetry install --no-root
 ```
+
+#### Initialise Script
+A script is included to do some initial setup such as preventing commits of outputs/metadata from jupyter notebooks.
+
+In the root of the repo, execute:
+```shell
+chmod u+x init.sh
+./init.sh
+```
+This currently:
+- Strips jupyter notebook of output and metadata before committing
