@@ -10,6 +10,8 @@ packages = [{include = "measuring_quality_of_life"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 jupyter = "^1.0.0"
+matplotlib = "^3.7.0"
+pandas = "^1.5.3"
 
 
 [build-system]
