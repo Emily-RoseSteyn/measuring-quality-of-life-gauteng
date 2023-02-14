@@ -9,6 +9,7 @@ packages = [{include = "measuring_quality_of_life"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+jupyter = "^1.0.0"
 
 
 [build-system]
