@@ -1,11 +1,12 @@
-# Beyond Poverty: Measuring Quality of Life from Satellite Images
+# [WORK IN PROGRESS]
+# Beyond Poverty: Measuring Quality of Life from Satellite Images in South Africa
 Previous work has shown that asset wealth and consumption expenditure (recognised indicators of poverty) can be estimated from satellite images.
 
-**Question**: Can other socioeconomic indicators be estimated from satellite images that represent a more holistic picture of quality of life?
+**Question**: Does local work in [Gauteng](../02-gauteng) generalise to South Africa?
 
 ## Data Retrieval
 - **General Household Surveys South Africa**
-  - Download dataset for 2021 from [Data First](https://www.datafirst.uct.ac.za/dataportal) portal.
+  - Download GHS dataset for 2021 from [Data First](https://www.datafirst.uct.ac.za/dataportal/index.php/catalog/905) portal.
   - Unzip folder
   - Rename the household DTA file to `ghs-2021.dta`
   - Copy DTA file to the [data](data) directory
