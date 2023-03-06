@@ -5,9 +5,10 @@ There are currently two primary objectives of this repository:
 - Reproducing previous work by [Yeh et al](https://github.com/chrisyeh96/africa_poverty_clean) in a South African Context.
 - Extending previous research by investigating measuring other socioeconomic indicators that describe "quality of life" more holistically.
 
-For simplicity, these objectives are separated into 2 folders. The readmes for each should be a sufficient guide to what has been done.
+For simplicity, these objectives are separated into 3 folders. The readmes for each should be a sufficient guide to what has been done.
 - [01-reproduction](/01-reproduction/README.md)
-- [02-extension](/02-extension/README.md)
+- [02-gauteng](/02-gauteng/README.md)
+- [02-south-africa](/03-south-africa/README.md)
 
 ## Getting Started
 #### Install Dependencies
