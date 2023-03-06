@@ -1,8 +1,18 @@
-# Measuring Quality of Life
+# Beyond Poverty: Measuring Quality of Life from Satellite Images in Gauteng
+Previous work has shown that asset wealth and consumption expenditure (recognised indicators of poverty) can be estimated from satellite images.
+
+**Question**: Can other socioeconomic indicators be estimated from satellite images that represent a more holistic picture of quality of life?
+
+- Focus on smaller area: Gauteng
+- Start with satellite data that is lower res from Landsat
+  - Then compare to higher res data from Planet
+- First get asset wealth and income with nightlight proxy
+- Consider other proxies
+
 This is a repository to track my research in measuring quality of life from satellite images using machine learning.
 
 The primary objective of this repository is to:
-- Extending previous research by investigating measuring other socioeconomic indicators that describe "quality of life" more holistically in Gauteng.
+- Extend previous research by investigating measuring other socioeconomic indicators that describe "quality of life" more holistically in Gauteng.
 
 ## Getting Started
 #### Install Dependencies
@@ -24,16 +34,7 @@ chmod u+x init.sh
 This currently:
 - Strips jupyter notebook of output and metadata before committing
 
-# Beyond Poverty: Measuring Quality of Life from Satellite Images in Gauteng
-Previous work has shown that asset wealth and consumption expenditure (recognised indicators of poverty) can be estimated from satellite images.
 
-**Question**: Can other socioeconomic indicators be estimated from satellite images that represent a more holistic picture of quality of life?
-
-- Focus on smaller area: Gauteng
-- Start with satellite data that is lower res from Landsat
-  - Then compare to higher res data from Planet
-- First get asset wealth and income with nightlight proxy
-- Consider other proxies
 
 ## Data Retrieval
 - **Gauteng City Region Observatory Data**
