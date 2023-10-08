@@ -11,3 +11,23 @@ repos:
       - id: check-yaml
       - id: debug-statements
       - id: trailing-whitespace
+-   repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: poetry run black
+        language: system
+        types: [python]
+      - id: mypy
+        name: mypy
+        entry: poetry run mypy .
+        require_serial: true
+        language: system
+        types: [python]
+        pass_filenames: false
+      - id: ruff
+        name: ruff
+        entry: poetry run ruff check
+        require_serial: true
+        language: system
+        types: [python]
