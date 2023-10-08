@@ -23,6 +23,15 @@ Once you have Poetry installed, you can run the following to install all require
 poetry install --no-root
 ```
 
+#### Pre-commit Hooks
+[Pre-commit](https://pre-commit.com/) is used to keep code clean. You can take a look at what hooks run in the [config](./.pre-commit-config.yaml).
+
+To ensure git hooks are setup for pre-commit, run:
+```shell
+pre-commit install
+```
+
+
 #### Initialise Script
 A script is included to do some initial setup such as preventing commits of outputs/metadata from jupyter notebooks.
 
