@@ -56,7 +56,10 @@ This currently:
 Your data directory should now look like:
 ```
 data
-  gcro-2021.dta
+  surveys
+    gcro-2015.dta
+    gcro-2018.dta
+    gcro-2021.dta
 ```
 
 
