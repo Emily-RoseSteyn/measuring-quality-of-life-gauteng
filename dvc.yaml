@@ -1,0 +1,20 @@
+stages:
+  install:
+    cmd: poetry install
+  load_env:
+    cmd: python src/load_env.py
+    deps:
+    - .env
+# EXAMPLE:
+# dvc stage add -n prepare \
+#   -p prepare.seed,prepare.split \
+#   -d src/prepare.py -d data/data.xml \
+#   -o data/prepared \
+#   python src/prepare.py data/data.xml
+
+# OTHER STAGES:
+# data_download:
+# prepare:
+# featurize:
+# train:
+# evaluate:
