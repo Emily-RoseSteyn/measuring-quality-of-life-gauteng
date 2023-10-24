@@ -2,4 +2,4 @@
 **/data/*
 !**/.gitkeep
 **/.env
-**/outputs/*
+**/temp-outputs/*

@@ -18,22 +18,43 @@ The primary objective of this repository is to:
 #### Install Dependencies
 This repository makes use of [Poetry](https://python-poetry.org/) which is a python package management solution. Follow the installation instructions [here](https://python-poetry.org/docs/#installation).
 
-Once you have Poetry installed, you can run the following to install all required dependencies:
+Once you have Poetry installed, you can run the following in the root directory to install all required dependencies:
 ```shell
-poetry install --no-root
+poetry install
 ```
 
-#### Initialise Script
-A script is included to do some initial setup such as preventing commits of outputs/metadata from jupyter notebooks.
+#### Pre-commit Hooks
+[Pre-commit](https://pre-commit.com/) is used to keep code clean and to make use of [DVC](https://github.com/iterative/dvc) on commits and pushes. You can take a look at what hooks run in the [config](./.pre-commit-config.yaml).
 
-In the root of the repo, execute:
+To ensure git hooks are setup for pre-commit, run:
 ```shell
-chmod u+x init.sh
-./init.sh
+pre-commit install --hook-type pre-push --hook-type post-checkout --hook-type pre-commit
 ```
-This currently:
-- Strips jupyter notebook of output and metadata before committing
 
+#### DVC
+[Data Version Control](https://github.com/iterative/dvc) is a cool tool that helps run end-to-end pipelines and track metrics and models at different checkpoints.
+
+To make use of this functionality, you need to run the following in the root directory:
+```shell
+dvc install
+```
+
+This will ensure that:
+* On checkout of a commit, any associated files are pulled from the relevant remote.
+* On pushing, any files added to DVC will also be pushed.
+* On committing, a check is run for the diff in local and remote DVC.
+
+**DVC Remote Storage**
+
+Contact [emilyrosesteyn@gmail.com](mailto:emilyrosesteyn@gmail.com) to get access to the existing remote storage container hosted with Google Drive to access previous models and results. The credentials are in [.dvc/config](.dvc/config) but the app is unavailable unless you are an added test user.
+
+Once added, when prompted,
+Google may ask you to confirm giving access to the DVC remote storage app to manage all Gdrive files.
+However, the scope of the app has been limited on GCP to only manage DVC's own created files.
+
+[//]: # (See OAuth Scopes in docs - https://dvc.org/doc/user-guide/data-management/remote-storage/google-drive#using-a-custom-google-cloud-project-recommended and scopes on api consent window in GCP)
+
+Alternatively, if you are forking this repository, follow the instructions on the DVC docs to [add a remote](https://dvc.org/doc/command-reference/remote/add).
 
 
 ## Data Retrieval
@@ -47,7 +68,10 @@ This currently:
 Your data directory should now look like:
 ```
 data
-  gcro-2021.dta
+  surveys
+    gcro-2015.dta
+    gcro-2018.dta
+    gcro-2021.dta
 ```
 
 
