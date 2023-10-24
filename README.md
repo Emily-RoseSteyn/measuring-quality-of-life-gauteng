@@ -18,31 +18,27 @@ The primary objective of this repository is to:
 #### Install Dependencies
 This repository makes use of [Poetry](https://python-poetry.org/) which is a python package management solution. Follow the installation instructions [here](https://python-poetry.org/docs/#installation).
 
-Once you have Poetry installed, you can run the following to install all required dependencies:
+Once you have Poetry installed, you can run the following in the root directory to install all required dependencies:
 ```shell
-poetry install --no-root
+poetry install
 ```
 
 #### Pre-commit Hooks
-[Pre-commit](https://pre-commit.com/) is used to keep code clean. You can take a look at what hooks run in the [config](./.pre-commit-config.yaml).
+[Pre-commit](https://pre-commit.com/) is used to keep code clean and to make use of [DVC](https://github.com/iterative/dvc) on commits and pushes. You can take a look at what hooks run in the [config](./.pre-commit-config.yaml).
 
 To ensure git hooks are setup for pre-commit, run:
 ```shell
-pre-commit install
+pre-commit install --hook-type pre-push --hook-type post-checkout --hook-type pre-commit
 ```
 
 
-#### Initialise Script
-A script is included to do some initial setup such as preventing commits of outputs/metadata from jupyter notebooks.
+#### DVC
+[Data Version Control](https://github.com/iterative/dvc) is a cool tool that helps run end-to-end pipelines and track metrics and models at different checkpoints.
 
-In the root of the repo, execute:
+To make use of this functionality, you need to run the following in the root directory:
 ```shell
-chmod u+x init.sh
-./init.sh
+dvc install
 ```
-This currently:
-- Strips jupyter notebook of output and metadata before committing
-
 
 
 ## Data Retrieval
