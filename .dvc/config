@@ -1,7 +1,7 @@
 [core]
     remote = myremote
 ['remote "myremote"']
-    url = gdrive://1E0sgdtLytp0ZFaqyhhF0OuEkWhoAIoB_/dvcstore
+    url = gdrive://0AIA0fZrA6i2RUk9PVA/dvc-remote
     gdrive_acknowledge_abuse = true
     gdrive_client_id = 556175274660-1c6ed464glg4siv7smp9tjbjo66n7c25.apps.googleusercontent.com
     gdrive_client_secret = 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
