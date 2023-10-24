@@ -46,7 +46,13 @@ This will ensure that:
 
 **DVC Remote Storage**
 
-Contact [emilyrosesteyn@gmail.com](mailto:emilyrosesteyn@gmail.com) to get access to the existing remote storage container to access previous models and results.
+Contact [emilyrosesteyn@gmail.com](mailto:emilyrosesteyn@gmail.com) to get access to the existing remote storage container hosted with Google Drive to access previous models and results. The credentials are in [.dvc/config](.dvc/config) but the app is unavailable unless you are an added test user.
+
+Once added, when prompted,
+Google may ask you to confirm giving access to the DVC remote storage app to manage all Gdrive files.
+However, the scope of the app has been limited on GCP to only manage DVC's own created files.
+
+[//]: # (See OAuth Scopes in docs - https://dvc.org/doc/user-guide/data-management/remote-storage/google-drive#using-a-custom-google-cloud-project-recommended and scopes on api consent window in GCP)
 
 Alternatively, if you are forking this repository, follow the instructions on the DVC docs to [add a remote](https://dvc.org/doc/command-reference/remote/add).
 
