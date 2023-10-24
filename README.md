@@ -40,6 +40,12 @@ To make use of this functionality, you need to run the following in the root dir
 dvc install
 ```
 
+**DVC Remote Storage**
+
+Contact [emilyrosesteyn@gmail.com](mailto:emilyrosesteyn@gmail.com) to get access to the existing remote storage container to access previous models and results.
+
+Alternatively, if you are forking this repository, follow the instructions on the DVC docs to [add a remote](https://dvc.org/doc/command-reference/remote/add).
+
 
 ## Data Retrieval
 - **Gauteng City Region Observatory Data**
