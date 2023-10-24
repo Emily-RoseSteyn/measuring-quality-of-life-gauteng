@@ -27,7 +27,7 @@ repos:
         pass_filenames: false
       - id: ruff
         name: ruff
-        entry: poetry run ruff check
+        entry: poetry run ruff check --no-cache
         require_serial: true
         language: system
         types: [ python ]
