@@ -32,7 +32,7 @@ mypy = "^1.5.1"
 black = "^23.9.1"
 ruff = "^0.0.292"
 pre-commit = "^3.4.0"
-dvc = "^3.26.1"
+dvc = {extras = ["gdrive"], version = "^3.27.0"}
 
 [build-system]
 requires = ["poetry-core"]
