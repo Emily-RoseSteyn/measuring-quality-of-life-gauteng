@@ -31,7 +31,6 @@ To ensure git hooks are setup for pre-commit, run:
 pre-commit install --hook-type pre-push --hook-type post-checkout --hook-type pre-commit
 ```
 
-
 #### DVC
 [Data Version Control](https://github.com/iterative/dvc) is a cool tool that helps run end-to-end pipelines and track metrics and models at different checkpoints.
 
@@ -39,6 +38,11 @@ To make use of this functionality, you need to run the following in the root dir
 ```shell
 dvc install
 ```
+
+This will ensure that:
+* On checkout of a commit, any associated files are pulled from the relevant remote.
+* On pushing, any files added to DVC will also be pushed.
+* On committing, a check is run for the diff in local and remote DVC.
 
 **DVC Remote Storage**
 
