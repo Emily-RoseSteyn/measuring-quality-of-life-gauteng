@@ -1,19 +1,40 @@
 stages:
   install:
     cmd: poetry install
+
   load_env:
     cmd: python src/utils/load_env.py
     deps:
     - .env
-# EXAMPLE:
-# dvc stage add -n prepare \
-#   -p prepare.seed,prepare.split \
-#   -d src/prepare.py -d data/data.xml \
-#   -o data/prepared \
-#   python src/prepare.py data/data.xml
 
-# OTHER STAGES:
-# data_download:
-# prepare:
-# train:
-# evaluate:
+  data_download:
+    cmd: python src/modules/data_download/data_download.py
+    deps:
+    - src/modules/data_download/data_download.py
+    outs:
+    - data/input
+
+  preprocess:
+    cmd: python src/modules/preprocessing/preprocess.py
+    deps:
+    - src/modules/preprocessing/preprocess.py
+    - data/input
+    outs:
+    - data/intermediate
+
+  train:
+    cmd: python src/modules/training/train.py
+    deps:
+    - src/modules/training/train.py
+    - data/intermediate
+    outs:
+    - outputs/model.pkl
+
+  evaluate:
+    cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
+    deps:
+    - data/intermediate
+    - outputs/model.pkl
+    - src/modules/evaluation/evaluate.py
+    outs:
+    - eval
