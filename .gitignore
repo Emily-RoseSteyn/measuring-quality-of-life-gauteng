@@ -3,3 +3,5 @@
 !**/.gitkeep
 **/.env
 **/temp-outputs/*
+/model.pkl
+/eval
