@@ -1424,6 +1424,44 @@ docs = ["mkdocs (==1.3.1)", "mkdocs-gen-files (==0.3.5)", "mkdocs-material (==8.
 tests = ["celery-types (==0.15.0)", "flaky (==3.7.0)", "mypy (==0.971)", "pylint (==2.15.0)", "pytest (==7.2.0)", "pytest-celery", "pytest-cov (==3.0.0)", "pytest-mock (==3.8.2)", "pytest-sugar (==0.9.6)", "pytest-test-utils (>=0.0.6)"]
 
 [[package]]
+name = "dvclive"
+version = "3.1.0"
+description = "Experiments logger for ML projects."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "dvclive-3.1.0-py3-none-any.whl", hash = "sha256:d071651a7dbd5f1d12f83b46c38d4a06f63273d8c2608ccb507fe12d56e1caa9"},
+    {file = "dvclive-3.1.0.tar.gz", hash = "sha256:4c937578c7a26fe1f2f31eb2f9d978560e28733e7e222a4f17f16ca4915f95db"},
+]
+
+[package.dependencies]
+dvc = ">=3.22.1"
+dvc-render = ">=0.6.0,<1.0"
+dvc-studio-client = ">=0.15.0,<1"
+funcy = "*"
+gto = "*"
+"ruamel.yaml" = "*"
+scmrepo = "*"
+
+[package.extras]
+all = ["dvclive[catalyst,fastai,huggingface,image,lgbm,markdown,mmcv,optuna,plots,pytorch-lightning,tf,xgb]"]
+catalyst = ["catalyst (>22)"]
+dev = ["dvclive[all,tests]", "mypy (>=1.1.1)", "types-PyYAML"]
+fastai = ["fastai"]
+huggingface = ["datasets", "transformers"]
+image = ["numpy", "pillow"]
+lgbm = ["lightgbm"]
+lightning = ["lightning (>=2.0)", "torch"]
+markdown = ["matplotlib"]
+mmcv = ["mmcv"]
+optuna = ["optuna"]
+plots = ["scikit-learn"]
+sklearn = ["scikit-learn"]
+tests = ["dvclive[image,markdown,plots]", "ipython", "pytest (>=7.2.0,<8.0)", "pytest-cov (>=3.0.0,<4.0)", "pytest-mock (>=3.8.2,<4.0)", "pytest-sugar (>=0.9.6,<1.0)"]
+tf = ["tensorflow"]
+xgb = ["xgboost"]
+
+[[package]]
 name = "earthpy"
 version = "0.9.4"
 description = "A set of helper functions to make working with spatial data in open source tools easier. This package is maintained by Earth Lab and was originally designed to support the earth analytics education program."
@@ -6078,4 +6116,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10,<3.12"
-content-hash = "5221d7d662ae694f7ad6aa6dd26c118d0060ed937ba868c2b68b4eb1fc0e8c33"
+content-hash = "4d3e50001d0b269025f7a907bb0128c0788ccca195eac4f897ebec2e305adca8"
