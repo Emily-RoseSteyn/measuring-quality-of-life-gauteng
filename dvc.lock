@@ -10,7 +10,7 @@ stages:
       md5: 89c06c2b5468b6e9d6d9b01799ffeab9
       size: 147
   load_env:
-    cmd: python src/load_env.py
+    cmd: python src/utils/load_env.py
     deps:
     - path: .env
       hash: md5
