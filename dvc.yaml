@@ -11,30 +11,30 @@ stages:
     cmd: python src/modules/data_download/data_download.py
     deps:
     - src/modules/data_download/data_download.py
-    outs:
-    - data/input
+#    outs:
+#    - data/input
 
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
     deps:
     - src/modules/preprocessing/preprocess.py
-    - data/input
-    outs:
-    - data/intermediate
+#    - data/input
+#    outs:
+#    - data/intermediate
 
   train:
     cmd: python src/modules/training/train.py
     deps:
     - src/modules/training/train.py
-    - data/intermediate
-    outs:
-    - outputs/model.pkl
+#    - data/intermediate
+#    outs:
+#    - outputs/model.pkl
 
   evaluate:
     cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
     deps:
-    - data/intermediate
-    - outputs/model.pkl
     - src/modules/evaluation/evaluate.py
-    outs:
-    - eval
+#    - data/intermediate
+#    - outputs/model.pkl
+#    outs:
+#    - eval
