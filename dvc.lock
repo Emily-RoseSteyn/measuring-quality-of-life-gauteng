@@ -16,3 +16,31 @@ stages:
       hash: md5
       md5: 89c06c2b5468b6e9d6d9b01799ffeab9
       size: 147
+  data_download:
+    cmd: python src/modules/data_download/data_download.py
+    deps:
+    - path: src/modules/data_download/data_download.py
+      hash: md5
+      md5: c6eae341cb7b94705c2511f0724b60ab
+      size: 123
+  preprocess:
+    cmd: python src/modules/preprocessing/preprocess.py
+    deps:
+    - path: src/modules/preprocessing/preprocess.py
+      hash: md5
+      md5: da3b21a060f5f6a7aa858ac55308515e
+      size: 123
+  train:
+    cmd: python src/modules/training/train.py
+    deps:
+    - path: src/modules/training/train.py
+      hash: md5
+      md5: 967ddcb9997bc563e883c55db1eff489
+      size: 118
+  evaluate:
+    cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
+    deps:
+    - path: src/modules/evaluation/evaluate.py
+      hash: md5
+      md5: 9cc3e729d5672039b8da235b0f9ab870
+      size: 118
