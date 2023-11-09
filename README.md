@@ -77,3 +77,6 @@ data
 
 [//]: # (TODO: Add years for dataset)
 [//]: # (TODO: Add .env configuration)
+
+## Gotchas
+- [Reinstalling poetry environment](https://stackoverflow.com/questions/70064449/how-to-force-reinstall-poetry-environment)
