@@ -14,8 +14,8 @@ stages:
     deps:
     - path: .env
       hash: md5
-      md5: 89c06c2b5468b6e9d6d9b01799ffeab9
-      size: 147
+      md5: 92d96330b0e0b8941ac456460713942b
+      size: 202
   data_download:
     cmd: python src/modules/data_download/data_download.py
     deps:
