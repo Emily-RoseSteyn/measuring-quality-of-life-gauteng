@@ -15,12 +15,15 @@ The primary objective of this repository is to:
 - Extend previous research by investigating measuring other socioeconomic indicators that describe "quality of life" more holistically in Gauteng.
 
 ## Getting Started
+#### Python Version
+This repo relies on Python 3.10 or greater. Take a look at [pyenv](https://github.com/pyenv/pyenv) for managing python environments.
+
 #### Install Dependencies
 This repository makes use of [Poetry](https://python-poetry.org/) which is a python package management solution. Follow the installation instructions [here](https://python-poetry.org/docs/#installation).
 
 Once you have Poetry installed, you can run the following in the root directory to install all required dependencies:
 ```shell
-poetry install
+poetry install --no-root
 ```
 
 #### Pre-commit Hooks
@@ -67,4 +70,9 @@ Alternatively, if you are forking this repository, follow the instructions on th
 [//]: # (TODO: Add .env configuration)
 
 ## Gotchas
-- [Reinstalling poetry environment](https://stackoverflow.com/questions/70064449/how-to-force-reinstall-poetry-environment)
+- **Reinstall poetry packages**
+  - [Reinstalling poetry environment](https://stackoverflow.com/questions/70064449/how-to-force-reinstall-poetry-environment)
+- **No sudo but need different version of python?**
+  - If you don't have sudo access, poetry and python can be a bit weird. You can use [pyenv](https://github.com/pyenv/pyenv) for managing python environments without sudo access.
+- **Poetry install hangs**
+  - I ran into an issue where poetry hangs when installing on cluster without sudo access similar to [this one](https://github.com/python-poetry/poetry/issues/8623). The solution of `export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring` worked for me.
