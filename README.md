@@ -56,23 +56,11 @@ However, the scope of the app has been limited on GCP to only manage DVC's own c
 
 Alternatively, if you are forking this repository, follow the instructions on the DVC docs to [add a remote](https://dvc.org/doc/command-reference/remote/add).
 
-
-## Data Retrieval
-- **Gauteng City Region Observatory Data**
-  - Download GCRO dataset for 2020-2021 from [Data First](https://www.datafirst.uct.ac.za/dataportal/index.php/catalog/874) portal.
-  - Unzip folder
-  - Rename the household DTA file to `gcro-2021.dta`
-  - Copy DTA file to the [data/surveys](data/surveys) directory
-  - Repeat this for 2014-2015 and 2017-2018
-
-Your data directory should now look like:
-```
-data
-  surveys
-    gcro-2015.dta
-    gcro-2018.dta
-    gcro-2021.dta
-```
+## Pipeline
+1. Data download
+2. Data preprocessing
+3. Training
+4. Evaluation
 
 
 [//]: # (TODO: Add years for dataset)
