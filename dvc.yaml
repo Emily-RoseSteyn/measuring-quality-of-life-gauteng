@@ -11,6 +11,12 @@ stages:
     cmd: python src/modules/data_download/data_download.py
     deps:
     - src/modules/data_download/data_download.py
+    - data/surveys/gcro-2021.dta
+    - data/surveys/gcro-2018.dta
+    - data/surveys/gcro-2016.dta
+    - data/shapefiles/2011
+    - data/shapefiles/2016
+    - data/shapefiles/2020
 #    outs:
 #    - data/input
 
