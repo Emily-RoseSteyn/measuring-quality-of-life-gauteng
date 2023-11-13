@@ -34,3 +34,12 @@ The shapefiles have been added to the DVC remote store. If you do not have acces
 * Rename exported shapefile directory to 2016.
 * Place entire folder in [data/shapefiles](/data/shapefiles)
 * Repeat for [2011](https://www.arcgis.com/sharing/rest/content/items/12d2deb98816451ab7c4dc09cdfeee6b/data).
+
+Your shapefile directory should now look like:
+```
+data
+  shapefiles
+    2011/
+    2016/
+    2020/
+```
