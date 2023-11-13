@@ -161,8 +161,10 @@ cython_debug/
 
 # DVC and manual gitignores
 !.gitkeep
-data/**
-data/**/
+data/surveys/**
+data/surveys/**/
+data/images/**
+data/images/**/
 **/.env
 **/temp-outputs/*
 /model.pkl
