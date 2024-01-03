@@ -22,7 +22,12 @@ data
 ```
 
 ## Shapefiles
-The shapefiles have been added to the DVC remote store. If you do not have access, or you are setting up an independent remote store, you can manually download this data from the South African [Municipal Demarcation Board](https://www.demarcation.org.za/).
+The shapefiles have been added to the DVC remote store. Make sure that you have setup DVC as documented in the root [readme](/README.md).
+
+Now, when you run `git pull` on `develop`, you should find the shapefiles in the [data directory](/data/shapefiles).
+
+#### Manual Download
+If you do not have access to the DVC remote store, or you are setting up an independent remote store, you can manually download this data from the South African [Municipal Demarcation Board](https://www.demarcation.org.za/).
 * Download [2020 shapefile](https://www.arcgis.com/sharing/rest/content/items/e0223a825ea2481fa72220ad3204276b/data).
 * Unzip and rename folder to 2020 and rename all child shapefiles to `2020.<ext>`.
 * Place entire folder in [data/shapefiles](/data/shapefiles).
@@ -35,6 +40,7 @@ The shapefiles have been added to the DVC remote store. If you do not have acces
 * Place entire folder in [data/shapefiles](/data/shapefiles)
 * Repeat for [2011](https://www.arcgis.com/sharing/rest/content/items/12d2deb98816451ab7c4dc09cdfeee6b/data).
 
+#### Expected Shapefile Directory
 Your shapefile directory should now look like:
 ```
 data
