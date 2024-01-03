@@ -70,6 +70,16 @@ Alternatively, if you are forking this repository, follow the instructions on th
 [//]: # (TODO: Add .env configuration)
 
 ## Gotchas
+
+#### DVC
+- **Credential Error on Push**
+  - If you have been gone a while from the repo, your DVC Google credentials might expire and you will get the below error on a `git push`:
+    ```text
+      ERROR: unexpected error - failed to authenticate GDrive: Access token refresh failed: invalid_grant: Bad Request
+    ```
+  - To resolve, delete the [`gdrive credentials`](/.dvc/gdrive-credentials.json) file and retry `git push`. This will regenerate a new credentials file and the push should work.
+
+#### Poetry
 - **Reinstall poetry packages**
   - [Reinstalling poetry environment](https://stackoverflow.com/questions/70064449/how-to-force-reinstall-poetry-environment)
 - **No sudo but need different version of python?**
