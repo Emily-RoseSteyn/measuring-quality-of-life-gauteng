@@ -1,0 +1,5 @@
+outs:
+- md5: f8ff8bb65c21a49b86af7b1c2fac7f95
+  size: 65338
+  hash: md5
+  path: gauteng-wards-shapefile.png
