@@ -32,11 +32,21 @@ def main() -> None:
     # Save intermediate shapefile - Gauteng boundary
     gauteng_boundary = gauteng_wards[["Province", "geometry"]]
     gauteng_boundary = gauteng_boundary.dissolve(by="Province")
+    # This gives some artifacts in the middle because of non-contiguous lines supposedly
     gauteng_boundary.plot(facecolor="none")
-
-    plt.savefig(os.path.join(images_dir, "gauteng-boundary-shapefile.png"))
+    plt.savefig(os.path.join(images_dir, "gauteng-boundary-shapefile-unprocessed.png"))
     gauteng_boundary.to_file(
-        os.path.join(results_dir, "gauteng-boundary.geojson"), driver="GeoJSON"
+        os.path.join(results_dir, "gauteng-boundary-unprocessed.geojson"),
+        driver="GeoJSON",
+    )
+
+    # Process with buffer so that artifacts are removed
+    gauteng_processed_boundary = gauteng_boundary.buffer(0.001)
+    gauteng_processed_boundary.plot(facecolor="none")
+    plt.savefig(os.path.join(images_dir, "gauteng-boundary-shapefile.png"))
+    gauteng_processed_boundary.to_file(
+        os.path.join(results_dir, "gauteng-boundary.geojson"),
+        driver="GeoJSON",
     )
 
     # Load gcro data
