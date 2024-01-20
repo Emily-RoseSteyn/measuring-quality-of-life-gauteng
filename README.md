@@ -15,12 +15,15 @@ The primary objective of this repository is to:
 - Extend previous research by investigating measuring other socioeconomic indicators that describe "quality of life" more holistically in Gauteng.
 
 ## Getting Started
+#### Python Version
+This repo relies on Python 3.10 or greater. Take a look at [pyenv](https://github.com/pyenv/pyenv) for managing python environments.
+
 #### Install Dependencies
 This repository makes use of [Poetry](https://python-poetry.org/) which is a python package management solution. Follow the installation instructions [here](https://python-poetry.org/docs/#installation).
 
 Once you have Poetry installed, you can run the following in the root directory to install all required dependencies:
 ```shell
-poetry install
+poetry install --no-root
 ```
 
 #### Pre-commit Hooks
@@ -56,24 +59,30 @@ However, the scope of the app has been limited on GCP to only manage DVC's own c
 
 Alternatively, if you are forking this repository, follow the instructions on the DVC docs to [add a remote](https://dvc.org/doc/command-reference/remote/add).
 
-
-## Data Retrieval
-- **Gauteng City Region Observatory Data**
-  - Download GCRO dataset for 2020-2021 from [Data First](https://www.datafirst.uct.ac.za/dataportal/index.php/catalog/874) portal.
-  - Unzip folder
-  - Rename the household DTA file to `gcro-2021.dta`
-  - Copy DTA file to the [data/surveys](data/surveys) directory
-  - Repeat this for 2014-2015 and 2017-2018
-
-Your data directory should now look like:
-```
-data
-  surveys
-    gcro-2015.dta
-    gcro-2018.dta
-    gcro-2021.dta
-```
+## Pipeline
+1. Data download
+2. Data preprocessing
+3. Training
+4. Evaluation
 
 
 [//]: # (TODO: Add years for dataset)
 [//]: # (TODO: Add .env configuration)
+
+## Gotchas
+
+#### DVC
+- **Credential Error on Push**
+  - If you have been gone a while from the repo, your DVC Google credentials might expire and you will get the below error on a `git push`:
+    ```text
+      ERROR: unexpected error - failed to authenticate GDrive: Access token refresh failed: invalid_grant: Bad Request
+    ```
+  - To resolve, delete the [`gdrive credentials`](/.dvc/gdrive-credentials.json) file and retry `git push`. This will regenerate a new credentials file and the push should work.
+
+#### Poetry
+- **Reinstall poetry packages**
+  - [Reinstalling poetry environment](https://stackoverflow.com/questions/70064449/how-to-force-reinstall-poetry-environment)
+- **No sudo but need different version of python?**
+  - If you don't have sudo access, poetry and python can be a bit weird. You can use [pyenv](https://github.com/pyenv/pyenv) for managing python environments without sudo access.
+- **Poetry install hangs**
+  - I ran into an issue where poetry hangs when installing on cluster without sudo access similar to [this one](https://github.com/python-poetry/poetry/issues/8623). The solution of `export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring` worked for me.

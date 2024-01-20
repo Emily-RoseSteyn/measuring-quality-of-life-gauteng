@@ -14,15 +14,42 @@ stages:
     deps:
     - path: .env
       hash: md5
-      md5: 89c06c2b5468b6e9d6d9b01799ffeab9
-      size: 147
+      md5: 92d96330b0e0b8941ac456460713942b
+      size: 202
   data_download:
     cmd: python src/modules/data_download/data_download.py
     deps:
+    - path: data/shapefiles/2011
+      hash: md5
+      md5: bdf63d65f51b6f4b0e8fe805d3776cb3.dir
+      size: 115252968
+      nfiles: 6
+    - path: data/shapefiles/2016
+      hash: md5
+      md5: e506ece68c603f5f346a71419331b389.dir
+      size: 60780086
+      nfiles: 6
+    - path: data/shapefiles/2020
+      hash: md5
+      md5: f0103491ddab83e03dcdf3e4d4013efc.dir
+      size: 60269229
+      nfiles: 6
+    - path: data/surveys/gcro-2016.dta
+      hash: md5
+      md5: b18fed022c1ad5c6588391a14ce4acac
+      size: 239054964
+    - path: data/surveys/gcro-2018.dta
+      hash: md5
+      md5: 74f9efb62a3992e2e5edd220afbbee79
+      size: 17658506
+    - path: data/surveys/gcro-2021.dta
+      hash: md5
+      md5: 3af38f13b58e0bb17be0cf1911b828b4
+      size: 8499821
     - path: src/modules/data_download/data_download.py
       hash: md5
-      md5: c6eae341cb7b94705c2511f0724b60ab
-      size: 123
+      md5: 7356cd382847518adc0df433e0b6dea4
+      size: 2128
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
     deps:
@@ -44,3 +71,50 @@ stages:
       hash: md5
       md5: 9cc3e729d5672039b8da235b0f9ab870
       size: 118
+  shapefile_processing:
+    cmd: python src/modules/shapefile_processing/shapefile_process.py
+    deps:
+    - path: data/shapefiles/2011
+      hash: md5
+      md5: bdf63d65f51b6f4b0e8fe805d3776cb3.dir
+      size: 115252968
+      nfiles: 6
+    - path: data/shapefiles/2016
+      hash: md5
+      md5: e506ece68c603f5f346a71419331b389.dir
+      size: 60780086
+      nfiles: 6
+    - path: data/shapefiles/2020
+      hash: md5
+      md5: f0103491ddab83e03dcdf3e4d4013efc.dir
+      size: 60269229
+      nfiles: 6
+    - path: src/modules/shapefile_processing/shapefile_process.py
+      hash: md5
+      md5: d3fb52acbc6b3850deb28a0bd9dc5495
+      size: 1945
+    outs:
+    - path: outputs/intermediate/geojson/gauteng-boundary-unprocessed.geojson
+      hash: md5
+      md5: 6d62946f5fd951a58c43395dbd1153ec
+      size: 339134
+    - path: outputs/intermediate/geojson/gauteng-boundary.geojson
+      hash: md5
+      md5: 6102c96faf343557835b06a4cd6320c0
+      size: 468936
+    - path: outputs/intermediate/geojson/gauteng-wards.geojson
+      hash: md5
+      md5: fd210f4642ed25a340f12ce85fb524c8
+      size: 5298461
+    - path: outputs/intermediate/images/processed-shapefile/gauteng-boundary-unprocessed.png
+      hash: md5
+      md5: 01dddb475e3deb56934da60b7a5ff315
+      size: 39593
+    - path: outputs/intermediate/images/processed-shapefile/gauteng-boundary.png
+      hash: md5
+      md5: cfc8b1635c6b9e30dde79bd25b28a40a
+      size: 34176
+    - path: outputs/intermediate/images/processed-shapefile/gauteng-wards.png
+      hash: md5
+      md5: f8ff8bb65c21a49b86af7b1c2fac7f95
+      size: 65338

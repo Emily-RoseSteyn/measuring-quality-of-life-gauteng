@@ -7,10 +7,28 @@ stages:
     deps:
     - .env
 
+  shapefile_processing:
+    cmd: python src/modules/shapefile_processing/shapefile_process.py
+    deps:
+    - src/modules/shapefile_processing/shapefile_process.py
+    - data/shapefiles/2011
+    - data/shapefiles/2016
+    - data/shapefiles/2020
+    outs:
+    - outputs/intermediate/geojson/gauteng-boundary.geojson
+    - outputs/intermediate/geojson/gauteng-boundary-unprocessed.geojson
+    - outputs/intermediate/geojson/gauteng-wards.geojson
+    - outputs/intermediate/images/processed-shapefile/gauteng-boundary.png
+    - outputs/intermediate/images/processed-shapefile/gauteng-boundary-unprocessed.png
+    - outputs/intermediate/images/processed-shapefile/gauteng-wards.png
+
   data_download:
     cmd: python src/modules/data_download/data_download.py
     deps:
     - src/modules/data_download/data_download.py
+    - data/surveys/gcro-2021.dta
+    - data/surveys/gcro-2018.dta
+    - data/surveys/gcro-2016.dta
 #    outs:
 #    - data/input
 
