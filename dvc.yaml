@@ -22,6 +22,16 @@ stages:
     - outputs/images/processed-shapefile/gauteng-boundary-unprocessed.png
     - outputs/images/processed-shapefile/gauteng-wards.png
 
+  gcro_processing:
+    cmd: python src/modules/gcro_processing/gcro_process.py
+    deps:
+    - src/modules/gcro_processing/gcro_process.py
+    - data/surveys/gcro-2021.dta
+    - data/surveys/gcro-2018.dta
+    - data/surveys/gcro-2016.dta
+#    outs:
+#    -
+
   data_download:
     cmd: python src/modules/data_download/data_download.py
     deps:

@@ -118,3 +118,22 @@ stages:
       hash: md5
       md5: f8ff8bb65c21a49b86af7b1c2fac7f95
       size: 65338
+  gcro_processing:
+    cmd: python src/modules/gcro_processing/gcro_process.py
+    deps:
+    - path: data/surveys/gcro-2016.dta
+      hash: md5
+      md5: b18fed022c1ad5c6588391a14ce4acac
+      size: 239054964
+    - path: data/surveys/gcro-2018.dta
+      hash: md5
+      md5: 74f9efb62a3992e2e5edd220afbbee79
+      size: 17658506
+    - path: data/surveys/gcro-2021.dta
+      hash: md5
+      md5: 3af38f13b58e0bb17be0cf1911b828b4
+      size: 8499821
+    - path: src/modules/gcro_processing/gcro_process.py
+      hash: md5
+      md5: db7bebc4c1cc89514e1f89f8a40cdb48
+      size: 323
