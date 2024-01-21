@@ -29,8 +29,9 @@ stages:
     - data/surveys/gcro-2021.dta
     - data/surveys/gcro-2018.dta
     - data/surveys/gcro-2016.dta
-#    outs:
-#    -
+    outs:
+    - outputs/processed-gcro/gcro-column-datatypes.json
+
 
   data_download:
     cmd: python src/modules/data_download/data_download.py
