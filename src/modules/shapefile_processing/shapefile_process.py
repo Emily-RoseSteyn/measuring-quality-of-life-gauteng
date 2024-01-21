@@ -12,7 +12,7 @@ def main() -> None:
     #  this is executing relative to the root directory when using dvc repro
     shapefile = gpd.read_file("./data/shapefiles/2020/2020.shp")
 
-    # Replace with step parameter
+    # TODO: Replace with step parameter
     results_dir = "./outputs/processed-shapefile"
 
     if not os.path.isdir(results_dir):
