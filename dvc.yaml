@@ -32,6 +32,7 @@ stages:
     outs:
     - outputs/processed-gcro/gcro-column-datatypes.json
     - outputs/processed-gcro/gcro-date-info.json
+    - outputs/processed-gcro/gcro-clustered-data.csv
 
 
   data_download:
