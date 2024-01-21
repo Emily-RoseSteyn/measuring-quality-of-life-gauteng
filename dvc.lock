@@ -135,10 +135,14 @@ stages:
       size: 8499821
     - path: src/modules/gcro_processing/gcro_process.py
       hash: md5
-      md5: faebc81a364f18cdb2e3c0e7b7ca0235
-      size: 1277
+      md5: 94a434d9982210824cd15eb0b2f19e68
+      size: 1606
     outs:
     - path: outputs/processed-gcro/gcro-column-datatypes.json
       hash: md5
       md5: 639dacf242b430f397437fde557da6d5
       size: 8646
+    - path: outputs/processed-gcro/gcro-date-info.json
+      hash: md5
+      md5: fe466fbd7f52211d9b3fe35da926acdd
+      size: 106
