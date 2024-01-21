@@ -13,7 +13,7 @@ def main() -> None:
     shapefile = gpd.read_file("./data/shapefiles/2020/2020.shp")
 
     # Replace with step parameter
-    results_dir = "./outputs/processed_shapefile"
+    results_dir = "./outputs/processed-shapefile"
 
     if not os.path.isdir(results_dir):
         os.makedirs(results_dir)
