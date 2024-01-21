@@ -15,12 +15,12 @@ stages:
     - data/shapefiles/2016
     - data/shapefiles/2020
     outs:
-    - outputs/geojson/gauteng-boundary.geojson
-    - outputs/geojson/gauteng-boundary-unprocessed.geojson
-    - outputs/geojson/gauteng-wards.geojson
-    - outputs/images/processed-shapefile/gauteng-boundary.png
-    - outputs/images/processed-shapefile/gauteng-boundary-unprocessed.png
-    - outputs/images/processed-shapefile/gauteng-wards.png
+    - outputs/processed-shapefile/gauteng-boundary.geojson
+    - outputs/processed-shapefile/gauteng-boundary-unprocessed.geojson
+    - outputs/processed-shapefile/gauteng-wards.geojson
+    - outputs/processed-shapefile/gauteng-boundary.png
+    - outputs/processed-shapefile/gauteng-boundary-unprocessed.png
+    - outputs/processed-shapefile/gauteng-wards.png
 
   gcro_processing:
     cmd: python src/modules/gcro_processing/gcro_process.py
