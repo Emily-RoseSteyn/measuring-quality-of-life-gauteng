@@ -12,8 +12,8 @@ def main() -> None:
     #  this is executing relative to the root directory when using dvc repro
     shapefile = gpd.read_file("./data/shapefiles/2020/2020.shp")
 
-    results_dir = "./outputs/intermediate/geojson"
-    images_dir = "./outputs/intermediate/images/processed-shapefile"
+    results_dir = "./outputs/geojson"
+    images_dir = "./outputs/images/processed-shapefile"
 
     if not os.path.isdir(results_dir):
         os.makedirs(results_dir)
