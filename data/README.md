@@ -93,7 +93,7 @@ We can now use [Planet's basemap viewer](https://www.planet.com/basemaps) to do 
 * Search for the monthly MOSAIC that corresponds to the mean date.
     * For example, in the case of the 2021 GCRO survey, the mean date is 2021-01-12. The corresponding monthly mosaic on
       Planet is January 2021 (`global_monthly_2021_01_mosaic`).
-* Find the relevant area of interest by uploading the corresponding Gauteng boundary geojson generated from
+* Find the relevant area of interest, by uploading the corresponding Gauteng boundary geojson generated from
   the `shapefile_processing` step.
 * A selected location should be visible with the corresponding basemap quads.
 * Copy the quad ids and create a `basemap-metadata.json` file with the following structure:
@@ -101,7 +101,7 @@ We can now use [Planet's basemap viewer](https://www.planet.com/basemaps) to do 
 ```json
 {
   "[year]": {
-    "mosaic_id": "[mosaic ID from planet]",
+    "mosaic_name": "[mosaic name from planet]",
     "basemap_quad_ids": [
       "copied quad ids wrapped in double quotations..."
     ]
