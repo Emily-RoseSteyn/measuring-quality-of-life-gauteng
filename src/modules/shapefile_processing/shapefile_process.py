@@ -10,7 +10,12 @@ def main() -> None:
     # Load shapefile
     # TODO: Figure out best practice for path here
     #  this is executing relative to the root directory when using dvc repro
-    shapefile = gpd.read_file("./data/shapefiles/2020/2020.shp")
+    shapefile = gpd.read_file("./data/shapefiles/2016/2016.shp")
+    shapefile = shapefile.rename(
+        columns={
+            "ProvinceNa": "Province",
+        }
+    )
 
     # TODO: Replace with step parameter
     results_dir = "./outputs/processed-shapefile"
