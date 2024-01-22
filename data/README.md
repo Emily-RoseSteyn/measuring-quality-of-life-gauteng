@@ -69,14 +69,18 @@ data
 
 ## Satellite Images
 
-If you have access to the DVC remote store, you can execute the `data_download` step in the DVC pipeline. This step
-uses [basemap quad](https://developers.planet.com/docs/basemaps/#basemap-quads) identifiers stored
-in [basemap-metadata.json](basemap-metadata/basemap-metadata.json) in order to download quads from Planet's API. The
-process for creating this file is described below.
+If you have access to the DVC remote store, you can execute the `data_download` step in the DVC pipeline without any
+additional work.
+This step uses [basemap quad](https://developers.planet.com/docs/basemaps/#basemap-quads) identifiers stored
+in [basemap-metadata.json](basemap-metadata/basemap-metadata.json) to download quads from Planet's API.
+The process for creating this file is described below.
 
 #### Manual Download
 
-If you do not have access to the DVC remote store, you will need to run the following steps in the DVC pipeline:
+If you do not have access to the DVC remote store, you will need to do the following before you can execute
+the `data_download` step.
+
+First, run the following steps in the DVC pipeline:
 
 * shapefile_processing
 * gcro_processing
