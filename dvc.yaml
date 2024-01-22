@@ -51,7 +51,8 @@ stages:
     - outputs/processed-shapefile/gauteng-wards.geojson
     - outputs/processed-gcro/gcro-clustered-data.csv
     outs:
-    - outputs/merged/2021/gauteng-qol.shp
+    - outputs/merged/gauteng-qol.geojson
+    - outputs/merged/gauteng-qol.png
 
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py

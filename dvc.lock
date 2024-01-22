@@ -80,33 +80,33 @@ stages:
       nfiles: 6
     - path: src/modules/shapefile_processing/shapefile_process.py
       hash: md5
-      md5: 95a33016bb65598c81219926dc68d3b1
-      size: 2093
+      md5: 8e775fc1f5804742a1885d1b5e6cad2d
+      size: 2204
     outs:
     - path: outputs/processed-shapefile/gauteng-boundary-unprocessed.geojson
       hash: md5
-      md5: 6d62946f5fd951a58c43395dbd1153ec
-      size: 339134
+      md5: 9fe82c51ba5cb2c39e8be8e0703822b9
+      size: 242617
     - path: outputs/processed-shapefile/gauteng-boundary-unprocessed.png
       hash: md5
-      md5: 01dddb475e3deb56934da60b7a5ff315
-      size: 39593
+      md5: bf06951d6e4ca98fc3a26ccab7bef728
+      size: 34101
     - path: outputs/processed-shapefile/gauteng-boundary.geojson
       hash: md5
-      md5: 08b6f572773d67322c8968a40bb365ff
-      size: 692032
+      md5: 7f7dd407b7d8f29c83d9cf0ba7d6f4f2
+      size: 691662
     - path: outputs/processed-shapefile/gauteng-boundary.png
       hash: md5
-      md5: ab7a5b48cbca655cdc9783df3f4230f1
-      size: 34114
+      md5: ab1da9522ce1649d07bc173e8b99611e
+      size: 34113
     - path: outputs/processed-shapefile/gauteng-wards.geojson
       hash: md5
-      md5: fd210f4642ed25a340f12ce85fb524c8
-      size: 5298461
+      md5: c87921e9eea50dc5f5cd0d0d0042f05d
+      size: 5370316
     - path: outputs/processed-shapefile/gauteng-wards.png
       hash: md5
-      md5: f8ff8bb65c21a49b86af7b1c2fac7f95
-      size: 65338
+      md5: 50429db4d8412b9e9183cb805cd3a8e9
+      size: 65880
   gcro_processing:
     cmd: python src/modules/gcro_processing/gcro_process.py
     deps:
@@ -139,3 +139,27 @@ stages:
       hash: md5
       md5: fe466fbd7f52211d9b3fe35da926acdd
       size: 106
+  gcro_shapefile_merge:
+    cmd: python src/modules/gcro_shapefile_merge/gcro_shapefile_merge.py
+    deps:
+    - path: outputs/processed-gcro/gcro-clustered-data.csv
+      hash: md5
+      md5: fd14932c47c6c5032a35f361eb917b09
+      size: 83318
+    - path: outputs/processed-shapefile/gauteng-wards.geojson
+      hash: md5
+      md5: c87921e9eea50dc5f5cd0d0d0042f05d
+      size: 5370316
+    - path: src/modules/gcro_shapefile_merge/gcro_shapefile_merge.py
+      hash: md5
+      md5: 21a43de73cd2973aa179e9dc6ca53f1f
+      size: 1464
+    outs:
+    - path: outputs/merged/gauteng-qol.geojson
+      hash: md5
+      md5: 1b0638102484489c12746c8501691ee1
+      size: 5389380
+    - path: outputs/merged/gauteng-qol.png
+      hash: md5
+      md5: 1ededb054f7eef6c1274565922786c43
+      size: 78817
