@@ -19,21 +19,6 @@ stages:
   data_download:
     cmd: python src/modules/data_download/data_download.py
     deps:
-    - path: data/shapefiles/2011
-      hash: md5
-      md5: bdf63d65f51b6f4b0e8fe805d3776cb3.dir
-      size: 115252968
-      nfiles: 6
-    - path: data/shapefiles/2016
-      hash: md5
-      md5: e506ece68c603f5f346a71419331b389.dir
-      size: 60780086
-      nfiles: 6
-    - path: data/shapefiles/2020
-      hash: md5
-      md5: f0103491ddab83e03dcdf3e4d4013efc.dir
-      size: 60269229
-      nfiles: 6
     - path: data/surveys/gcro-2016.dta
       hash: md5
       md5: b18fed022c1ad5c6588391a14ce4acac
@@ -48,8 +33,8 @@ stages:
       size: 8499821
     - path: src/modules/data_download/data_download.py
       hash: md5
-      md5: 7356cd382847518adc0df433e0b6dea4
-      size: 2128
+      md5: 4346f6796e342b36df0cb73b6688bc55
+      size: 1596
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
     deps:
