@@ -1,0 +1,5 @@
+outs:
+- md5: bc2b2c557e7eadc583224d25468fcc95
+  size: 467
+  hash: md5
+  path: basemap-metadata.json
