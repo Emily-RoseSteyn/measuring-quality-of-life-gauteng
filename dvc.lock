@@ -19,6 +19,10 @@ stages:
   data_download:
     cmd: python src/modules/data_download/data_download.py
     deps:
+    - path: data/basemap-metadata/basemap-metadata.json
+      hash: md5
+      md5: 8a465e42c9c492ba6f4affd6af3698a6
+      size: 469
     - path: data/surveys/gcro-2016.dta
       hash: md5
       md5: b18fed022c1ad5c6588391a14ce4acac

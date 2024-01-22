@@ -42,8 +42,7 @@ stages:
     - data/surveys/gcro-2021.dta
     - data/surveys/gcro-2018.dta
     - data/surveys/gcro-2016.dta
-#    outs:
-#    - data/input
+    - data/basemap-metadata/basemap-metadata.json
 
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
