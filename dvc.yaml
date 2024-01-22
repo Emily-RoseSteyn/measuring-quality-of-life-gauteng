@@ -44,6 +44,15 @@ stages:
     - data/surveys/gcro-2016.dta
     - data/basemap-metadata/basemap-metadata.json
 
+  gcro_shapefile_merge:
+    cmd: python src/modules/gcro_shapefile_merge/gcro_shapefile_merge
+    deps:
+    - src/modules/gcro_shapefile_merge/gcro_shapefile_merge.py
+    - outputs/processed-shapefile/gauteng-wards.geojson
+    - outputs/processed-gcro/gcro-clustered-data.csv
+    outs:
+    - outputs/merged/2021/gauteng-qol.shp
+
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
     deps:
