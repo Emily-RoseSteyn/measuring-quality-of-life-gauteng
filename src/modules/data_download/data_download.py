@@ -59,8 +59,6 @@ def main() -> None:
         r = session.get(link)
         with open(file_path, "wb") as f:
             f.write(r.content)
-        # TODO: Remove break
-        break
 
 
 if __name__ == "__main__":
