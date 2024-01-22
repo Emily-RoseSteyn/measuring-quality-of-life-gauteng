@@ -91,8 +91,8 @@ stages:
       nfiles: 6
     - path: src/modules/shapefile_processing/shapefile_process.py
       hash: md5
-      md5: 0e4616b0d2c6af259d1f948ee28f7496
-      size: 1838
+      md5: 95a33016bb65598c81219926dc68d3b1
+      size: 2093
     outs:
     - path: outputs/processed-shapefile/gauteng-boundary-unprocessed.geojson
       hash: md5
@@ -104,12 +104,12 @@ stages:
       size: 39593
     - path: outputs/processed-shapefile/gauteng-boundary.geojson
       hash: md5
-      md5: 6102c96faf343557835b06a4cd6320c0
-      size: 468936
+      md5: 08b6f572773d67322c8968a40bb365ff
+      size: 692032
     - path: outputs/processed-shapefile/gauteng-boundary.png
       hash: md5
-      md5: cfc8b1635c6b9e30dde79bd25b28a40a
-      size: 34176
+      md5: ab7a5b48cbca655cdc9783df3f4230f1
+      size: 34114
     - path: outputs/processed-shapefile/gauteng-wards.geojson
       hash: md5
       md5: fd210f4642ed25a340f12ce85fb524c8

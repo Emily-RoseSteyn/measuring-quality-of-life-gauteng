@@ -38,7 +38,15 @@ def main() -> None:
     )
 
     # Process with buffer so that artifacts are removed
-    gauteng_processed_boundary = gauteng_boundary.buffer(0.001)
+    # Change projection so that buffer applied as expected
+    # From geodetic coordinates (EPSG4326) to meters (3857) and back again
+    gauteng_processed_boundary = (
+        gauteng_boundary.to_crs(crs=3857)
+        .buffer(0.01)
+        .buffer(-0.01)
+        .to_crs(crs=gauteng_boundary.crs)
+    )
+
     gauteng_processed_boundary.plot(facecolor="none")
     plt.savefig(os.path.join(results_dir, "gauteng-boundary.png"))
     gauteng_processed_boundary.to_file(
