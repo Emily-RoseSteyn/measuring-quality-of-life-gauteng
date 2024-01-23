@@ -72,6 +72,10 @@ def main() -> None:
     )
     fig.save(f"{results_dir}/grid-gauteng-qol.png", dpi=300)
 
+    # Add latitude and longitude
+    joined_gdf["longitude"] = joined_gdf.geometry.x
+    joined_gdf["latitude"] = joined_gdf.geometry.y
+
     # Save CSV
     joined_gdf.to_csv(f"{results_dir}/qol-labelled-grid.csv")
 
