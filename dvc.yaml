@@ -54,6 +54,15 @@ stages:
     - outputs/merged/gauteng-qol.geojson
     - outputs/merged/gauteng-qol.png
 
+
+  generate_grid:
+    cmd: python src/modules/grid_generation/generate_grid.py
+    deps:
+    - src/modules/grid_generation/generate_grid.py
+    - outputs/merged/gauteng-qol.geojson
+    outs:
+    - outputs/grid/qol-labelled-grid.csv
+
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
     deps:
