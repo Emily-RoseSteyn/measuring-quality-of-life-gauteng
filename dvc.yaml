@@ -62,6 +62,7 @@ stages:
     - outputs/merged/gauteng-qol.geojson
     outs:
     - outputs/grid/grid-overlay.png
+    - outputs/grid/grid-gauteng-qol.png
     - outputs/grid/qol-labelled-grid.csv
 
   preprocess:
