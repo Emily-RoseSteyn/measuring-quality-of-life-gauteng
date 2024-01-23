@@ -61,6 +61,7 @@ stages:
     - src/modules/grid_generation/generate_grid.py
     - outputs/merged/gauteng-qol.geojson
     outs:
+    - outputs/grid/grid-overlay.png
     - outputs/grid/qol-labelled-grid.csv
 
   preprocess:
