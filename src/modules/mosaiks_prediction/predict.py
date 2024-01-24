@@ -13,8 +13,13 @@ def main() -> None:
 
     # load label data
     label_data = read_csv("outputs/grid/qol-labelled-grid.csv")
-    label_data["longitude"] = round(label_data["longitude"], 3)  # 3 decimal places
-    label_data["latitude"] = round(label_data["latitude"], 3)  # 3 decimal places
+    # Magic number of 0.001 to remove error between this and the features
+    label_data["longitude"] = (
+        round(label_data["longitude"], 3) - 0.001
+    )  # 3 decimal places
+    label_data["latitude"] = (
+        round(label_data["latitude"], 3) - 0.001
+    )  # 3 decimal places
     label_data = label_data.sort_values(by=["latitude", "longitude"])
     logger.debug(label_data.head())
 
