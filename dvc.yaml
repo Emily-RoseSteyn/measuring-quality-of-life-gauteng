@@ -65,6 +65,12 @@ stages:
     - outputs/grid/grid-gauteng-qol.png
     - outputs/grid/qol-labelled-grid.csv
 
+  mosaiks_prediction:
+    cmd: python src/modules/mosaiks_prediction/predict.py
+    deps:
+    - src/modules/mosaiks_prediction/predict.py
+    - data/mosaiks-features/mosaiks_features.csv
+
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
     deps:
