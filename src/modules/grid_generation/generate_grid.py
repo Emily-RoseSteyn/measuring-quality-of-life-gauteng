@@ -1,4 +1,3 @@
-import logging
 import os
 
 import geopandas as gpd
@@ -11,6 +10,7 @@ from plotnine import (
     labs,
     scale_fill_cmap,
 )
+from utils.logger import get_logger
 
 
 def create_grid(bounds: np.ndarray, cell_size: float, crs: str) -> GeoDataFrame:
@@ -26,7 +26,8 @@ def create_grid(bounds: np.ndarray, cell_size: float, crs: str) -> GeoDataFrame:
 
 
 def main() -> None:
-    logging.info("In grid generation")
+    logger = get_logger()
+    logger.info("In grid generation")
 
     results_dir = "./outputs/grid"
     if not os.path.isdir(results_dir):
