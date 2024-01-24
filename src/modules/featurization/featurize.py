@@ -6,9 +6,13 @@ def main() -> None:
     logger = get_logger()
     logger.info("In featurization")
 
-    # Check if running on GPU
-    logger.debug("GPUs.................................. ")
-    logger.debug(tf.config.list_physical_devices("GPU"))
+    # Tensorflow info logs
+    logger.debug("TensorFlow version: %s", tf.__version__)
+    device_name = tf.test.gpu_device_name()
+    if device_name != "/device:GPU:0":
+        logger.debug("GPU device not found - On for CPU time!")
+    else:
+        logger.debug("Found GPU at %s", device_name)
 
 
 if __name__ == "__main__":
