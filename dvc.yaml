@@ -10,7 +10,6 @@ stages:
   shapefile_processing:
     cmd: python src/modules/shapefile_processing/shapefile_process.py
     deps:
-    - src/modules/shapefile_processing/shapefile_process.py
     - data/shapefiles/2011
     - data/shapefiles/2016
     - data/shapefiles/2020
@@ -25,7 +24,6 @@ stages:
   gcro_processing:
     cmd: python src/modules/gcro_processing/gcro_process.py
     deps:
-    - src/modules/gcro_processing/gcro_process.py
     - data/surveys/gcro-2021.dta
     - data/surveys/gcro-2018.dta
     - data/surveys/gcro-2016.dta
@@ -38,7 +36,6 @@ stages:
   data_download:
     cmd: python src/modules/data_download/data_download.py
     deps:
-    - src/modules/data_download/data_download.py
     - data/surveys/gcro-2021.dta
     - data/surveys/gcro-2018.dta
     - data/surveys/gcro-2016.dta
@@ -47,7 +44,6 @@ stages:
   gcro_shapefile_merge:
     cmd: python src/modules/gcro_shapefile_merge/gcro_shapefile_merge.py
     deps:
-    - src/modules/gcro_shapefile_merge/gcro_shapefile_merge.py
     - outputs/processed-shapefile/gauteng-wards.geojson
     - outputs/processed-gcro/gcro-clustered-data.csv
     outs:
@@ -58,7 +54,6 @@ stages:
   generate_grid:
     cmd: python src/modules/grid_generation/generate_grid.py
     deps:
-    - src/modules/grid_generation/generate_grid.py
     - outputs/merged/gauteng-qol.geojson
     outs:
     - outputs/grid/grid-overlay.png
@@ -68,7 +63,6 @@ stages:
   mosaiks_prediction:
     cmd: python src/modules/mosaiks_prediction/predict.py
     deps:
-    - src/modules/mosaiks_prediction/predict.py
     - data/mosaiks-features/mosaiks_features.csv
     - outputs/grid/qol-labelled-grid.csv
 

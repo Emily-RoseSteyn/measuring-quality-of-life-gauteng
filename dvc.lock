@@ -200,5 +200,5 @@ stages:
       size: 4094302
     - path: src/modules/mosaiks_prediction/predict.py
       hash: md5
-      md5: 7b025a520758443c3baa1191e6496277
-      size: 1461
+      md5: 050dee06d43e908b77831b82ff7ed571
+      size: 1544
