@@ -1,13 +1,14 @@
-import logging
 import os
 
 import geopandas as gpd
 import pandas as pd
 from matplotlib import pyplot as plt
+from utils.logger import get_logger
 
 
 def main() -> None:
-    logging.info("In gcro shapefile merge")
+    logger = get_logger()
+    logger.info("In gcro shapefile merge")
 
     results_dir = "./outputs/merged"
     if not os.path.isdir(results_dir):

@@ -1,13 +1,14 @@
 import json
-import logging
 import os
 from datetime import datetime
 
 import pandas as pd
+from utils.logger import get_logger
 
 
 def main() -> None:
-    logging.info("In gcro data processing")
+    logger = get_logger()
+    logger.info("In gcro data processing")
     # Load gcro data
     gcro_dta = "./data/surveys/gcro-2021.dta"
     df_gcro = pd.read_stata(gcro_dta, convert_categoricals=False)
