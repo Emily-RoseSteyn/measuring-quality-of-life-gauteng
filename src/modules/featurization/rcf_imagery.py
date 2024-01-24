@@ -1,7 +1,8 @@
-# TAKEN FROM https://github.com/microsoft/PlanetaryComputerExamples/blob/main/tutorials/mosaiks.ipynb
+# ADAPTED FROM https://github.com/microsoft/PlanetaryComputerExamples/blob/main/tutorials/mosaiks.ipynb
 # type: ignore  # noqa: PGH003
 # TODO: Fix the typings in this file
 import tensorflow as tf
+from keras import Model
 from tensorflow.keras.layers import AvgPool2D, Conv2D, ReLU
 
 
@@ -22,7 +23,7 @@ def featurize(input_img, model, device):
     return feats
 
 
-class RCF(tf.keras.layers.Layer):
+class RCF(Model):
     """A model for extracting Random Convolution Features (RCF) from input imagery."""
 
     def __init__(self, num_features=16, kernel_size=3, num_input_channels=3):
@@ -32,17 +33,32 @@ class RCF(tf.keras.layers.Layer):
         assert num_features % 2 == 0
 
         self.conv1 = Conv2D(
-            num_input_channels,
-            num_features // 2,
-            kernel_size=kernel_size,
-            stride=1,
-            padding=0,
-            dilation=1,
-            bias=True,
+            filters=num_features // 2,  # Number of output filters
+            kernel_size=kernel_size,  # Kernel size
+            strides=(1, 1),  # Strides
+            padding="valid",  # Padding, equivalent to padding=0 in PyTorch
+            dilation_rate=(1, 1),  # Dilation rate
+            use_bias=True,  # Whether to use a bias term
+            input_shape=(None, None, num_input_channels),  # Input shape (optional)
         )
 
-        tf.keras.init.normal_(self.conv1.weight, mean=0.0, std=1.0)
-        tf.keras.init.constant_(self.conv1.bias, -1.0)
+        # Create a normal initializer with mean 0 and standard deviation 1:
+        initializer = tf.random_normal_initializer(mean=0.0, stddev=1.0)
+
+        # Apply the initializer to the weights of the 'conv1' layer:
+        self.conv1.build(
+            input_shape=(None, None, num_input_channels)
+        )  # Ensure weights are created
+        self.conv1.weight = initializer
+
+        # Create a constant initializer with value -1.0:
+        initializer = tf.constant_initializer(-1.0)
+
+        # Apply the initializer to the bias of the 'conv1' layer:
+        self.conv1.build(
+            input_shape=(None, None, num_input_channels)
+        )  # Ensure biases are created
+        self.conv1.bias = initializer
 
     def forward(self, x):
         x1a = ReLU(self.conv1(x), inplace=True)
