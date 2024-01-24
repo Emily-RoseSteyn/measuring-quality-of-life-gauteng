@@ -1,4 +1,5 @@
 import tensorflow as tf
+from modules.featurization.rcf_model import RCF
 from utils.logger import get_logger
 
 
@@ -13,6 +14,12 @@ def main() -> None:
         logger.debug("GPU device not found - On for CPU time!")
     else:
         logger.debug("Found GPU at %s", device_name)
+
+    # Setting up model
+    # TODO: Carry on from here. Currently just hacking at this
+    num_features = 1024
+    model = RCF(num_features)
+    logger.debug(model)
 
 
 if __name__ == "__main__":
