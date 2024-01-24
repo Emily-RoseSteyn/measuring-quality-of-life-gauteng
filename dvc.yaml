@@ -70,6 +70,7 @@ stages:
     deps:
     - src/modules/mosaiks_prediction/predict.py
     - data/mosaiks-features/mosaiks_features.csv
+    - outputs/grid/qol-labelled-grid.csv
 
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py

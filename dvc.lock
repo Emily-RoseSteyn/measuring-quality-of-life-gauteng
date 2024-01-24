@@ -80,8 +80,8 @@ stages:
       nfiles: 6
     - path: src/modules/shapefile_processing/shapefile_process.py
       hash: md5
-      md5: 8e775fc1f5804742a1885d1b5e6cad2d
-      size: 2204
+      md5: 00320e8df8aa1c4f4aa37d75d8bffa35
+      size: 2251
     outs:
     - path: outputs/processed-shapefile/gauteng-boundary-unprocessed.geojson
       hash: md5
@@ -89,7 +89,7 @@ stages:
       size: 242617
     - path: outputs/processed-shapefile/gauteng-boundary-unprocessed.png
       hash: md5
-      md5: bf06951d6e4ca98fc3a26ccab7bef728
+      md5: f825e045948567c2bbb028dc31ba39eb
       size: 34101
     - path: outputs/processed-shapefile/gauteng-boundary.geojson
       hash: md5
@@ -97,7 +97,7 @@ stages:
       size: 691662
     - path: outputs/processed-shapefile/gauteng-boundary.png
       hash: md5
-      md5: ab1da9522ce1649d07bc173e8b99611e
+      md5: 93860f3618c778f7f618e68d3aaec889
       size: 34113
     - path: outputs/processed-shapefile/gauteng-wards.geojson
       hash: md5
@@ -105,7 +105,7 @@ stages:
       size: 5370316
     - path: outputs/processed-shapefile/gauteng-wards.png
       hash: md5
-      md5: 50429db4d8412b9e9183cb805cd3a8e9
+      md5: 9f4dc17babf4e4f0fa961810dc40365b
       size: 65880
   gcro_processing:
     cmd: python src/modules/gcro_processing/gcro_process.py
@@ -124,8 +124,8 @@ stages:
       size: 8499821
     - path: src/modules/gcro_processing/gcro_process.py
       hash: md5
-      md5: 281044c1e5c364d44f703971d1c714cd
-      size: 2361
+      md5: 2e07910790d67849dc981a0900c6108a
+      size: 2408
     outs:
     - path: outputs/processed-gcro/gcro-clustered-data.csv
       hash: md5
@@ -152,8 +152,8 @@ stages:
       size: 5370316
     - path: src/modules/gcro_shapefile_merge/gcro_shapefile_merge.py
       hash: md5
-      md5: 21a43de73cd2973aa179e9dc6ca53f1f
-      size: 1464
+      md5: 9b7bc079f113878147cbfa07ddfbd7f6
+      size: 1511
     outs:
     - path: outputs/merged/gauteng-qol.geojson
       hash: md5
@@ -161,7 +161,7 @@ stages:
       size: 5389380
     - path: outputs/merged/gauteng-qol.png
       hash: md5
-      md5: 1ededb054f7eef6c1274565922786c43
+      md5: b7c6c18c61f4083223600a76d48ab886
       size: 78817
   generate_grid:
     cmd: python src/modules/grid_generation/generate_grid.py
@@ -172,18 +172,33 @@ stages:
       size: 5389380
     - path: src/modules/grid_generation/generate_grid.py
       hash: md5
-      md5: 36dad687b6a7d3ddfb8104a36be5ef18
-      size: 2641
+      md5: 8ff66fe7946fe591ffe5bba55621544f
+      size: 2688
     outs:
     - path: outputs/grid/grid-gauteng-qol.png
       hash: md5
-      md5: cf9342ec47d679f10367f37217ef1f30
-      size: 436997
+      md5: bd3944457ad82bc722636244030e0179
+      size: 420087
     - path: outputs/grid/grid-overlay.png
       hash: md5
-      md5: 6a46ef097933b68473bcfe779e0efc53
+      md5: 9375875afdf385a3c91a5c17e6b99e3d
       size: 845522
     - path: outputs/grid/qol-labelled-grid.csv
       hash: md5
-      md5: cabd574e3f95484398def636af086948
+      md5: dd338aecc08f7019d4796627277ff554
       size: 4094302
+  mosaiks_prediction:
+    cmd: python src/modules/mosaiks_prediction/predict.py
+    deps:
+    - path: data/mosaiks-features/mosaiks_features.csv
+      hash: md5
+      md5: 3d33d043b5f9052405a5744a24ea7581
+      size: 1261596796
+    - path: outputs/grid/qol-labelled-grid.csv
+      hash: md5
+      md5: dd338aecc08f7019d4796627277ff554
+      size: 4094302
+    - path: src/modules/mosaiks_prediction/predict.py
+      hash: md5
+      md5: 7b025a520758443c3baa1191e6496277
+      size: 1461
