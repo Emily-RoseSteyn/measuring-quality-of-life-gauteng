@@ -8,6 +8,7 @@ from plotnine import (
     geom_map,
     ggplot,
     labs,
+    scale_color_cmap,
     scale_fill_cmap,
 )
 from utils.logger import get_logger
@@ -15,11 +16,18 @@ from utils.logger import get_logger
 
 def create_grid(bounds: np.ndarray, cell_size: float, crs: str) -> GeoDataFrame:
     x_min, y_min, x_max, y_max = bounds
-    x_coords = list(np.arange(x_min, x_max, cell_size))
-    y_coords = list(np.arange(y_min, y_max, cell_size))
+
+    # Offsetting to correspond to MOSAIKS grid precision
+    x_offset = round(x_min, 2)
+    y_offset = round(y_min)
+
+    # Get list of point coordinates
+    x_coords = list(np.arange(x_offset, x_max, cell_size))
+    y_coords = list(np.arange(y_offset, y_max, cell_size))
 
     # Create all combinations of xy coordinates
     coordinate_pairs = np.array(np.meshgrid(x_coords, y_coords)).T.reshape(-1, 2)
+
     # Create a list of shapely points
     geometries = gpd.points_from_xy(coordinate_pairs[:, 0], coordinate_pairs[:, 1])
     return gpd.GeoDataFrame(geometries, columns=["geometry"], crs=crs)
@@ -53,7 +61,7 @@ def main() -> None:
     fig = (
         ggplot()
         + geom_map(data=qol_labels, mapping=aes(fill="qol_index"))
-        + scale_fill_cmap()
+        + scale_fill_cmap(cmap_name="plasma")
         + geom_map(data=grid, fill=None)
         + labs(x="", y="", fill="QoL Index")
     )
@@ -67,9 +75,9 @@ def main() -> None:
     #   - Warning is incorrect
     fig = (
         ggplot()
-        + geom_map(data=joined_gdf, mapping=aes(fill="qol_index"), stroke=0, size=1.2)
-        + scale_fill_cmap()
-        + labs(x="", y="", fill="QoL Index")
+        + geom_map(data=joined_gdf, mapping=aes(color="qol_index"), size=0.01)
+        + scale_color_cmap(cmap_name="plasma")
+        + labs(x="", y="", color="Quality of Life")
     )
     fig.save(f"{results_dir}/grid-gauteng-qol.png", dpi=300)
 

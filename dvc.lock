@@ -172,21 +172,21 @@ stages:
       size: 5389380
     - path: src/modules/grid_generation/generate_grid.py
       hash: md5
-      md5: 8ff66fe7946fe591ffe5bba55621544f
-      size: 2688
+      md5: cbfa27d7e77f59eed331be5805456d71
+      size: 2982
     outs:
     - path: outputs/grid/grid-gauteng-qol.png
       hash: md5
-      md5: bd3944457ad82bc722636244030e0179
-      size: 420087
+      md5: bafa000296f0440389105a5b7b646b0a
+      size: 742254
     - path: outputs/grid/grid-overlay.png
       hash: md5
-      md5: 9375875afdf385a3c91a5c17e6b99e3d
-      size: 845522
+      md5: c89487f3c07b91ec61bf9edc0adce8a8
+      size: 770593
     - path: outputs/grid/qol-labelled-grid.csv
       hash: md5
-      md5: dd338aecc08f7019d4796627277ff554
-      size: 4094302
+      md5: 25c42a83bfac2ac857d0efbfdbcaca94
+      size: 4100978
   mosaiks_prediction:
     cmd: python src/modules/mosaiks_prediction/predict.py
     deps:
