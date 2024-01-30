@@ -172,8 +172,8 @@ stages:
       size: 5389380
     - path: src/modules/grid_generation/generate_grid.py
       hash: md5
-      md5: 9e94d7e782edd05a00ed46cb3abee26f
-      size: 3192
+      md5: c579a36ae5433bdad0e4ef9fa73b06a7
+      size: 3162
     outs:
     - path: outputs/grid/grid-gauteng-qol.png
       hash: md5
