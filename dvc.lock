@@ -192,13 +192,26 @@ stages:
     deps:
     - path: data/mosaiks-features/mosaiks_features.csv
       hash: md5
-      md5: 3d33d043b5f9052405a5744a24ea7581
-      size: 1261596796
+      md5: b4991d36a61ae9646fe377a50658a037
+      size: 1261893911
     - path: outputs/grid/qol-labelled-grid.csv
       hash: md5
-      md5: dd338aecc08f7019d4796627277ff554
-      size: 4094302
+      md5: 47bbcdc00cf7271c3bffa249a36e7001
+      size: 3334106
     - path: src/modules/mosaiks_prediction/predict.py
       hash: md5
-      md5: 050dee06d43e908b77831b82ff7ed571
-      size: 1544
+      md5: 48f7d3a51772e513d36b20a7647d60d2
+      size: 6089
+    outs:
+    - path: outputs/mosaiks-prediction/observed-vs-predicted.png
+      hash: md5
+      md5: 32c7814293a5b2574ceb1d16fd00e813
+      size: 623975
+    - path: outputs/mosaiks-prediction/observed.png
+      hash: md5
+      md5: c88d6d110195732a7211b5bc8366c4bf
+      size: 1029397
+    - path: outputs/mosaiks-prediction/predicted.png
+      hash: md5
+      md5: 67c5220d5cc34ff06afb71c340288f8b
+      size: 1307584
