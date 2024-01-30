@@ -1,12 +1,13 @@
-import logging
 import os
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
+from utils.logger import get_logger
 
 
 def main() -> None:
-    logging.info("In shapefile processing")
+    logger = get_logger()
+    logger.info("In shapefile processing")
     # Load shapefile
     # TODO: Figure out best practice for path here
     #  this is executing relative to the root directory when using dvc repro

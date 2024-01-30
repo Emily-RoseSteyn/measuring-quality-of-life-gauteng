@@ -1,8 +1,9 @@
-import logging
+from utils.logger import get_logger
 
 
 def main() -> None:
-    logging.info("In training")
+    logger = get_logger()
+    logger.info("In training")
 
 
 if __name__ == "__main__":

@@ -1,10 +1,10 @@
 import json
-import logging
 import os
 from pathlib import Path
 
 import requests
 from utils.env_variable_keys import PLANET_API_KEY
+from utils.logger import get_logger
 
 API_KEY = os.environ.get(PLANET_API_KEY, "")
 API_URL = "https://api.planet.com/basemaps/v1/mosaics"
@@ -24,7 +24,8 @@ def get_quad_url(mosaic_id: str, quad_id: str) -> str:
 
 
 def main() -> None:
-    logging.info("In data download")
+    logger = get_logger()
+    logger.info("In data download")
 
     session = initialise_session()
 
