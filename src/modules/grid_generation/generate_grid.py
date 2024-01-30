@@ -18,18 +18,22 @@ def create_grid(bounds: np.ndarray, cell_size: float, crs: str) -> GeoDataFrame:
     x_min, y_min, x_max, y_max = bounds
 
     # Offsetting to correspond to MOSAIKS grid precision
-    x_offset = round(x_min, 2)
-    y_offset = round(y_min)
+    x_min = round(x_min, 2) + cell_size / 2
+    y_min = round(y_min) + cell_size / 2
+    x_max = round(x_max, 2) + cell_size / 2
+    y_max = round(y_max, 2) + cell_size / 2
 
     # Get list of point coordinates
-    x_coords = list(np.arange(x_offset, x_max, cell_size))
-    y_coords = list(np.arange(y_offset, y_max, cell_size))
+    # NB: Previously used np.arange without rounding, but this has precision errors for decimal cell_size
+    x_coords = list(np.around(np.arange(x_min, x_max, cell_size), 3))
+    y_coords = list(np.around(np.arange(y_min, y_max, cell_size), 3))
 
     # Create all combinations of xy coordinates
     coordinate_pairs = np.array(np.meshgrid(x_coords, y_coords)).T.reshape(-1, 2)
 
     # Create a list of shapely points
     geometries = gpd.points_from_xy(coordinate_pairs[:, 0], coordinate_pairs[:, 1])
+
     return gpd.GeoDataFrame(geometries, columns=["geometry"], crs=crs)
 
 
