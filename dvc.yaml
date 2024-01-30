@@ -1,3 +1,4 @@
+# NB: Script must be included in deps in order to trigger changed stage
 stages:
   install:
     cmd: poetry install
@@ -5,65 +6,77 @@ stages:
   load_env:
     cmd: python src/utils/load_env.py
     deps:
-    - .env
+      - src/utils/load_env.py
+      - .env
 
   shapefile_processing:
     cmd: python src/modules/shapefile_processing/shapefile_process.py
     deps:
-    - src/modules/shapefile_processing/shapefile_process.py
-    - data/shapefiles/2011
-    - data/shapefiles/2016
-    - data/shapefiles/2020
+      - src/modules/shapefile_processing/shapefile_process.py
+      - data/shapefiles/2011
+      - data/shapefiles/2016
+      - data/shapefiles/2020
     outs:
-    - outputs/processed-shapefile/gauteng-boundary.geojson
-    - outputs/processed-shapefile/gauteng-boundary-unprocessed.geojson
-    - outputs/processed-shapefile/gauteng-wards.geojson
-    - outputs/processed-shapefile/gauteng-boundary.png
-    - outputs/processed-shapefile/gauteng-boundary-unprocessed.png
-    - outputs/processed-shapefile/gauteng-wards.png
+      - outputs/processed-shapefile/gauteng-boundary.geojson
+      - outputs/processed-shapefile/gauteng-boundary-unprocessed.geojson
+      - outputs/processed-shapefile/gauteng-wards.geojson
+      - outputs/processed-shapefile/gauteng-boundary.png
+      - outputs/processed-shapefile/gauteng-boundary-unprocessed.png
+      - outputs/processed-shapefile/gauteng-wards.png
 
   gcro_processing:
     cmd: python src/modules/gcro_processing/gcro_process.py
     deps:
-    - src/modules/gcro_processing/gcro_process.py
-    - data/surveys/gcro-2021.dta
-    - data/surveys/gcro-2018.dta
-    - data/surveys/gcro-2016.dta
+      - src/modules/gcro_processing/gcro_process.py
+      - data/surveys/gcro-2021.dta
+      - data/surveys/gcro-2018.dta
+      - data/surveys/gcro-2016.dta
     outs:
-    - outputs/processed-gcro/gcro-column-datatypes.json
-    - outputs/processed-gcro/gcro-date-info.json
-    - outputs/processed-gcro/gcro-clustered-data.csv
+      - outputs/processed-gcro/gcro-column-datatypes.json
+      - outputs/processed-gcro/gcro-date-info.json
+      - outputs/processed-gcro/gcro-clustered-data.csv
 
 
   data_download:
     cmd: python src/modules/data_download/data_download.py
     deps:
-    - src/modules/data_download/data_download.py
-    - data/surveys/gcro-2021.dta
-    - data/surveys/gcro-2018.dta
-    - data/surveys/gcro-2016.dta
-    - data/basemap-metadata/basemap-metadata.json
+      - src/modules/data_download/data_download.py
+      - data/surveys/gcro-2021.dta
+      - data/surveys/gcro-2018.dta
+      - data/surveys/gcro-2016.dta
+      - data/basemap-metadata/basemap-metadata.json
 
   gcro_shapefile_merge:
     cmd: python src/modules/gcro_shapefile_merge/gcro_shapefile_merge.py
     deps:
-    - src/modules/gcro_shapefile_merge/gcro_shapefile_merge.py
-    - outputs/processed-shapefile/gauteng-wards.geojson
-    - outputs/processed-gcro/gcro-clustered-data.csv
+      - src/modules/gcro_shapefile_merge/gcro_shapefile_merge.py
+      - outputs/processed-shapefile/gauteng-wards.geojson
+      - outputs/processed-gcro/gcro-clustered-data.csv
     outs:
-    - outputs/merged/gauteng-qol.geojson
-    - outputs/merged/gauteng-qol.png
+      - outputs/merged/gauteng-qol.geojson
+      - outputs/merged/gauteng-qol.png
 
 
   generate_grid:
     cmd: python src/modules/grid_generation/generate_grid.py
     deps:
-    - src/modules/grid_generation/generate_grid.py
-    - outputs/merged/gauteng-qol.geojson
+      - src/modules/grid_generation/generate_grid.py
+      - outputs/merged/gauteng-qol.geojson
     outs:
-    - outputs/grid/grid-overlay.png
-    - outputs/grid/grid-gauteng-qol.png
-    - outputs/grid/qol-labelled-grid.csv
+      - outputs/grid/grid-overlay.png
+      - outputs/grid/grid-gauteng-qol.png
+      - outputs/grid/qol-labelled-grid.csv
+
+  mosaiks_prediction:
+    cmd: python src/modules/mosaiks_prediction/predict.py
+    deps:
+      - src/modules/mosaiks_prediction/predict.py
+      - data/mosaiks-features/mosaiks_features.csv
+      - outputs/grid/qol-labelled-grid.csv
+    outs:
+      - outputs/mosaiks-prediction/observed-vs-predicted.png
+      - outputs/mosaiks-prediction/observed.png
+      - outputs/mosaiks-prediction/predicted.png
 
   featurize:
     cmd: python src/modules/featurization/featurize.py
@@ -75,23 +88,23 @@ stages:
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
     deps:
-    - src/modules/preprocessing/preprocess.py
-#    - data/input
-#    outs:
-#    - data/intermediate
+      - src/modules/preprocessing/preprocess.py
+  #    - data/input
+  #    outs:
+  #    - data/intermediate
 
   train:
     cmd: python src/modules/training/train.py
     deps:
-    - src/modules/training/train.py
-#    - data/intermediate
-#    outs:
-#    - outputs/model.pkl
+      - src/modules/training/train.py
+  #    - data/intermediate
+  #    outs:
+  #    - outputs/model.pkl
 
   evaluate:
     cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
     deps:
-    - src/modules/evaluation/evaluate.py
+      - src/modules/evaluation/evaluate.py
 #    - data/intermediate
 #    - outputs/model.pkl
 #    outs:
