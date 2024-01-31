@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import Generator
 
 from modules.tiling.tile_image import tile_image
@@ -23,8 +24,7 @@ def main() -> None:
     logger.info("In tile images")
 
     # Output directory
-    results_dir = "./outputs/tiles"
-
+    results_dir = os.path.abspath(Path("./outputs/tiles"))
     if not os.path.isdir(results_dir):
         os.makedirs(results_dir)
 
@@ -41,6 +41,8 @@ def main() -> None:
         tile_without_slurm(images, results_dir)
 
     # TODO: How to save corresponding qol data?
+    with open(f"{results_dir}/gauteng-qol-tile-map.csv", "w"):
+        logger.info("Doing nothing for now")
 
 
 if __name__ == "__main__":

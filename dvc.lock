@@ -215,3 +215,23 @@ stages:
       hash: md5
       md5: 67c5220d5cc34ff06afb71c340288f8b
       size: 1307584
+  tiling:
+    cmd: python src/modules/tiling/tile_images.py
+    deps:
+    - path: outputs/merged/gauteng-qol.geojson
+      hash: md5
+      md5: 1b0638102484489c12746c8501691ee1
+      size: 5389380
+    - path: src/modules/tiling/tile_image.py
+      hash: md5
+      md5: 26d231ce5a38872a4cec8a9f7ee821d8
+      size: 2417
+    - path: src/modules/tiling/tile_images.py
+      hash: md5
+      md5: 0be2a52b50e4e3262aa5ee1da1c706c6
+      size: 1463
+    outs:
+    - path: outputs/tiles/gauteng-qol-tile-map.csv
+      hash: md5
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
