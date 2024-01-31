@@ -33,6 +33,10 @@ def main() -> None:
     image_dir = "data/basemap-quads"
     images = list(absolute_file_paths(image_dir))
 
+    # TODO: Slurm flow changes
+    #  - Enable slurm on cluster
+    #  - Pass commands into script (images and results dir)
+    #  - Check if W works?
     if SLURM_ENABLED:
         # If so, dispatch slurm script with wait
         logger.info("Running with SLURM")
