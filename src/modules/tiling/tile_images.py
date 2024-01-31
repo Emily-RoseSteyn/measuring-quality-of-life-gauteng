@@ -1,4 +1,5 @@
 import os
+import subprocess
 from pathlib import Path
 from typing import Generator
 
@@ -35,6 +36,8 @@ def main() -> None:
     if SLURM_ENABLED:
         # If so, dispatch slurm script with wait
         logger.info("Running with SLURM")
+        sbatch_script = Path("./src/modules/tiling/tile.sbatch")
+        subprocess.call(sbatch_script)  # noqa: S603
     else:
         # If not, tile individually sequentially
         logger.info("SLURM is not available")
