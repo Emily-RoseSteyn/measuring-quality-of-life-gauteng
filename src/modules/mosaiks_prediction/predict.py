@@ -14,7 +14,8 @@ from plotnine import (
     scale_color_cmap,
 )
 from sklearn import metrics
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.linear_model._base import LinearModel
 from sklearn.model_selection import train_test_split
 from utils.logger import get_logger
 
@@ -123,29 +124,50 @@ def main() -> None:
         axis=1,
     )
 
+    # OLS
+    ols_result = ols_regression(x_test, x_train, y_test, y_train)
+    plot_results(plotting_coords, plotting_coords_train, y_test, y_train, ols_result)
+
     # RIDGE
     ridge_result = ridge_regression(x_test, x_train, y_test, y_train)
     plot_results(plotting_coords, plotting_coords_train, y_test, y_train, ridge_result)
 
 
+def regress(reg: LinearModel, x_test: dict, x_train: dict, y_train: dict) -> tuple:
+    # Train the model
+    reg.fit(x_train, y_train)
+    # Make predictions
+    y_pred = reg.predict(x_test)
+    # Make predictions on training set for plotting maps
+    y_pred_train = reg.predict(x_train)
+    y_pred_train[y_pred_train < 0] = 0
+    return y_pred, y_pred_train
+
+
+def calc_r2(model_type: str, y_test: dict, y_pred: dict) -> Any:
+    # Compute R^2 from true and predicted values
+    r2 = metrics.r2_score(y_test, y_pred)
+    logger.info("%s r2: %s", model_type, r2)
+    return r2
+
+
+def ols_regression(
+    x_test: dict, x_train: dict, y_test: dict, y_train: dict
+) -> ModelResult:
+    model_type = "ols"
+    reg = LinearRegression()
+    y_pred, y_pred_train = regress(reg, x_test, x_train, y_train)
+    r2 = calc_r2(model_type, y_test, y_pred)
+    return model_type, y_pred, y_pred_train, r2
+
+
 def ridge_regression(
     x_test: dict, x_train: dict, y_test: dict, y_train: dict
 ) -> ModelResult:
-    # RIDGE REGRESSION HERE
-    ridge_reg = Ridge(alpha=1)  # alpha is the hyperparameter equivalent to lambda
-    # Train the model
-    ridge_reg.fit(x_train, y_train)
-    # Make predictions
-    y_pred = ridge_reg.predict(x_test)
-    # Compute R^2 from true and predicted values
-    r2 = metrics.r2_score(y_test, y_pred)
-    logger.info("r2: %s", r2)
-
-    # Make predictions on training set for plotting maps
-    y_pred_train = ridge_reg.predict(x_train)
-    y_pred_train[y_pred_train < 0] = 0
-
     model_type = "ridge"
+    reg = Ridge(alpha=1)  # alpha is the hyperparameter equivalent to lambda
+    y_pred, y_pred_train = regress(reg, x_test, x_train, y_train)
+    r2 = calc_r2(model_type, y_test, y_pred)
     return model_type, y_pred, y_pred_train, r2
 
 

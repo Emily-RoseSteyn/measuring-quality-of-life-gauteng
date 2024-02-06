@@ -204,9 +204,21 @@ stages:
       size: 3334106
     - path: src/modules/mosaiks_prediction/predict.py
       hash: md5
-      md5: ed072db5ed85a60855d26749f2edf9cf
-      size: 6694
+      md5: 1a4972f67c34a139a7f927ac7165eb28
+      size: 7533
     outs:
+    - path: outputs/mosaiks-prediction/ols-observed-vs-predicted.png
+      hash: md5
+      md5: 319e4fd1483b3ad1080ebbf74b130a23
+      size: 566932
+    - path: outputs/mosaiks-prediction/ols-observed.png
+      hash: md5
+      md5: c88d6d110195732a7211b5bc8366c4bf
+      size: 1029397
+    - path: outputs/mosaiks-prediction/ols-predicted.png
+      hash: md5
+      md5: 9ddd52abd08e95da52b9140b607b23df
+      size: 1266103
     - path: outputs/mosaiks-prediction/ridge-observed-vs-predicted.png
       hash: md5
       md5: f852a1d62a5501762244bea2301f4bb9
