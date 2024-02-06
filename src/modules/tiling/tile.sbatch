@@ -10,4 +10,4 @@
 # if running long jobs rather use 40 so that others can still use the system
 # You can also get it to email you and a whole bunch of other things, but not necessary for now
 
-exec srun --unbuffered --mpi=pmi2 python tile_slurm.py
+exec srun --unbuffered --mpi=pmi2 python -c "print('hello')"
