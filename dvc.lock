@@ -228,12 +228,12 @@ stages:
       size: 5389380
     - path: src/modules/tiling/tile_image.py
       hash: md5
-      md5: 26d231ce5a38872a4cec8a9f7ee821d8
-      size: 2417
+      md5: 39b61ca783498255ccdb93f09111419e
+      size: 2493
     - path: src/modules/tiling/tile_images.py
       hash: md5
-      md5: 0be2a52b50e4e3262aa5ee1da1c706c6
-      size: 1463
+      md5: 66b60efd95c299f38877459a1359e31a
+      size: 1783
     outs:
     - path: outputs/tiles/gauteng-qol-tile-map.csv
       hash: md5

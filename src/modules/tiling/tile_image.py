@@ -56,12 +56,17 @@ def tile_image(file_path: str, output_dir: str, crop_size: int = 256) -> None:
 
     # Read Image
     image = read_image(file_path)
-    channels, img_height, img_width = image.shape
+
+    # Ensuring image is in "contiguous C ordered arrays with channels at the lowest dimension"
+    # This is important for the reshaping below
+    image = np.moveaxis(image, 0, 2)
+    img_height, img_width, channels = image.shape
 
     # Assuming image is a square
     tile_height, tile_width = (crop_size, crop_size)
 
     # Reshape image
+    # TODO: Understand this better
     tiled_array = image.reshape(
         img_height // tile_height,
         tile_height,
@@ -70,16 +75,16 @@ def tile_image(file_path: str, output_dir: str, crop_size: int = 256) -> None:
         channels,
     )
 
-    # TODO: Fix colour incorrect
+    # Making sure tiles are ordered by row tiles, column tiles, channels, row, height
+    # ie of shape 16 x 16 x 4 x 256 x256
     tiled_array = tiled_array.swapaxes(1, 2)
+    tiled_array = np.moveaxis(tiled_array, 4, 2)
 
     for i, row in enumerate(tiled_array):
         for j, tile in enumerate(row):
             basename = Path(os.path.basename(file_path))
             file_name = f"{basename.stem}_{i}{j}{basename.suffix}"
             output_file_path = Path.joinpath(Path(output_dir), file_name)
-            rolled_array = np.rollaxis(tile, axis=2)
-            save_image(rolled_array, output_file_path, crs)
-        break
+            save_image(tile, output_file_path, crs)
 
     logger.info("Output dir %s", output_dir)
