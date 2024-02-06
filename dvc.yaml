@@ -56,6 +56,14 @@ stages:
       - outputs/merged/gauteng-qol.geojson
       - outputs/merged/gauteng-qol.png
 
+  tiling:
+    cmd: python src/modules/tiling/tile_images.py
+    deps:
+    - src/modules/tiling/tile_images.py
+    - src/modules/tiling/tile_image.py
+    - outputs/merged/gauteng-qol.geojson
+    outs:
+    - outputs/tiles/gauteng-qol-tile-map.csv
 
   generate_grid:
     cmd: python src/modules/grid_generation/generate_grid.py
