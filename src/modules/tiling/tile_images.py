@@ -41,7 +41,7 @@ def main() -> None:
         # If so, dispatch slurm script with wait
         logger.info("Running with SLURM")
         sbatch_script = Path("./src/modules/tiling/tile.sbatch")
-        subprocess.call(f"sbatch {sbatch_script} -W")  # noqa: S603
+        subprocess.call(f"cat {sbatch_script}")  # noqa: S603
     else:
         # If not, tile individually sequentially
         logger.info("SLURM is not available")
