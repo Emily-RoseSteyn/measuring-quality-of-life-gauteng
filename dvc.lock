@@ -204,8 +204,8 @@ stages:
       size: 3334106
     - path: src/modules/mosaiks_prediction/predict.py
       hash: md5
-      md5: 1a4972f67c34a139a7f927ac7165eb28
-      size: 7533
+      md5: 582c7dab2e109c2858559a3ac276def6
+      size: 7531
     outs:
     - path: outputs/mosaiks-prediction/ols-observed-vs-predicted.png
       hash: md5
