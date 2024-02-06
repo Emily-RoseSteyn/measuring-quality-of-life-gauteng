@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=tiling_emily
-#SBATCH --output=~/logs/%x-%A_%a.out.log
-#SBATCH --error=~/logs/%x-%A_%a.err.log
+#SBATCH --output=/home/esteyn/logs/%x-%A_%a.out.log
+#SBATCH --error=/home/esteyn/logs/%x-%A_%a.err.log
 #SBATCH --cpus-per-task 1
 #SBATCH --ntasks=25
 
@@ -11,3 +11,4 @@
 # You can also get it to email you and a whole bunch of other things, but not necessary for now
 
 exec srun --unbuffered --mpi=pmi2 python -c "print('hello')"
+# TODO: Correct command to point to tile_slurm.py
