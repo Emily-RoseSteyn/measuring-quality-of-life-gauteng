@@ -204,8 +204,8 @@ stages:
       size: 3334106
     - path: src/modules/mosaiks_prediction/predict.py
       hash: md5
-      md5: 1bb2bd3448f56ba022fdd684d81860f6
-      size: 6502
+      md5: ed072db5ed85a60855d26749f2edf9cf
+      size: 6694
     outs:
     - path: outputs/mosaiks-prediction/ridge-observed-vs-predicted.png
       hash: md5
