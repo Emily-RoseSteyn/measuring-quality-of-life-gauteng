@@ -39,7 +39,7 @@ def main() -> None:
     #  - Check if W works?
     if SLURM_ENABLED:
         # If so, dispatch slurm script with wait
-        logger.info("Running with SLURM")
+        logger.info("Running with SLURM %s", os.getcwd())
         sbatch_script = Path("./src/modules/tiling/tile.sbatch")
         subprocess.call(f"cat {sbatch_script}")  # noqa: S603
     else:
