@@ -76,7 +76,7 @@ if __name__ == "__main__":
         # Do stuff here!
         # in this template an artificial cpu stress is run for 20 seconds
         cmd = "stress --cpu 1 --timeout 20"
-        subprocess.run(cmd)  # noqa: S603, PLW1510
+        subprocess.run(cmd.split())  # noqa: S603, PLW1510
     # End do stuff
 
     # Finished
