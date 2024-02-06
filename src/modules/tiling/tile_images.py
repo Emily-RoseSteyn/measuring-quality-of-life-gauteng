@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Generator
 
 from modules.tiling.tile_image import tile_image
-from utils.env_variable_keys import SLURM_ENABLED
+from utils.env_variables import SLURM_ENABLED
 from utils.logger import get_logger
 
 

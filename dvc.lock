@@ -14,12 +14,12 @@ stages:
     deps:
     - path: .env
       hash: md5
-      md5: f725b3afb99352453c44ecd3c8e0e767
-      size: 214
+      md5: 0993916b02e11024cbb257c0d830ff6e
+      size: 204
     - path: src/utils/load_env.py
       hash: md5
-      md5: b4dc5ce82721f49a252e9267a2e456d9
-      size: 272
+      md5: 0be0562e313405b4425f7c28d038285f
+      size: 222
   data_download:
     cmd: python src/modules/data_download/data_download.py
     deps:
@@ -41,8 +41,8 @@ stages:
       size: 8499821
     - path: src/modules/data_download/data_download.py
       hash: md5
-      md5: 09f316d70cc892222bffe26da4b7515d
-      size: 1743
+      md5: 150565aed27fe8a8fc212127d8060b00
+      size: 1592
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
     deps:

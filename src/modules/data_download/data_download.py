@@ -1,16 +1,9 @@
 import json
-import os
 from pathlib import Path
 
 import requests
-from dotenv import load_dotenv
-from utils.env_variable_keys import PLANET_API_KEY
+from utils.env_variables import PLANET_API_KEY, PLANET_API_URL_BASEMAPS
 from utils.logger import get_logger
-
-# Loading relevant env variables
-load_dotenv()
-API_KEY = os.environ.get(PLANET_API_KEY, "")
-API_URL = "https://api.planet.com/basemaps/v1/mosaics"
 
 
 def initialise_session() -> requests.Session:
@@ -18,12 +11,12 @@ def initialise_session() -> requests.Session:
     session = requests.Session()
 
     # Authenticate
-    session.auth = (API_KEY, "")
+    session.auth = (PLANET_API_KEY, "")
     return session
 
 
 def get_quad_url(mosaic_id: str, quad_id: str) -> str:
-    return f"{API_URL}/{mosaic_id}/quads/{quad_id}/full"
+    return f"{PLANET_API_URL_BASEMAPS}/{mosaic_id}/quads/{quad_id}/full"
 
 
 def main() -> None:
@@ -45,7 +38,7 @@ def main() -> None:
     parameters = {"name__is": mosaic_name}
 
     # Make get request to access mosaic from basemaps API
-    res = session.get(API_URL, params=parameters)
+    res = session.get(PLANET_API_URL_BASEMAPS, params=parameters)
     mosaic = res.json()
 
     # Get mosaic id from response

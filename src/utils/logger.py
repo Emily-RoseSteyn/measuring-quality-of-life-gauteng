@@ -1,14 +1,8 @@
 import logging
-import os
 
-from dotenv import load_dotenv
-
-from utils.env_variable_keys import LOGGING_LEVEL
-
-load_dotenv()
+from utils.env_variables import LOGGING_LEVEL
 
 
 def get_logger() -> logging.Logger:
-    logging_level = os.environ.get(LOGGING_LEVEL, logging.INFO)
-    logging.basicConfig(level=logging_level)
+    logging.basicConfig(level=LOGGING_LEVEL)
     return logging.getLogger("masters")
