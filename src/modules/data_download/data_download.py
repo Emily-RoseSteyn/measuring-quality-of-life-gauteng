@@ -3,9 +3,12 @@ import os
 from pathlib import Path
 
 import requests
+from dotenv import load_dotenv
 from utils.env_variable_keys import PLANET_API_KEY
 from utils.logger import get_logger
 
+# Loading relevant env variables
+load_dotenv()
 API_KEY = os.environ.get(PLANET_API_KEY, "")
 API_URL = "https://api.planet.com/basemaps/v1/mosaics"
 

@@ -55,6 +55,8 @@ Once added, when prompted,
 Google may ask you to confirm giving access to the DVC remote storage app to manage all Gdrive files.
 However, the scope of the app has been limited on GCP to only manage DVC's own created files.
 
+In cases where you cannot interactively authorise with Google (e.g. a compute engine, cluster node, etc), you will need a [credential file](https://dvc.org/doc/user-guide/data-management/remote-storage/google-drive#using-service-accounts) from GCP. Again, please contact [emilyrosesteyn@gmail.com](mailto:emilyrosesteyn@gmail.com).
+
 [//]: # (See OAuth Scopes in docs - https://dvc.org/doc/user-guide/data-management/remote-storage/google-drive#using-a-custom-google-cloud-project-recommended and scopes on api consent window in GCP)
 
 Alternatively, if you are forking this repository, follow the instructions on the DVC docs to [add a remote](https://dvc.org/doc/command-reference/remote/add).
@@ -83,6 +85,20 @@ Alternatively, if you are forking this repository, follow the instructions on th
 - **Reinstall poetry packages**
   - [Reinstalling poetry environment](https://stackoverflow.com/questions/70064449/how-to-force-reinstall-poetry-environment)
 - **No sudo but need different version of python?**
-  - If you don't have sudo access, poetry and python can be a bit weird. You can use [pyenv](https://github.com/pyenv/pyenv) for managing python environments without sudo access.
+  - If you don't have sudo access on a linux system, poetry and python can be a bit weird. You can use [pyenv](https://github.com/pyenv/pyenv) for managing python environments without sudo access.
+  - For example, on a system that has `python3.8`, one can run `pyenv install 3.11` to install a newer version of python without requiring sudo access.
+  - Keep in mind that poetry does not install python but rather references available versions of python and creates the right virtual environment with the right executable before installing packages.
 - **Poetry install hangs**
   - I ran into an issue where poetry hangs when installing on cluster without sudo access similar to [this one](https://github.com/python-poetry/poetry/issues/8623). The solution of `export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring` worked for me.
+- **Repeated warning: _The currently activated Python version 3.8.10 is not supported by the project_**
+  - If this warning keeps showing up, you might have a system python/poetry mismatch.
+  - I seemed to resolve this on a linux system, by ensuring the right python version is installed with pyenv and then setting poetry to use that version. E.g. for python 3.11:
+    - `pyenv install 3.11`
+    - In the project directory: `pyenv local 3.11`
+    - `poetry env use 3.11`
+- **_ImportError: No module named '\_sqlite3_**
+  - This is because of a missing underling sqlite package on a linux system. Python binds to the system sqlite package through `_sqlite3`.
+  - Get a `sudo` user to run: `sudo apt install libsqlite3-dev`
+  - NB! Reinstall python with pyenv: `pyenv install <VERSION>`.
+    - Say yes if prompted to install over an existing version.
+  - [Ref](https://github.com/pyenv/pyenv/issues/678#issuecomment-312159387)
