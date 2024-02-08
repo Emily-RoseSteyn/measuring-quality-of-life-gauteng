@@ -204,18 +204,30 @@ stages:
       size: 3334106
     - path: src/modules/mosaiks_prediction/predict.py
       hash: md5
-      md5: 060028720acae6d6630835aeb4d24542
-      size: 6087
+      md5: 582c7dab2e109c2858559a3ac276def6
+      size: 7531
     outs:
-    - path: outputs/mosaiks-prediction/observed-vs-predicted.png
+    - path: outputs/mosaiks-prediction/ols-observed-vs-predicted.png
       hash: md5
-      md5: 32c7814293a5b2574ceb1d16fd00e813
-      size: 623975
-    - path: outputs/mosaiks-prediction/observed.png
+      md5: 319e4fd1483b3ad1080ebbf74b130a23
+      size: 566932
+    - path: outputs/mosaiks-prediction/ols-observed.png
       hash: md5
       md5: c88d6d110195732a7211b5bc8366c4bf
       size: 1029397
-    - path: outputs/mosaiks-prediction/predicted.png
+    - path: outputs/mosaiks-prediction/ols-predicted.png
+      hash: md5
+      md5: 9ddd52abd08e95da52b9140b607b23df
+      size: 1266103
+    - path: outputs/mosaiks-prediction/ridge-observed-vs-predicted.png
+      hash: md5
+      md5: f852a1d62a5501762244bea2301f4bb9
+      size: 629812
+    - path: outputs/mosaiks-prediction/ridge-observed.png
+      hash: md5
+      md5: c88d6d110195732a7211b5bc8366c4bf
+      size: 1029397
+    - path: outputs/mosaiks-prediction/ridge-predicted.png
       hash: md5
       md5: 67c5220d5cc34ff06afb71c340288f8b
       size: 1307584

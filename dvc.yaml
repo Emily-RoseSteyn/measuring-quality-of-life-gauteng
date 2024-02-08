@@ -82,9 +82,12 @@ stages:
       - data/mosaiks-features/mosaiks_features.csv
       - outputs/grid/qol-labelled-grid.csv
     outs:
-      - outputs/mosaiks-prediction/observed-vs-predicted.png
-      - outputs/mosaiks-prediction/observed.png
-      - outputs/mosaiks-prediction/predicted.png
+      - outputs/mosaiks-prediction/ols-observed-vs-predicted.png
+      - outputs/mosaiks-prediction/ols-observed.png
+      - outputs/mosaiks-prediction/ols-predicted.png
+      - outputs/mosaiks-prediction/ridge-observed-vs-predicted.png
+      - outputs/mosaiks-prediction/ridge-observed.png
+      - outputs/mosaiks-prediction/ridge-predicted.png
 
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
