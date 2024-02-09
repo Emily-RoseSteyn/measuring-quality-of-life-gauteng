@@ -63,6 +63,13 @@ stages:
     - src/modules/tiling/tile_image.py
     - outputs/merged/gauteng-qol.geojson
 
+  tile_cluster_matching:
+    cmd: python src/modules/tile_cluster_matching/match_tiles.py
+    deps:
+    - src/modules/tile_cluster_matching/match_tiles.py
+    outs:
+      - outputs/tiles/gauteng-qol-cluster-tiles.csv
+
   generate_grid:
     cmd: python src/modules/grid_generation/generate_grid.py
     deps:
