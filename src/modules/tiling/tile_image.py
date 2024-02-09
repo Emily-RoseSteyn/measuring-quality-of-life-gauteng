@@ -82,9 +82,11 @@ def tile_image(file_path: str, output_dir: str, crop_size: int = 256) -> None:
 
     for i, row in enumerate(tiled_array):
         for j, tile in enumerate(row):
+            # Create name of tile from position in array
             basename = Path(os.path.basename(file_path))
             file_name = f"{basename.stem}_{i}{j}{basename.suffix}"
             output_file_path = Path.joinpath(Path(output_dir), file_name)
+            # Saving tile to geotiff
             save_image(tile, output_file_path, crs)
 
     logger.info("Output dir %s", output_dir)

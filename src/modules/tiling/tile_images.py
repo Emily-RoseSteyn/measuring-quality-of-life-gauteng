@@ -48,10 +48,6 @@ def main() -> None:
         logger.info("SLURM is not available")
         tile_without_slurm(images, results_dir)
 
-    # TODO: How to save corresponding qol data?
-    with open(f"{results_dir}/gauteng-qol-tile-map.csv", "w"):
-        logger.info("Doing nothing for now")
-
 
 if __name__ == "__main__":
     main()
