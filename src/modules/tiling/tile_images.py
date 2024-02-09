@@ -1,18 +1,11 @@
 import os
 import subprocess
 from pathlib import Path
-from typing import Generator
 
 from modules.tiling.tile_image import tile_image
 from utils.env_variables import SLURM_ENABLED
+from utils.file_utils import dir_nested_file_list
 from utils.logger import get_logger
-
-
-def absolute_file_paths(directory: str) -> Generator[str, None, None]:
-    for dirpath, _, filenames in os.walk(directory):
-        for f in filenames:
-            if f.endswith(".tiff"):
-                yield os.path.abspath(os.path.join(dirpath, f))
 
 
 def tile_without_slurm(file_list: list, output_directory: str) -> None:
@@ -31,7 +24,7 @@ def main() -> None:
 
     # Get images directory
     image_dir = "data/basemap-quads"
-    images = list(absolute_file_paths(image_dir))
+    images = list(dir_nested_file_list(image_dir, "tiff"))
 
     # TODO: Slurm flow changes
     #  - Enable slurm on cluster
