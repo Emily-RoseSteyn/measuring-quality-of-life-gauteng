@@ -15,13 +15,13 @@ def main() -> None:
     if not os.path.isdir(results_dir):
         os.makedirs(results_dir)
 
-    # Get images directory
+    # Get tiles
     tiles = list(dir_nested_file_list(results_dir, "tiff"))
 
+    # TODO: Parallelize me
     for tile in tiles:
         with rio.open(tile) as img_object:
             logger.debug(img_object.crs)
-        break
 
 
 if __name__ == "__main__":
