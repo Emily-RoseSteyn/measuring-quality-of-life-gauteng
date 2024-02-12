@@ -1,90 +1,61 @@
 import os
+from itertools import product
 from pathlib import Path
 from typing import Any
 
-import numpy as np
 import rasterio as rio
-from earthpy.spatial import crs_check
+from rasterio import windows
 from utils.logger import get_logger
 
 logger = get_logger()
 
 
-def read_image(file_name: str) -> Any:
-    """
-    Read image from file_name
-    Args: file_name: image file name
-    Returns: image array
-    """
-    try:
-        if not Path(file_name).is_file():
-            logger.error("Cannot open file! %s", file_name)
-            return np.array([])
-        with rio.open(file_name) as img_object:
-            img = img_object.read()
-            return img
-    except Exception:
-        logger.exception("Error in read_image: %s")
-        return np.array([])
+# TODO: Understand this more
+def get_tiles(image: Any, crop_size: int) -> Any:
+    # Assuming image is a square and tile is a square too
+    height, width = image.meta["height"], image.meta["width"]
+    # Using range, get columns and rows spaced by crop_size
+    cols = range(0, width, crop_size)
+    rows = range(0, height, crop_size)
+    # Get grid
+    grid = product(cols, rows)
+    big_window = windows.Window(col_off=0, row_off=0, width=width, height=height)
 
+    # For each col/row step in the grid
+    for col_off, row_off in grid:
+        # Get the window
+        window = windows.Window(
+            col_off=col_off, row_off=row_off, width=crop_size, height=crop_size
+        ).intersection(big_window)
+        # Apply the window to the original datasource to get the correct transform
+        transform = windows.transform(window, image.transform)
 
-def save_image(img_arr: np.ndarray, output_file_path: Path, crs: str) -> Path:
-    """
-    Save image to file_name
-    Args: img_arr: image array
-    Output: output_file_path: image file name
-    """
-    with rio.open(
-        output_file_path,
-        "w",
-        driver="GTiff",
-        count=img_arr.shape[0],
-        height=img_arr.shape[1],
-        width=img_arr.shape[2],
-        dtype=img_arr.dtype,
-        crs=crs,
-    ) as dest:
-        dest.write(img_arr)
-    return output_file_path
+        yield window, transform
 
 
 def tile_image(file_path: str, output_dir: str, crop_size: int = 256) -> None:
     logger.info("Tiling %s", file_path)
+    basename = Path(os.path.basename(file_path))
+    file_name = basename.stem
+    suffix = basename.suffix
 
-    # Get CRS
-    crs = crs_check(file_path)
+    with rio.open(file_path) as img_object:
+        metadata = img_object.meta.copy()
+        for window, transform in get_tiles(img_object, crop_size):
+            # Setting metadata
+            metadata["transform"] = transform
+            metadata["width"], metadata["height"] = window.width, window.height
 
-    # Read Image
-    image = read_image(file_path)
+            # Getting tile "number"
+            index_x = int(window.col_off / crop_size)
+            index_y = int(window.row_off / crop_size)
+            tile_number = f"{index_x}_{index_y}"
 
-    # Ensuring image is in "contiguous C ordered arrays with channels at the lowest dimension"
-    # This is important for the reshaping below
-    image = np.moveaxis(image, 0, 2)
-    img_height, img_width, channels = image.shape
+            # Setting file name
+            tile_file_name = f"{file_name}_{tile_number}{suffix}"
+            output_file_path = Path.joinpath(Path(output_dir), tile_file_name)
 
-    # Assuming image is a square
-    tile_height, tile_width = (crop_size, crop_size)
-
-    # Reshape image
-    # TODO: Understand this better
-    tiled_array = image.reshape(
-        img_height // tile_height,
-        tile_height,
-        img_width // tile_width,
-        tile_width,
-        channels,
-    )
-
-    # Making sure tiles are ordered by row tiles, column tiles, channels, row, height
-    # ie of shape 16 x 16 x 4 x 256 x256
-    tiled_array = tiled_array.swapaxes(1, 2)
-    tiled_array = np.moveaxis(tiled_array, 4, 2)
-
-    for i, row in enumerate(tiled_array):
-        for j, tile in enumerate(row):
-            basename = Path(os.path.basename(file_path))
-            file_name = f"{basename.stem}_{i}{j}{basename.suffix}"
-            output_file_path = Path.joinpath(Path(output_dir), file_name)
-            save_image(tile, output_file_path, crs)
-
-    logger.info("Output dir %s", output_dir)
+            # Writing file
+            with rio.open(output_file_path, "w", **metadata) as dest:
+                # Read the original image object windowed by the current tile window
+                dest.write(img_object.read(window=window))
