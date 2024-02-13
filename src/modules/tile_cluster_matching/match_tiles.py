@@ -1,27 +1,34 @@
 import os
 from pathlib import Path
 
-import rasterio as rio
-from utils.file_utils import dir_nested_file_list
+import geopandas as gpd
 from utils.logger import get_logger
 
 
+# NB: This is separate to tiles because we may want to match different clustered data with the same tiles
 def main() -> None:
     logger = get_logger()
     logger.info("Matching tiles to clusters")
 
     # Output & tiles directory
     results_dir = os.path.abspath(Path("./outputs/tiles"))
-    if not os.path.isdir(results_dir):
-        os.makedirs(results_dir)
 
-    # Get tiles
-    tiles = list(dir_nested_file_list(results_dir, "tiff"))
+    # Get tile transforms
+    tile_transforms = gpd.read_file(f"{results_dir}/tile-transforms.geojson")
 
-    # TODO: Parallelize me
-    for tile in tiles:
-        with rio.open(tile) as img_object:
-            logger.debug(img_object.crs)
+    # Load clustered data
+    qol_data = gpd.read_file("outputs/merged/gauteng-qol.geojson")
+
+    # Ensure same CRS
+    qol_data = qol_data.to_crs(tile_transforms.crs)
+
+    # TODO: Validate this
+    intersections = gpd.overlay(qol_data, tile_transforms, how="intersection")
+
+    # Save
+    intersections.to_file(
+        os.path.join(results_dir, "gauteng-qol-cluster-tiles.geojson"), driver="GeoJSON"
+    )
 
 
 if __name__ == "__main__":
