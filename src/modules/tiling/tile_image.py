@@ -3,14 +3,18 @@ from itertools import product
 from pathlib import Path
 from typing import Any
 
+import geopandas as gpd
 import rasterio as rio
 from rasterio import windows
+from shapely import box
 from utils.logger import get_logger
 
 logger = get_logger()
 
 
 # TODO: Understand this more
+# Based on this SO:
+# https://gis.stackexchange.com/questions/285499/how-to-split-multiband-image-into-image-tiles-using-rasterio
 def get_tiles(image: Any, crop_size: int) -> Any:
     # Assuming image is a square and tile is a square too
     height, width = image.meta["height"], image.meta["width"]
@@ -33,12 +37,15 @@ def get_tiles(image: Any, crop_size: int) -> Any:
         yield window, transform
 
 
-def tile_image(file_path: str, output_dir: str, crop_size: int = 256) -> None:
+def tile_image(
+    file_path: str, output_dir: str, crop_size: int = 256, thread: int = 0
+) -> None:
     logger.info("Tiling %s", file_path)
     basename = Path(os.path.basename(file_path))
     file_name = basename.stem
     suffix = basename.suffix
 
+    tile_transforms = []
     with rio.open(file_path) as img_object:
         metadata = img_object.meta.copy()
         for window, transform in get_tiles(img_object, crop_size):
@@ -56,6 +63,19 @@ def tile_image(file_path: str, output_dir: str, crop_size: int = 256) -> None:
             output_file_path = Path.joinpath(Path(output_dir), tile_file_name)
 
             # Writing file
+            img_read = img_object.read(window=window)
             with rio.open(output_file_path, "w", **metadata) as dest:
                 # Read the original image object windowed by the current tile window
-                dest.write(img_object.read(window=window))
+                dest.write(img_read)
+
+            # Appending tile transform to dataframe to store in geojson
+            geom = box(*windows.bounds(window, transform))
+            tile_transforms.append({"geometry": geom, "tile": tile_file_name})
+
+        # Storing in geojson to merge in parent
+        tile_transforms_df = gpd.GeoDataFrame(tile_transforms, crs=img_object.crs)
+        tile_transforms_df.to_file(
+            os.path.join(output_dir, f"tile-transforms_{thread}.geojson"),
+            driver="GeoJSON",
+            mode="w",
+        )

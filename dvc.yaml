@@ -63,7 +63,8 @@ stages:
     - src/modules/tiling/tile_image.py
     - src/modules/tiling/tile.sbatch
     - src/modules/tiling/tile_slurm.py
-    - outputs/merged/gauteng-qol.geojson
+    outs:
+      - outputs/tiles/tile-transforms.geojson
 
   tile_cluster_matching:
     cmd: python src/modules/tile_cluster_matching/match_tiles.py
