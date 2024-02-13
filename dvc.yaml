@@ -61,6 +61,8 @@ stages:
     deps:
     - src/modules/tiling/tile_images.py
     - src/modules/tiling/tile_image.py
+    - src/modules/tiling/tile.sbatch
+    - src/modules/tiling/tile_slurm.py
     - outputs/merged/gauteng-qol.geojson
 
   tile_cluster_matching:
