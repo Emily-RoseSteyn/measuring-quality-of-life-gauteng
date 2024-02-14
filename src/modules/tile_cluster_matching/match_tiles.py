@@ -14,6 +14,8 @@ def main() -> None:
     results_dir = os.path.abspath(Path("./outputs/tiles"))
 
     # Get tile transforms
+    # Something is wrong with how these transforms are loaded
+    # (Because the plot is wrong)
     tile_transforms = gpd.read_file(f"{results_dir}/tile-transforms.geojson")
 
     # Load clustered data
@@ -23,6 +25,8 @@ def main() -> None:
     qol_data = qol_data.to_crs(tile_transforms.crs)
 
     # TODO: Validate this
+    # Probably don't want intersection but rather contains?
+    # https://geopandas.org/en/stable/docs/reference/api/geopandas.GeoSeries.contains.html#geopandas.GeoSeries.contains
     intersections = gpd.overlay(qol_data, tile_transforms, how="intersection")
 
     # Save

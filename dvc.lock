@@ -268,8 +268,8 @@ stages:
       size: 1958451
     - path: src/modules/tile_cluster_matching/match_tiles.py
       hash: md5
-      md5: a564e287b412f96b3ae0d6285a940fff
-      size: 1241
+      md5: f934bbe2f326de19ec3044eff957c748
+      size: 1101
     outs:
     - path: outputs/tiles/gauteng-qol-cluster-tiles.geojson
       hash: md5
