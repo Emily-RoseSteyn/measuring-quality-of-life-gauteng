@@ -36,7 +36,7 @@ def tile_slurm(file_list: list, output_directory: str) -> None:
         )
 
         # Do stuff here!
-        tile_image(item, output_directory, index)
+        tile_image(item, output_directory, thread=index)
 
     # End do stuff
 
