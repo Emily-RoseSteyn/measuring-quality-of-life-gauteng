@@ -26,9 +26,9 @@ def tile_slurm(file_list: list, output_directory: str) -> None:
     MPI.COMM_WORLD.Barrier()
 
     # For each file
-    for item in file_list:
+    for index, item in enumerate(file_list):
         # If there are still files to process and processor is ready
-        if (item - 1) % size != rank:
+        if index % size != rank:
             continue
 
         logger.info(
