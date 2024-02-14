@@ -236,25 +236,25 @@ stages:
     deps:
     - path: src/modules/tiling/tile.sbatch
       hash: md5
-      md5: ec0a0ac8a020f5c74e40c54e3b84989f
-      size: 636
+      md5: 0163522daa35186ae30b95aa153f87d3
+      size: 289
     - path: src/modules/tiling/tile_image.py
       hash: md5
       md5: 51b66ea6e8d08d5cde4f5db37eb7ff37
       size: 3102
     - path: src/modules/tiling/tile_images.py
       hash: md5
-      md5: 94ae352dcb77ced2180c476b781e23e1
-      size: 2177
+      md5: aa81b8521a6e994d180004deb23067ac
+      size: 2088
     - path: src/modules/tiling/tile_slurm.py
       hash: md5
-      md5: 08bdc5e051b1116721b41ab692e4462b
-      size: 2336
+      md5: a547e2d634e3b470d6005c01fbb3b44d
+      size: 1444
     outs:
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
-      md5: ebd82ea12a6e053a7f529b7bbe877606
-      size: 1958451
+      md5: 61d481559bd86c6e1fdc9225a221bdac
+      size: 6243700
   tile_cluster_matching:
     cmd: python src/modules/tile_cluster_matching/match_tiles.py
     deps:
