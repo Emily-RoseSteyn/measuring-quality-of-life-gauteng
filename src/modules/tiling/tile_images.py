@@ -5,9 +5,9 @@ from pathlib import Path
 
 import geopandas as gpd
 import pandas as pd
+from modules.tiling.get_tile_list import get_tile_list
 from modules.tiling.tile_image import tile_image
 from utils.env_variables import SLURM_ENABLED
-from utils.file_utils import dir_nested_file_list
 from utils.logger import get_logger
 
 
@@ -45,10 +45,6 @@ def main() -> None:
     if not os.path.isdir(results_dir):
         os.makedirs(results_dir)
 
-    # Get images directory
-    image_dir = "data/basemap-quads"
-    images = list(dir_nested_file_list(image_dir, "tiff"))
-
     # TODO: Slurm flow changes
     #  - Enable slurm on cluster
     #  - Pass commands into script (images and results dir)
@@ -62,6 +58,7 @@ def main() -> None:
     else:
         # If not, tile individually sequentially
         logger.info("SLURM is not available")
+        images = get_tile_list()
         tile_without_slurm(images, results_dir)
 
     # When done, merge geojson data
