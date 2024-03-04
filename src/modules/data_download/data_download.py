@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import requests
+
 from utils.env_variables import PLANET_API_KEY, PLANET_API_URL_BASEMAPS
 from utils.logger import get_logger
 
