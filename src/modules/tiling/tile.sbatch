@@ -2,7 +2,7 @@
 #SBATCH --job-name=tiling_emily
 #SBATCH --output=logs/%x-%A_%a.out.log
 #SBATCH --error=logs/%x-%A_%a.err.log
-#SBATCH --cpus-per-task 1
+#SBATCH --cpus-per-task 2
 #SBATCH --ntasks=16
 
 # Python unbuffered for logs
