@@ -23,7 +23,7 @@ This repository makes use of [Poetry](https://python-poetry.org/) which is a pyt
 
 Once you have Poetry installed, you can run the following in the root directory to install all required dependencies:
 ```shell
-poetry install --no-root
+poetry install
 ```
 
 #### Pre-commit Hooks
