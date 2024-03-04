@@ -28,6 +28,11 @@ def tile_slurm(file_list: list, output_directory: str) -> None:
         num_workers = size - 1
         logger.info(f"Master starting with {num_workers:d} workers")
         closed_workers = 0
+
+        # Make sure rank 0 has gotten to this point before moving on
+        MPI.COMM_WORLD.Barrier()
+
+        # This is basically a poll for receiving comms
         while closed_workers < num_workers:
             source = status.Get_source()
             tag = status.Get_tag()
@@ -39,6 +44,8 @@ def tile_slurm(file_list: list, output_directory: str) -> None:
             if tag == MPI_TAGS.EXIT:
                 logger.info(f"Worker {source} exited.")
                 closed_workers += 1
+
+        logger.info("All workers finished")
 
         # When all workers done, merge geojson results
         merge_geojson(output_directory)
