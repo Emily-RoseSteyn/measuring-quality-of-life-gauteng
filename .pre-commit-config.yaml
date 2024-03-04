@@ -13,11 +13,6 @@ repos:
       - id: trailing-whitespace
   - repo: local
     hooks:
-      - id: black
-        name: black
-        entry: poetry run black
-        language: system
-        types: [ python ]
       - id: mypy
         name: mypy
         entry: poetry run mypy .
