@@ -43,8 +43,8 @@ def tile_slurm(file_list: list, output_directory: str) -> None:
             logger.info(f"Got data from worker {source}")
 
             if tag == MPI_TAGS.EXIT:
-                logger.info(f"Worker {source} exited.")
                 closed_workers += 1
+                logger.info(f"Worker {source} exited. Waiting for {num_workers - closed_workers} workers to finish.")
 
         logger.info("All workers finished")
 
