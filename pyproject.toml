@@ -89,6 +89,7 @@ ignore = [
     "FIX002",
     "G004", # Ignore f string in loggers
     "I001", # Let pycharm handle import ordering
+    "ERA001", # Allow commented out code
 ]
 line-length = 88
 target-version = "py37"

@@ -29,8 +29,9 @@ def tile_slurm(file_list: list, output_directory: str) -> None:
         logger.info(f"Master starting with {num_workers:d} workers")
         closed_workers = 0
 
+        # TODO: This doesn't work I don't think
         # Make sure rank 0 has gotten to this point before moving on
-        MPI.COMM_WORLD.Barrier()
+        # MPI.COMM_WORLD.Barrier()
 
         # This is basically a poll for receiving comms
         while closed_workers < num_workers:
