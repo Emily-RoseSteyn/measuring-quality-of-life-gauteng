@@ -26,23 +26,26 @@ def tile_slurm(file_list: list, output_directory: str) -> None:
     if rank == 0:
         logger.info(f"Master starting with {num_workers:d} workers")
         closed_workers = 0
-
-        # TODO: This doesn't work I don't think
-        # Make sure rank 0 has gotten to this point before moving on
-        # MPI.COMM_WORLD.Barrier()
+        task_index = 0
 
         # This is basically a poll for receiving comms
         while closed_workers < num_workers:
+            comm.recv(source=MPI.ANY_SOURCE, tag=MPI.ANY_TAG, status=status)
             source = status.Get_source()
             tag = status.Get_tag()
-
-            # Listen for comms from workers
-            comm.recv(source=MPI.ANY_SOURCE, tag=MPI.ANY_TAG, status=status)
-            logger.info(f"Got data from worker {source}")
-
-            if tag == MPI_TAGS.EXIT:
+            if tag == MPI_TAGS.READY:
+                # Worker is ready, so send it a task
+                if task_index < len(file_list):
+                    comm.send({"file": file_list[task_index], "index": task_index}, dest=source, tag=MPI_TAGS.START)
+                    logger.debug(f"Sending task {task_index} to worker {source}")
+                    task_index += 1
+                else:
+                    comm.send(None, dest=source, tag=MPI_TAGS.EXIT)
+            elif tag == MPI_TAGS.DONE:
+                logger.debug(f"Got data from worker {source}")
+            elif tag == MPI_TAGS.EXIT:
+                logger.info(f"Worker {source} exited.")
                 closed_workers += 1
-                logger.info(f"Worker {source} exited. Waiting for {num_workers - closed_workers} workers to finish.")
 
         logger.info("All workers finished")
 
@@ -57,23 +60,28 @@ def tile_slurm(file_list: list, output_directory: str) -> None:
     # If not rank 0, then worker node
     else:
         logger.info(f"Tiling with slurm - node {rank}")
-        # For each file
-        for index, item in enumerate(file_list):
-            # If there are still files to process and file is modulus of current rank (-1 to exclude master)
-            # (means that every node processing files independently)
-            if index % num_workers != (rank - 1):
-                continue
 
-            logger.info(
-                "Item %s being done by processor %d (%s) of %d", item, rank, name, size
-            )
+        # Worker processes execute code below
+        name = MPI.Get_processor_name()
+        while True:
+            comm.send(None, dest=0, tag=MPI_TAGS.READY)
+            task = comm.recv(source=0, tag=MPI.ANY_TAG, status=status)
+            tag = status.Get_tag()
 
-            # Do stuff here!
-            tile_image(item, output_directory, thread=index)
+            if tag == MPI_TAGS.START:
+                # Do the work here
+                item = task["file"]
+                index = task["index"]
+                logger.info(
+                    "Item %s being done by processor %d (%s) of %d", item, rank, name, size
+                )
+                tile_image(item, output_directory, thread=index)
+                comm.send(None, dest=0, tag=MPI_TAGS.DONE)
+            elif tag == MPI_TAGS.EXIT:
+                break
 
         # When node done with its file list, tell rank 0
         comm.send(None, dest=0, tag=MPI_TAGS.EXIT)
-        # End do stuff
 
         # Finished
         logger.info(
