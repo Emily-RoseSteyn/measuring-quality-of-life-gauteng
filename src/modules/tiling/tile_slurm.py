@@ -73,7 +73,7 @@ def tile_slurm(file_list: list, output_directory: str) -> None:
                 item = task["file"]
                 index = task["index"]
                 logger.info(
-                    "Item %s being done by processor %d (%s) of %d", item, rank, name, size
+                    "Item %s being done by processor %d (%s) of %d", item, rank, name, num_workers
                 )
                 tile_image(item, output_directory, thread=index)
                 comm.send(None, dest=0, tag=MPI_TAGS.DONE)
