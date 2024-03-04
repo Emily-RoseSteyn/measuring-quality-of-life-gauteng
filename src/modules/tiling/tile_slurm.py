@@ -14,18 +14,16 @@ logger = get_logger()
 
 
 def tile_slurm(file_list: list, output_directory: str) -> None:
-    logger.info("Tiling with slurm")
-
     start_time = time.time()
     comm = MPI.COMM_WORLD  # get MPI communicator object
     rank = comm.Get_rank()
     size = comm.Get_size()
+    num_workers = size - 1
     name = MPI.Get_processor_name()
     status = MPI.Status()  # get MPI status object
 
     # If rank 0, listen for all workers to be done
     if rank == 0:
-        num_workers = size - 1
         logger.info(f"Master starting with {num_workers:d} workers")
         closed_workers = 0
 
@@ -58,11 +56,12 @@ def tile_slurm(file_list: list, output_directory: str) -> None:
 
     # If not rank 0, then worker node
     else:
+        logger.info(f"Tiling with slurm - node {rank}")
         # For each file
         for index, item in enumerate(file_list):
-            # If there are still files to process and file is modulus of current rank
+            # If there are still files to process and file is modulus of current rank (-1 to exclude master)
             # (means that every node processing files independently)
-            if index % size != rank:
+            if index % num_workers != (rank - 1):
                 continue
 
             logger.info(
@@ -79,7 +78,7 @@ def tile_slurm(file_list: list, output_directory: str) -> None:
         # Finished
         logger.info(
             "Node %s time spent in minutes: %s",
-            ((rank - 1) % size),
+            rank,
             int(time.time() - start_time) / 60,
         )
 
