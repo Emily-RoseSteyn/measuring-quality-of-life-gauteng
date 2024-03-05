@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import requests
+from tqdm import tqdm
 
 from utils.env_variables import PLANET_API_KEY, PLANET_API_URL_BASEMAPS
 from utils.logger import get_logger
@@ -45,7 +46,7 @@ def main() -> None:
     # Get mosaic id from response
     mosaic_id = mosaic["mosaics"][0]["id"]
 
-    for quad_id in quad_ids:
+    for quad_id in tqdm(quad_ids):
         link = get_quad_url(mosaic_id, quad_id)
         file_path = f"data/basemap-quads/{year}/{quad_id}.tiff"
 

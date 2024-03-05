@@ -7,6 +7,7 @@ import geopandas as gpd
 import rasterio as rio
 from rasterio import windows
 from shapely import box
+
 from utils.logger import get_logger
 
 logger = get_logger()
@@ -38,7 +39,7 @@ def get_tiles(image: Any, crop_size: int) -> Any:
 
 
 def tile_image(
-    file_path: str, output_dir: str, crop_size: int = 256, thread: int = 0
+        file_path: str, output_dir: str, crop_size: int = 256, thread: int = 0
 ) -> None:
     logger.info("Tiling %s", file_path)
     basename = Path(os.path.basename(file_path))
