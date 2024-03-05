@@ -55,8 +55,8 @@ def tile_image(
             metadata["width"], metadata["height"] = window.width, window.height
 
             # Getting tile "number"
-            index_x = int(window.col_off / crop_size)
-            index_y = int(window.row_off / crop_size)
+            index_x = str(int(window.col_off / crop_size)).zfill(2)
+            index_y = str(int(window.row_off / crop_size)).zfill(2)
             tile_number = f"{index_x}_{index_y}"
 
             # Setting file name
@@ -69,9 +69,11 @@ def tile_image(
                 # Read the original image object windowed by the current tile window
                 dest.write(img_read)
 
-            # Appending tile transform to dataframe to store in geojson
-            geom = box(*windows.bounds(window, transform))
-            tile_transforms.append({"geometry": geom, "tile": tile_file_name})
+                # Appending bounds of tile to dataframe to store in geojson
+                bounds = dest.bounds
+                geom = box(*bounds)
+                # geom = box(*windows.bounds(window, transform))
+                tile_transforms.append({"geometry": geom, "tile": tile_file_name})
 
         # Storing in geojson to merge in parent
         tile_transforms_df = gpd.GeoDataFrame(tile_transforms, crs=img_object.crs)
