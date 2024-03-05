@@ -264,14 +264,18 @@ stages:
       size: 5389380
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
-      md5: ebd82ea12a6e053a7f529b7bbe877606
-      size: 1958451
+      md5: 8c07b0a7e2b2972f2c2501d57aabb57f
+      size: 9407715
     - path: src/modules/tile_cluster_matching/match_tiles.py
       hash: md5
-      md5: f934bbe2f326de19ec3044eff957c748
-      size: 1101
+      md5: b8c62fcb0cb1aa61ce629974d0f6f5d0
+      size: 1290
     outs:
-    - path: outputs/tiles/gauteng-qol-cluster-tiles.geojson
+    - path: outputs/matched/gauteng-qol-cluster-tiles.geojson
       hash: md5
-      md5: 89c238680385a509d3f1f7d39b854105
-      size: 3223088
+      md5: c3fa72f8c0c828dd730a8397a02bb11c
+      size: 15608084
+    - path: outputs/matched/gauteng-qol-cluster-tiles.png
+      hash: md5
+      md5: 386ff0136e6cad95f8b9ef3a576e02ab
+      size: 29578
