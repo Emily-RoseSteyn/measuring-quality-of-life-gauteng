@@ -109,5 +109,8 @@ We can now use [Planet's basemap viewer](https://www.planet.com/basemaps) to do 
 }
 ```
 
+**NB!** Planet paginates its basemap quad id. Ensure you "Load More" until there are no more quads to load. There should
+be ~91 quads for Gauteng.
+
 In the future, the step for searching and selecting basemap quads will potentially be automated using Planet's API so
 that one does not have to get the ids from the web interface.
