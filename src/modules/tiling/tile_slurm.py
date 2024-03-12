@@ -1,4 +1,5 @@
 import os
+import shutil
 import time
 from pathlib import Path
 
@@ -13,7 +14,7 @@ from utils.logger import get_logger
 logger = get_logger()
 
 
-def root_process(comm, num_workers, status):
+def root_process(comm, num_workers, status, results_dir):
     logger.info(f"Master starting with {num_workers:d} workers")
     file_list = get_tile_list()
     closed_workers = 0
@@ -38,11 +39,17 @@ def root_process(comm, num_workers, status):
             closed_workers += 1
     logger.info("All workers finished")
     # When all workers done, merge geojson results
-    results_dir = os.path.abspath(Path("./outputs/tiles"))
     merge_geojson(results_dir)
 
 
-def worker_process(comm, num_workers, rank, status):
+def cleanup_worker(source_dir: str, target_dir: str) -> None:
+    file_names = os.listdir(source_dir)
+
+    for file_name in file_names:
+        shutil.move(os.path.join(source_dir, file_name), target_dir)
+
+
+def worker_process(comm, num_workers, rank, status, results_dir):
     logger.info(f"Tiling with slurm - node {rank}")
 
     # Setup output dir
@@ -70,6 +77,7 @@ def worker_process(comm, num_workers, rank, status):
             break
 
     # When done processing files copy output to results and remove temp dir
+    cleanup_worker(output_dir, results_dir)
 
     # When node done with its file list, tell rank 0
     comm.send(None, dest=0, tag=MPI_TAGS.EXIT)
@@ -84,13 +92,14 @@ def main() -> None:
     MPI.Get_processor_name()
     status = MPI.Status()  # get MPI status object
 
+    results_dir = os.path.abspath(Path("./outputs/tiles"))
     # If rank 0, listen for all workers to be done
     if rank == 0:
-        root_process(comm, num_workers, status)
+        root_process(comm, num_workers, status, results_dir)
 
     # If not rank 0, then worker node
     else:
-        worker_process(comm, num_workers, rank, status)
+        worker_process(comm, num_workers, rank, status, results_dir)
 
     # Finished
     logger.info(
