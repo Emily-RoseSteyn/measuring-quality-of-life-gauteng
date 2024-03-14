@@ -1,5 +1,4 @@
 import os
-import shutil
 import time
 from pathlib import Path
 
@@ -42,14 +41,7 @@ def root_process(comm, num_workers, status, results_dir):
     merge_geojson(results_dir)
 
 
-def cleanup_worker(source_dir: str, target_dir: str) -> None:
-    file_names = os.listdir(source_dir)
-
-    for file_name in file_names:
-        shutil.move(os.path.join(source_dir, file_name), target_dir)
-
-
-def worker_process(comm, num_workers, rank, status, results_dir):
+def worker_process(comm, num_workers, rank, status):
     logger.info(f"Tiling with slurm - node {rank}")
 
     # Setup output dir
@@ -76,9 +68,6 @@ def worker_process(comm, num_workers, rank, status, results_dir):
         elif tag == MPI_TAGS.EXIT:
             break
 
-    # When done processing files copy output to results and remove temp dir
-    cleanup_worker(output_dir, results_dir)
-
     # When node done with its file list, tell rank 0
     comm.send(None, dest=0, tag=MPI_TAGS.EXIT)
 
@@ -99,7 +88,7 @@ def main() -> None:
 
     # If not rank 0, then worker node
     else:
-        worker_process(comm, num_workers, rank, status, results_dir)
+        worker_process(comm, num_workers, rank, status)
 
     # Finished
     logger.info(

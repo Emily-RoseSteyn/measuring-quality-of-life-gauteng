@@ -15,13 +15,13 @@ source .env
 dir=$SCRATCH
 
 # Create temp directory required for all nodes
-exec srun mkdir -p $dir
+srun mkdir -p $dir
 wait
 
 # Assuming relative to root project directory
-exec srun --unbuffered --mpi=pmi2 python ./src/modules/tiling/tile_slurm.py
+srun --unbuffered --mpi=pmi2 python ./src/modules/tiling/tile_slurm.py
 wait
 
-# Remove temp directory required for all nodes
-exec srun rm -rf $dir
-wait
+# Move outputs from temp dir to outputs in working dir
+mv $dir/* ./output/tiles
+srun rm -rf $dir
