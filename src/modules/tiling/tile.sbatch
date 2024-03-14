@@ -16,9 +16,12 @@ dir=$SCRATCH
 
 # Create temp directory required for all nodes
 exec srun mkdir -p $dir
+wait
 
 # Assuming relative to root project directory
 exec srun --unbuffered --mpi=pmi2 python ./src/modules/tiling/tile_slurm.py
+wait
 
 # Remove temp directory required for all nodes
 exec srun rm -rf $dir
+wait
