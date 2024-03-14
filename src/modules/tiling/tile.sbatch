@@ -8,5 +8,14 @@
 # Python unbuffered for logs
 export PYTHONUNBUFFERED=TRUE
 
+# Load .env file
+source .env
+
+# Access the variable
+dir=$SCRATCH
+
+# Create temp directory required for all nodes
+exec srun mkdir -p $dir
+
 # Assuming relative to root project directory
 exec srun --unbuffered --mpi=pmi2 python ./src/modules/tiling/tile_slurm.py
