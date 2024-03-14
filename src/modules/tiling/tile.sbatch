@@ -19,3 +19,6 @@ exec srun mkdir -p $dir
 
 # Assuming relative to root project directory
 exec srun --unbuffered --mpi=pmi2 python ./src/modules/tiling/tile_slurm.py
+
+# Remove temp directory required for all nodes
+exec srun rm -rf $dir
