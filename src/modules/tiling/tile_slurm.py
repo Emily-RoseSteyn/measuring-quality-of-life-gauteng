@@ -5,7 +5,6 @@ from pathlib import Path
 from mpi4py import MPI
 
 from modules.tiling.get_tile_list import get_tile_list
-from modules.tiling.merge_geojson import merge_geojson
 from modules.tiling.tile_image import tile_image
 from utils.env_variables import MPI_TAGS, TEMP_WRITE_DIR
 from utils.logger import get_logger
@@ -13,7 +12,7 @@ from utils.logger import get_logger
 logger = get_logger()
 
 
-def root_process(comm, num_workers, status, results_dir):
+def root_process(comm, num_workers, status):
     logger.info(f"Master starting with {num_workers:d} workers")
     file_list = get_tile_list()
     closed_workers = 0
@@ -37,8 +36,6 @@ def root_process(comm, num_workers, status, results_dir):
             logger.info(f"Worker {source} exited.")
             closed_workers += 1
     logger.info("All workers finished")
-    # When all workers done, merge geojson results
-    merge_geojson(results_dir)
 
 
 def worker_process(comm, num_workers, rank, status):
@@ -81,10 +78,9 @@ def main() -> None:
     MPI.Get_processor_name()
     status = MPI.Status()  # get MPI status object
 
-    results_dir = os.path.abspath(Path("./outputs/tiles"))
     # If rank 0, listen for all workers to be done
     if rank == 0:
-        root_process(comm, num_workers, status, results_dir)
+        root_process(comm, num_workers, status)
 
     # If not rank 0, then worker node
     else:

@@ -1,3 +1,4 @@
+import argparse
 import glob
 import os
 
@@ -23,3 +24,13 @@ def merge_geojson(results_dir: str) -> None:
         driver="GeoJSON",
         mode="w",
     )
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    results_dir_key = "results_dir"
+    parser.add_argument(f"{results_dir_key}", help="The results directory to merge geojson")
+    args = vars(parser.parse_args())
+    results_dir = args[results_dir_key]
+
+    merge_geojson(results_dir)
