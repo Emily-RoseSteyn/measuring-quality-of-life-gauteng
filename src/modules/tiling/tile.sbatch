@@ -23,7 +23,8 @@ srun --unbuffered --mpi=pmi2 python src/modules/tiling/tile_slurm.py
 wait
 
 # Move outputs from temp dir to outputs in working dir
-$results_dir=output/tiles
+$results_dir="${PWD}/output/tiles"
+echo $results_dir
 exec mv $dir/* $results_dir
 
 # When all workers done and outputs have been merged, merge geojson results
