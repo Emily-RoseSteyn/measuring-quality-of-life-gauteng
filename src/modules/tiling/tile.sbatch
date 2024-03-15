@@ -30,6 +30,8 @@ echo "Completed tiling"
 # Move outputs from temp dir to outputs in working dir
 # TODO: directory should be in env
 results_dir="${PWD}/outputs/tiles"
+
+# TODO - sgather not working as expected. Rather use rsync??
 sgather -r "$dir" "$results_dir"
 wait
 echo "Moved tiles from nodes to output folder"
