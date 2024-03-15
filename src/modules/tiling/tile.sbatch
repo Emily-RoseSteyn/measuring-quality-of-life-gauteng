@@ -5,6 +5,8 @@
 #SBATCH --ntasks=20
 #SBATCH --cpus-per-task=1
 
+echo "Starting tiling with SBATCH"
+
 # Python unbuffered for logs
 export PYTHONUNBUFFERED=TRUE
 
@@ -15,21 +17,26 @@ source .env
 dir=$SCRATCH
 
 # Create temp directory required for all nodes
-srun mkdir -p $dir
+srun mkdir -p "$dir"
 wait
+echo "Made temp directories on nodes"
 
 # Assuming relative to root project directory
 srun --unbuffered --mpi=pmi2 python src/modules/tiling/tile_slurm.py
 wait
 
+echo "Completed tiling"
+
 # Move outputs from temp dir to outputs in working dir
 # TODO: directory should be in env
 results_dir="${PWD}/outputs/tiles"
-exec mv $dir/* $results_dir
+srun mv "$dir"/* "$results_dir"
 wait
+echo "Moved tiles from nodes to output folder"
 
-# When all workers done and outputs have been merged, merge geojson results
-exec python src/modules/tiling/merge_geojson $results_dir
-wait
+# When all workers done and outputs have been merged, merge geojson results only on the one node
+python src/modules/tiling/merge_geojson "$results_dir"
+echo "Merged geojson files in output folder"
 
-srun rm -rf $dir
+srun rm -rf "$dir"
+echo "Done"
