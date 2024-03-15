@@ -30,7 +30,7 @@ echo "Completed tiling"
 # Move outputs from temp dir to outputs in working dir
 # TODO: directory should be in env
 results_dir="${PWD}/outputs/tiles"
-srun mv "$dir"/* "$results_dir"
+sgather -r "$dir" "$results_dir"
 wait
 echo "Moved tiles from nodes to output folder"
 
