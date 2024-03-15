@@ -26,8 +26,10 @@ wait
 # TODO: directory should be in env
 results_dir="${PWD}/outputs/tiles"
 exec mv $dir/* $results_dir
+wait
 
 # When all workers done and outputs have been merged, merge geojson results
 exec python src/modules/tiling/merge_geojson $results_dir
+wait
 
 srun rm -rf $dir
