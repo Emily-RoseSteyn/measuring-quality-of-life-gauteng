@@ -29,7 +29,7 @@ echo "Completed tiling"
 
 # Move outputs from temp dir to outputs in working dir
 # TODO: directory should be in env
-results_dir="${PWD}/outputs/tiles"
+results_dir="${SLURM_SUBMIT_DIR}/outputs/tiles"
 
 # TODO - sgather not working as expected. Rather use rsync??
 sgather -r "$dir" "$results_dir"
