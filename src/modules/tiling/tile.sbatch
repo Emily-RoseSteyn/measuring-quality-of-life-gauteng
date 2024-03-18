@@ -27,13 +27,20 @@ wait
 
 echo "Completed tiling"
 
+# Compress output directory
+compressed_dir="$dir".tar.gz
+srun tar -zcvf "$compressed_dir" "$dir"
+wait
+
+echo "Compressed tiled directories"
+
 # Move outputs from temp dir to outputs in working dir
 # TODO: directory should be in env
-results_dir="${SLURM_SUBMIT_DIR}/outputs/tiles"
+results_dir="${SLURM_SUBMIT_DIR}/outputs/tiles/result"
 
 # Gather from nodes (under the hood uses scp)
-# Move is to outputs/tiles.<NODE_NAME>
-sgather -r -v -C "$dir" "$results_dir"
+# Move is to outputs/tiles/result.<NODE_NAME>
+sgather -vC "$compressed_dir" "$results_dir"
 wait
 echo "Moved tiles from nodes to output folder"
 
