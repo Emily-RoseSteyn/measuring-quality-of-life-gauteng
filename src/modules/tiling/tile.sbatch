@@ -31,7 +31,7 @@ echo "Completed tiling"
 # Alternatively could do rsync but leaving as is for now
 number_nodes=$SLURM_JOB_NUM_NODES
 compressed_dir="$dir".tar.gz
-srun --ntasks="$number_nodes" --ntasks-per-node=1 tar -zcf "$compressed_dir" "$dir"
+srun --ntasks="$number_nodes" --ntasks-per-node=1 tar -zcf "$compressed_dir" -C "$dir"
 wait
 echo "Compressed tiled directories"
 
@@ -49,13 +49,4 @@ echo "Moved tiles from nodes to output folder"
 srun --ntasks="$number_nodes" --ntasks-per-node=1 rm -rf "$dir"
 wait
 echo "Removed temp directory on nodes"
-
-# Decompress results files
-for file in "$results_dir"/result.*; do tar xzvf "${file}" && rm "${file}"; done
-echo "Uncompressed all files in output folder"
-
-# When all workers done and outputs have been merged, merge geojson results only on the one node
-python src/modules/tiling/merge_geojson "$results_dir"
-echo "Merged geojson files in output folder"
-
-echo "Done"
+echo "Done. Please run src/modules/tiling/process_slurm_results.sh"
