@@ -7,5 +7,5 @@ for file in "$results_dir"/result.*; do tar -xzf "${file}" -C "$results_dir" && 
 echo "Uncompressed all files in output folder"
 
 # When all workers done and outputs have been merged, merge geojson results only on the one node
-python src/modules/tiling/merge_geojson "$results_dir"
+python src/modules/tiling/merge_geojson.py "$results_dir"
 echo "Merged geojson files in output folder"
