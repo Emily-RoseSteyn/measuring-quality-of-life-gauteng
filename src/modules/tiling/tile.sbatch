@@ -27,6 +27,8 @@ wait
 echo "Completed tiling"
 
 # Compress output directory but only run once on each node
+# I do this compression because moving many small files with sgather is slow (because it uses scp under the hood)
+# Alternatively could do rsync but leaving as is for now
 number_nodes=$SLURM_JOB_NUM_NODES
 compressed_dir="$dir".tar.gz
 srun --ntasks="$number_nodes" --ntasks-per-node=1 tar -zcf "$compressed_dir" "$dir"
@@ -35,19 +37,25 @@ echo "Compressed tiled directories"
 
 # Move outputs from temp dir to outputs in working dir
 # TODO: directory should be in env
-results_dir="${SLURM_SUBMIT_DIR}/outputs/tiles/result"
+results_dir="${SLURM_SUBMIT_DIR}/outputs/tiles"
 
 # Gather from nodes (under the hood uses scp)
 # Move is to outputs/tiles/result.<NODE_NAME>
-sgather -vC "$compressed_dir" "$results_dir"
+sgather -vC "$compressed_dir" "$results_dir/result"
 wait
 echo "Moved tiles from nodes to output folder"
 
-# Merge tiles folders
+# Remove temp directory on nodes
+srun --ntasks="$number_nodes" --ntasks-per-node=1 rm -rf "$dir"
+wait
+echo "Removed temp directory on nodes"
+
+# Decompress results files
+for file in $results_dir; do tar xzvf "${file}" && rm "${file}"; done
+echo "Uncompressed all files in output folder"
 
 # When all workers done and outputs have been merged, merge geojson results only on the one node
-#python src/modules/tiling/merge_geojson "$results_dir"
-#echo "Merged geojson files in output folder"
+python src/modules/tiling/merge_geojson "$results_dir"
+echo "Merged geojson files in output folder"
 
-srun rm -rf "$dir"
 echo "Done"
