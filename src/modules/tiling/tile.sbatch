@@ -29,7 +29,7 @@ echo "Completed tiling"
 
 # Compress output directory
 compressed_dir="$dir".tar.gz
-srun tar -zcvf "$compressed_dir" "$dir"
+srun tar -zcf "$compressed_dir" "$dir"
 wait
 
 echo "Compressed tiled directories"
