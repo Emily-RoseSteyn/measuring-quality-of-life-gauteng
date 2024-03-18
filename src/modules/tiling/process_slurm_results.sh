@@ -1,3 +1,4 @@
+#!/bin/bash
 # Run from root dir of project
 results_dir="${PWD}/outputs/tiles"
 
