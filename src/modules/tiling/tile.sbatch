@@ -33,7 +33,7 @@ results_dir="${SLURM_SUBMIT_DIR}/outputs/tiles"
 
 # Gather from nodes (under the hood uses scp)
 # Move is to outputs/tiles.<NODE_NAME>
-sgather -r -v -c "$dir" "$results_dir"
+sgather -r -v -C "$dir" "$results_dir"
 wait
 echo "Moved tiles from nodes to output folder"
 
