@@ -18,3 +18,5 @@ LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", logging.INFO)
 SLURM_ENABLED = os.getenv("SLURM_ENABLED", None)
 
 MPI_TAGS = enum("READY", "DONE", "EXIT", "START")
+
+TEMP_WRITE_DIR = os.getenv("SCRATCH", "temp")
