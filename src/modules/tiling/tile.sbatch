@@ -31,14 +31,17 @@ echo "Completed tiling"
 # TODO: directory should be in env
 results_dir="${SLURM_SUBMIT_DIR}/outputs/tiles"
 
-# TODO - sgather not working as expected. Rather use rsync??
-sgather -r "$dir" "$results_dir"
+# Gather from nodes (under the hood uses scp)
+# Move is to outputs/tiles.<NODE_NAME>
+sgather -r -v -c "$dir" "$results_dir"
 wait
 echo "Moved tiles from nodes to output folder"
 
+# Merge tiles folders
+
 # When all workers done and outputs have been merged, merge geojson results only on the one node
-python src/modules/tiling/merge_geojson "$results_dir"
-echo "Merged geojson files in output folder"
+#python src/modules/tiling/merge_geojson "$results_dir"
+#echo "Merged geojson files in output folder"
 
 srun rm -rf "$dir"
 echo "Done"
