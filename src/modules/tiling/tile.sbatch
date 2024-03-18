@@ -31,7 +31,7 @@ echo "Completed tiling"
 # Alternatively could do rsync but leaving as is for now
 number_nodes=$SLURM_JOB_NUM_NODES
 compressed_dir="$dir".tar.gz
-srun --ntasks="$number_nodes" --ntasks-per-node=1 tar -zcf "$compressed_dir" -C "$dir"
+srun --ntasks="$number_nodes" --ntasks-per-node=1 tar -zcf "$compressed_dir" -C "$dir" .
 wait
 echo "Compressed tiled directories"
 
