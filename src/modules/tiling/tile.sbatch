@@ -13,7 +13,7 @@ export PYTHONUNBUFFERED=TRUE
 # Load .env file
 source .env
 
-# Access the variable
+# Set output dir variable
 dir=$SCRATCH
 
 # Create temp directory required for all nodes
@@ -24,14 +24,13 @@ echo "Made temp directories on nodes"
 # Assuming relative to root project directory
 srun --unbuffered --mpi=pmi2 python src/modules/tiling/tile_slurm.py
 wait
-
 echo "Completed tiling"
 
-# Compress output directory
+# Compress output directory but only run once on each node
+number_nodes=$SLURM_JOB_NUM_NODES
 compressed_dir="$dir".tar.gz
-srun tar -zcf "$compressed_dir" "$dir"
+srun --ntasks="$number_nodes" --ntasks-per-node=1 tar -zcf "$compressed_dir" "$dir"
 wait
-
 echo "Compressed tiled directories"
 
 # Move outputs from temp dir to outputs in working dir
