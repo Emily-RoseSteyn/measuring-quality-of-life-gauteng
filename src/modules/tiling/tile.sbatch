@@ -51,7 +51,7 @@ wait
 echo "Removed temp directory on nodes"
 
 # Decompress results files
-for file in $results_dir; do tar xzvf "${file}" && rm "${file}"; done
+for file in "$results_dir"/result.*; do tar xzvf "${file}" && rm "${file}"; done
 echo "Uncompressed all files in output folder"
 
 # When all workers done and outputs have been merged, merge geojson results only on the one node
