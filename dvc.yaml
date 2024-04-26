@@ -23,6 +23,7 @@ stages:
       - outputs/processed-shapefile/gauteng-boundary.png
       - outputs/processed-shapefile/gauteng-boundary-unprocessed.png
       - outputs/processed-shapefile/gauteng-wards.png
+      - outputs/processed-shapefile/za-wards.png
 
   gcro_processing:
     cmd: python src/modules/gcro_processing/gcro_process.py

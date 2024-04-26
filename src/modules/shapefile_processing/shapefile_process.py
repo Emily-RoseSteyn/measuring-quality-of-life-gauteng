@@ -2,6 +2,7 @@ import os
 
 import geopandas as gpd
 import matplotlib.pyplot as plt
+
 from utils.logger import get_logger
 
 
@@ -23,6 +24,10 @@ def main() -> None:
 
     if not os.path.isdir(results_dir):
         os.makedirs(results_dir)
+
+    # Save image of all ards in SA
+    shapefile.plot()
+    plt.savefig(os.path.join(results_dir, "za-wards.png"))
 
     # Save intermediate shapefile - all wards in Gauteng
     gauteng_wards = shapefile[shapefile.Province == "Gauteng"]
