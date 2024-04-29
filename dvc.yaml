@@ -77,45 +77,37 @@ stages:
       - outputs/matched/gauteng-qol-cluster-tiles.geojson
       - outputs/matched/gauteng-qol-cluster-tiles.png
 
-  generate_grid:
-    cmd: python src/modules/grid_generation/generate_grid.py
-    deps:
-      - src/modules/grid_generation/generate_grid.py
-      - outputs/merged/gauteng-qol.geojson
-    outs:
-      - outputs/grid/grid-overlay.png
-      - outputs/grid/grid-gauteng-qol.png
-      - outputs/grid/qol-labelled-grid.csv
-
-  mosaiks_prediction:
-    cmd: python src/modules/mosaiks_prediction/predict.py
-    deps:
-      - src/modules/mosaiks_prediction/predict.py
-      - data/mosaiks-features/mosaiks_features.csv
-      - outputs/grid/qol-labelled-grid.csv
-    outs:
-      - outputs/mosaiks-prediction/ols-observed-vs-predicted.png
-      - outputs/mosaiks-prediction/ols-observed.png
-      - outputs/mosaiks-prediction/ols-predicted.png
-      - outputs/mosaiks-prediction/ridge-observed-vs-predicted.png
-      - outputs/mosaiks-prediction/ridge-observed.png
-      - outputs/mosaiks-prediction/ridge-predicted.png
-
-  preprocess:
-    cmd: python src/modules/preprocessing/preprocess.py
-    deps:
-      - src/modules/preprocessing/preprocess.py
-  #    - data/input
+  #  generate_grid:
+  #    cmd: python src/modules/grid_generation/generate_grid.py
+  #    deps:
+  #      - src/modules/grid_generation/generate_grid.py
+  #      - outputs/merged/gauteng-qol.geojson
   #    outs:
-  #    - data/intermediate
+  #      - outputs/grid/grid-overlay.png
+  #      - outputs/grid/grid-gauteng-qol.png
+  #      - outputs/grid/qol-labelled-grid.csv
+  #
+  #  mosaiks_prediction:
+  #    cmd: python src/modules/mosaiks_prediction/predict.py
+  #    deps:
+  #      - src/modules/mosaiks_prediction/predict.py
+  #      - data/mosaiks-features/mosaiks_features.csv
+  #      - outputs/grid/qol-labelled-grid.csv
+  #    outs:
+  #      - outputs/mosaiks-prediction/ols-observed-vs-predicted.png
+  #      - outputs/mosaiks-prediction/ols-observed.png
+  #      - outputs/mosaiks-prediction/ols-predicted.png
+  #      - outputs/mosaiks-prediction/ridge-observed-vs-predicted.png
+  #      - outputs/mosaiks-prediction/ridge-observed.png
+  #      - outputs/mosaiks-prediction/ridge-predicted.png
 
   train:
     cmd: python src/modules/training/train.py
     deps:
       - src/modules/training/train.py
-  #    - data/intermediate
-  #    outs:
-  #    - outputs/model.pkl
+      - outputs/matched/gauteng-qol-cluster-tiles.geojson
+    outs:
+      - outputs/model.pkl
 
   evaluate:
     cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
