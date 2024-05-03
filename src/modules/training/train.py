@@ -1,42 +1,62 @@
 import random
 
 import geopandas as gpd
+import pandas as pd
 import tensorflow as tf
-from keras.callbacks import ModelCheckpoint
 from keras.layers import GlobalAveragePooling2D, Dropout, Dense
-from keras_preprocessing.image import ImageDataGenerator
+from sklearn.model_selection import train_test_split
 from tensorflow.keras import Input, Model
 from tensorflow.keras.applications import ResNet50V2
-from tensorflow.keras.losses import MeanSquaredError
-from tensorflow.keras.optimizers import Adam
 
 from utils.logger import get_logger
 
 logger = get_logger()
 
 
-# TODO: Refactor to return train, validation AND TEST
-# Perhaps also find a better way to do this so that you can return tuple instead of calling function separately
-def load_dataset(subset):
+def split_data(df: pd.DataFrame) -> tuple:
+    """Accepts a Pandas DataFrame and splits it into training, validation, and test data. Returns DataFrames.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Pandas DataFrame containing all data.
+
+    Returns
+    -------
+    Union[pd.DataFrame, pd.DataFrame, pd.DataFrame]
+        [description]
     """
-    Loads the subset (training/validation) of the data from path
+    # TODO: Splits should be params
+    # TODO: Distribution of these datasets needs to be fair?
+    #  See e2e notebooks with stratified shuffle split
+    train, val = train_test_split(df, test_size=0.2, random_state=1)  # split the data with a validation size o 20%
+    train, test = train_test_split(
+        train, test_size=0.125, random_state=1
+    )  # split the data with an overall  test size of 10%
+
+    logger.info("Descriptive statistics of train:")
+    logger.info(f"Shape: {train.shape}")
+    logger.info(train.describe())
+
+    logger.info("Descriptive statistics of validation:")
+    logger.info(f"Shape: {val.shape}")
+    logger.info(val.describe())
+
+    logger.info("Descriptive statistics of test:")
+    logger.info(f"Shape: {test.shape}")
+    logger.info(test.describe())
+
+    return train, val, test
+
+
+def load_dataset():
+    """
+    Loads the data from path
     """
 
     labels = gpd.read_file("outputs/matched/gauteng-qol-cluster-tiles.geojson")
     labels = labels[["tile", "qol_index"]]
-    data = ImageDataGenerator(validation_split=0.2, rescale=1 / 255)
-    data_flow = data.flow_from_dataframe(
-        dataframe=labels,
-        directory="outputs/tiles",
-        x_col="tile",
-        y_col="qol_index",
-        target_size=(256, 256),
-        batch_size=32,
-        class_mode="raw",
-        subset=subset,
-        seed=42)
-
-    return data_flow
+    return labels
 
 
 # TODO: Refactor into class model building
@@ -75,58 +95,64 @@ def main() -> None:
     # np.random.seed(seed)  # TODO: Figure out how to fix this
     tf.random.set_seed(seed)
 
-    # Load training and validation datasets (actually this is validation data set)
-    train = load_dataset("training")
-    validation = load_dataset("validation")
-
-    # Creating model
-    input_shape = (256, 256, 3)
-    base_model, model = create_model(input_shape=input_shape)
-
-    model.compile(
-        optimizer=Adam(),
-        loss=MeanSquaredError(),
-    )
-
-    # TODO: What am I doing after this??
-
-    # checkpoint
-    filepath = "../outputs/checkpoints/weights-improvement-{epoch:02d}-{val_loss:.2f}.hdf5"
-    checkpoint = ModelCheckpoint(filepath, monitor="val_loss", verbose=1, save_best_only=True, mode="max")
-    callbacks_list = [checkpoint]
-
-    # Top layer fit
-    epochs = 20
-    # print("Fitting the top layer of the model")
-    # TODO: What does this mean again?
-    model.fit(train, epochs=epochs, validation_data=validation, batch_size=10, callbacks=callbacks_list)
-
-    # Unfreeze the base_model. Note that it keeps running in inference mode
-    # since we passed `training=False` when calling it. This means that
-    # the batchnorm layers will not update their batch statistics.
-    # This prevents the batchnorm layers from undoing all the training
-    # we've done so far.
-    base_model.trainable = True
-    model.summary(show_trainable=True)
-
-    model.compile(
-        optimizer=Adam(1e-5),  # Low learning rate
-        loss=MeanSquaredError(),
-    )
-
-    epochs = 100
-    # print("Fitting the end-to-end model")
-    model.fit(train, epochs=epochs, validation_data=validation)
-    # with Live() as live:
-    #     model.fit(
-    #         train,
-    #         validation_data=validation,
-    #         callbacks=[
-    #             DVCLiveCallback(live=live)
-    #         ]
-    #     )
-    #     model.save("model")
-    #     live.log_artifact("model", type="model")
+    # Load dataset
+    dataset = load_dataset()
+    # Split data into training, validation, test datasets
+    train, val, test = split_data(dataset)
+    # get_mean_baseline(train, val)
+    # train = load_dataset("training")
+    # validation = load_dataset("validation")
+    #
+    # # TODO: Add data augmentation
+    #
+    # # Creating model
+    # input_shape = (256, 256, 3)
+    # base_model, model = create_model(input_shape=input_shape)
+    #
+    # model.compile(
+    #     optimizer=Adam(),
+    #     loss=MeanSquaredError(),
+    # )
+    #
+    # # TODO: What am I doing after this??
+    #
+    # # checkpoint
+    # filepath = "../outputs/checkpoints/weights-improvement-{epoch:02d}-{val_loss:.2f}.hdf5"
+    # checkpoint = ModelCheckpoint(filepath, monitor="val_loss", verbose=1, save_best_only=True, mode="max")
+    # callbacks_list = [checkpoint]
+    #
+    # # Top layer fit
+    # epochs = 20
+    # # print("Fitting the top layer of the model")
+    # # TODO: What does this mean again?
+    # model.fit(train, epochs=epochs, validation_data=validation, batch_size=10, callbacks=callbacks_list)
+    #
+    # # Unfreeze the base_model. Note that it keeps running in inference mode
+    # # since we passed `training=False` when calling it. This means that
+    # # the batchnorm layers will not update their batch statistics.
+    # # This prevents the batchnorm layers from undoing all the training
+    # # we've done so far.
+    # base_model.trainable = True
+    # model.summary(show_trainable=True)
+    #
+    # model.compile(
+    #     optimizer=Adam(1e-5),  # Low learning rate
+    #     loss=MeanSquaredError(),
+    # )
+    #
+    # epochs = 100
+    # # print("Fitting the end-to-end model")
+    # model.fit(train, epochs=epochs, validation_data=validation)
+    # # with Live() as live:
+    # #     model.fit(
+    # #         train,
+    # #         validation_data=validation,
+    # #         callbacks=[
+    # #             DVCLiveCallback(live=live)
+    # #         ]
+    # #     )
+    # #     model.save("model")
+    # #     live.log_artifact("model", type="model")
 
 
 if __name__ == "__main__":
