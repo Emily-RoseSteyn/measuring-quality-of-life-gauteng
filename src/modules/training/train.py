@@ -4,6 +4,7 @@ import geopandas as gpd
 import pandas as pd
 import tensorflow as tf
 from keras.layers import GlobalAveragePooling2D, Dropout, Dense
+from keras.losses import MeanAbsoluteError, MeanAbsolutePercentageError
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Input, Model
 from tensorflow.keras.applications import ResNet50V2
@@ -13,8 +14,19 @@ from utils.logger import get_logger
 logger = get_logger()
 
 
+def load_dataset():
+    """
+    Loads the data from path
+    """
+
+    labels = gpd.read_file("outputs/matched/gauteng-qol-cluster-tiles.geojson")
+    labels = labels[["tile", "qol_index"]]
+    return labels
+
+
 def split_data(df: pd.DataFrame) -> tuple:
-    """Accepts a Pandas DataFrame and splits it into training, validation, and test data. Returns DataFrames.
+    """
+    Accepts a Pandas DataFrame and splits it into training, validation, and test data. Returns DataFrames.
 
     Parameters
     ----------
@@ -26,7 +38,7 @@ def split_data(df: pd.DataFrame) -> tuple:
     Union[pd.DataFrame, pd.DataFrame, pd.DataFrame]
         [description]
     """
-    # TODO: Splits should be params
+    # TODO: Splits should be params; also note eating into training data here
     # TODO: Distribution of these datasets needs to be fair?
     #  See e2e notebooks with stratified shuffle split
     train, val = train_test_split(df, test_size=0.2, random_state=1)  # split the data with a validation size o 20%
@@ -49,14 +61,36 @@ def split_data(df: pd.DataFrame) -> tuple:
     return train, val, test
 
 
-def load_dataset():
+def get_mean_baseline(train: pd.DataFrame, val: pd.DataFrame) -> float:
     """
-    Loads the data from path
-    """
+    Calculates the mean MAE and MAPE baselines by taking the mean values of the training data
+    as a naive prediction for the validation target feature.
+    (ie if the model predicted mean values, what would the error be in that case)
 
-    labels = gpd.read_file("outputs/matched/gauteng-qol-cluster-tiles.geojson")
-    labels = labels[["tile", "qol_index"]]
-    return labels
+    Parameters
+    ----------
+    train : pd.DataFrame
+        Pandas DataFrame containing your training data.
+    val : pd.DataFrame
+        Pandas DataFrame containing your validation data.
+
+    Returns
+    -------
+    float
+        MAPE value.
+    """
+    # y_hat is the dummy predicted variable set to the mean of the qol index data in the training set
+    y_hat = train["qol_index"].mean()
+    val["y_hat"] = y_hat
+    mae = MeanAbsoluteError()
+    mae = mae(val["qol_index"], val["y_hat"]).numpy()
+    mape = MeanAbsolutePercentageError()
+    mape = mape(val["qol_index"], val["y_hat"]).numpy()
+
+    logger.info(f"Mean Absolute Error baseline: {mae}")
+    logger.info(f"Mean Absolute Percentage Error baseline: {mape}")
+
+    return mape
 
 
 # TODO: Refactor into class model building
@@ -99,10 +133,11 @@ def main() -> None:
     dataset = load_dataset()
     # Split data into training, validation, test datasets
     train, val, test = split_data(dataset)
-    # get_mean_baseline(train, val)
-    # train = load_dataset("training")
-    # validation = load_dataset("validation")
-    #
+
+    # A naive benchmark to compare results to
+    # Uses the mean of the training data as the predicted value for all x values and calculates error based on that
+    get_mean_baseline(train, val)
+
     # # TODO: Add data augmentation
     #
     # # Creating model
