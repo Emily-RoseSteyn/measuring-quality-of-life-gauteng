@@ -332,7 +332,7 @@ def run_model(
 
     callbacks = get_callbacks(model_name)
     model = resnet_model()
-    model.summary()
+    # model.summary()
     # TODO: Install missing packages pydot + graphviz
     # plot_model(model, to_file=f"outputs/misc/{model_name}.jpg", show_shapes=True)
 
