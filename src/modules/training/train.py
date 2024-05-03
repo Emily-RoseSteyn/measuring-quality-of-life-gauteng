@@ -1,10 +1,14 @@
+import os
 import random
+from pathlib import Path
 
 import geopandas as gpd
 import pandas as pd
 import tensorflow as tf
 from keras.layers import GlobalAveragePooling2D, Dropout, Dense
 from keras.losses import MeanAbsoluteError, MeanAbsolutePercentageError
+from keras.preprocessing.image import ImageDataGenerator
+from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Input, Model
 from tensorflow.keras.applications import ResNet50V2
@@ -64,6 +68,7 @@ def split_data(df: pd.DataFrame) -> tuple:
 
 def get_mean_baseline(train: pd.DataFrame, val: pd.DataFrame) -> float:
     """
+    Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
     Calculates the mean MAE and MAPE baselines by taking the mean values of the training data
     as a naive prediction for the validation target feature.
     (ie if the model predicted mean values, what would the error be in that case)
@@ -92,6 +97,135 @@ def get_mean_baseline(train: pd.DataFrame, val: pd.DataFrame) -> float:
     logger.info(f"Mean Absolute Percentage Error baseline: {mape}")
 
     return mape
+
+
+# TODO: Clean up and move elsewhere
+def visualize_augmentations(data_generator: ImageDataGenerator, df: pd.DataFrame):
+    """
+    Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
+    Visualizes the keras augmentations with matplotlib in 3x3 grid. This function is part of create_generators() and
+    can be accessed from there.
+
+    Parameters
+    ----------
+    data_generator : Iterator
+        The keras data generator of your training data.
+    df : pd.DataFrame
+        The Pandas DataFrame containing your training data.
+    """
+    image_dir = os.path.abspath(Path("./outputs/misc"))
+
+    if not os.path.isdir(image_dir):
+        os.makedirs(image_dir)
+
+    # super hacky way of creating a small dataframe with one image
+    series = df.iloc[2]
+
+    df_augmentation_visualization = pd.concat([series, series], axis=1).transpose()
+
+    iterator_visualizations = data_generator.flow_from_dataframe(
+        directory="outputs/tiles",
+        dataframe=df_augmentation_visualization,
+        x_col="tile",
+        y_col="qol_index",
+        class_mode="raw",
+        target_size=(256, 256),
+        batch_size=1,  # use only one image for visualization
+    )
+
+    for i in range(9):
+        plt.subplot(3, 3, i + 1)  # create a 3x3 grid
+        batch = next(iterator_visualizations)  # get the next image of the generator (always the same image)
+        img = batch[0]
+        img = img[0, :, :, :]  # remove one dimension for plotting without issues
+        plt.imshow(img)
+    plt.savefig("outputs/misc/augmentations.png")
+
+
+def create_generators(
+        df: pd.DataFrame, train: pd.DataFrame, val: pd.DataFrame, test: pd.DataFrame,
+        visualize_augmentations_flag: int = 0
+) -> tuple:
+    """
+    Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
+    Accepts four Pandas DataFrames: all data, the training, validation and test DataFrames. Creates and returns
+    keras ImageDataGenerators.
+    The augmentations of the ImageDataGenerators can also be visualised in this function.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Pandas DataFrame containing all data.
+    train : pd.DataFrame
+        Pandas DataFrame containing training data.
+    val : pd.DataFrame
+        Pandas DataFrame containing validation data.
+    test : pd.DataFrame
+        Pandas DataFrame containing testing data.
+    visualize_augmentations_flag: int
+        Flag to visualise augmentations.
+
+    Returns
+    -------
+    tuple[Iterator, Iterator, Iterator]
+        keras ImageDataGenerators used for training, validating and testing of your models.
+    """
+    # Create training ImageDataGenerator with image augmentations
+    # TODO: Check image augmentation
+    train_generator = ImageDataGenerator(
+        rescale=1.0 / 255,
+        rotation_range=5,
+        width_shift_range=0.1,
+        height_shift_range=0.1,
+        brightness_range=(0.75, 1),
+        shear_range=0.1,
+        zoom_range=[0.75, 1],
+        horizontal_flip=True,
+        vertical_flip=True
+    )
+
+    # Visualize image augmentations if flag set before actually getting dataframe
+    if visualize_augmentations_flag == 1:
+        visualize_augmentations(train_generator, df)
+
+    # Create dataframe iterator
+    train_generator = train_generator.flow_from_dataframe(
+        directory="outputs/tiles",
+        dataframe=train,
+        x_col="tile",  # Image location
+        y_col="qol_index",  # Target feature
+        class_mode="raw",  # Use "raw" for regressions TODO: Understand why?
+        target_size=(256, 256),
+        # TODO: increase or decrease to fit GPU
+        batch_size=32,
+    )
+
+    # Create validation and test ImageDataGenerators without image augmentations
+    # Except for rescaling, no augmentations are needed for validation and testing generators
+    validation_generator = ImageDataGenerator(
+        rescale=1.0 / 255
+    )
+    validation_generator = validation_generator.flow_from_dataframe(
+        directory="outputs/tiles",
+        dataframe=val,
+        x_col="tile",  # Image location
+        y_col="qol_index",  # Target feature
+        class_mode="raw",
+        target_size=(256, 256),
+        batch_size=32,
+    )
+
+    test_generator = ImageDataGenerator(rescale=1.0 / 255)
+    test_generator = test_generator.flow_from_dataframe(
+        directory="outputs/tiles",
+        dataframe=test,
+        x_col="tile",  # Image location
+        y_col="qol_index",  # Target feature
+        class_mode="raw",
+        target_size=(256, 256),
+        batch_size=32,
+    )
+    return train_generator, validation_generator, test_generator
 
 
 # TODO: Refactor into class model building
@@ -139,6 +273,11 @@ def main() -> None:
     # A naive benchmark to compare results to
     # Uses the mean of the training data as the predicted value for all x values and calculates error based on that
     get_mean_baseline(train, val)
+
+    # Get data generators
+    train_generator, validation_generator, test_generator = create_generators(
+        df=dataset, train=train, val=val, test=test, visualize_augmentations_flag=1
+    )
 
     # # TODO: Add data augmentation
     #
