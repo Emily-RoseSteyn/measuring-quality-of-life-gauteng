@@ -1,16 +1,21 @@
 import os
 import random
+from datetime import datetime
 from pathlib import Path
 
 import geopandas as gpd
 import pandas as pd
+import pytz
 import tensorflow as tf
-from keras.layers import GlobalAveragePooling2D, Dropout, Dense
+from keras.callbacks import History, TensorBoard, EarlyStopping, ModelCheckpoint
 from keras.losses import MeanAbsoluteError, MeanAbsolutePercentageError
-from keras.preprocessing.image import ImageDataGenerator
+from keras.optimizers import Adam
+from keras.preprocessing.image import ImageDataGenerator, Iterator
 from matplotlib import pyplot as plt
+from seaborn import relplot
 from sklearn.model_selection import train_test_split
-from tensorflow.keras import Input, Model
+from tensorflow.keras import Model
+from tensorflow.keras import layers
 from tensorflow.keras.applications import ResNet50V2
 
 from utils.logger import get_logger
@@ -228,31 +233,166 @@ def create_generators(
     return train_generator, validation_generator, test_generator
 
 
+def get_callbacks(model_name: str) -> list:
+    """
+    Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
+    Accepts the model name as a string and returns multiple callbacks for training the keras model.
+
+    Parameters
+    ----------
+    model_name : str
+        The name of the model as a string.
+
+    Returns
+    -------
+    List[Union[TensorBoard, EarlyStopping, ModelCheckpoint]]
+        A list of multiple keras callbacks.
+    """
+    logdir = (
+            "logs/scalars/" + model_name + "_" + datetime.now(tz=pytz.utc).strftime("%Y%m%d-%H%M%S")
+    )  # create a folder for each model.
+    tensorboard_callback = TensorBoard(log_dir=logdir)
+    # use tensorboard --logdir logs/scalars in your command line to startup tensorboard with the correct logs
+
+    early_stopping_callback = EarlyStopping(
+        monitor="val_mean_absolute_percentage_error",
+        min_delta=1,  # model should improve by at least 1%
+        patience=10,  # amount of epochs  with improvements worse than 1% until the model stops
+        verbose=2,
+        mode="min",
+        restore_best_weights=True,  # restore the best model with the lowest validation error
+    )
+
+    model_checkpoint_callback = ModelCheckpoint(
+        "./outputs/checkpoints/" + model_name + ".h5",
+        monitor="val_mean_absolute_percentage_error",
+        verbose=0,
+        save_best_only=True,  # save the best model
+        mode="min",
+        save_freq="epoch",  # save every epoch
+    )  # saving eff_net takes quite a bit of time
+    return [tensorboard_callback, early_stopping_callback, model_checkpoint_callback]
+
+
 # TODO: Refactor into class model building
-def create_model(input_shape):
+def resnet_model():
     """
     Defines the model
     """
+    inputs = layers.Input(
+        shape=(256, 256, 3)
+    )
+
     # Using ResNet50 architecture - freezing base model
-    base_model = ResNet50V2(input_shape=input_shape, weights="imagenet", include_top=False)
+    base_model = ResNet50V2(input_tensor=inputs, weights="imagenet", include_top=False)
     base_model.trainable = False
 
-    # Create new model on top
-    # Specify input shape
-    inputs = Input(shape=input_shape)
-
-    # New model is base model with training set to false
-    x = base_model(inputs, training=False)
-    # Add averaging layer to ensure fixed size vector
-    x = GlobalAveragePooling2D()(x)
-    # Add dropout layer to reduce overfitting
-    x = Dropout(0.2)(x)
+    # Rebuild top
+    x = layers.GlobalAveragePooling2D(name="avg_pool")(base_model.output)
+    x = layers.BatchNormalization()(x)
+    top_dropout_rate = 0.2
+    x = layers.Dropout(top_dropout_rate, name="top_dropout")(x)
 
     # final layer, since we are doing regression we will add only one neuron (unit)
-    outputs = Dense(1, activation="relu")(x)
-    added_model = Model(inputs, outputs)
+    outputs = layers.Dense(1, name="pred")(x)
 
-    return base_model, added_model
+    # Compile
+    base_model = Model(inputs, outputs, name="ResNet50V2")
+
+    return base_model
+
+
+# TODO: Different models? Fine-tuning? Generalisation (see blog)
+def run_model(
+        train_generator: Iterator,
+        validation_generator: Iterator,
+        test_generator: Iterator,
+) -> History:
+    """
+    This function runs a keras model with the Adam optimizer and multiple callbacks. The model is evaluated within
+    training through the validation generator and one final time on the test generator at the end of fitting.
+
+    Parameters
+    ----------
+    train_generator : Iterator
+        keras ImageDataGenerators for the training data.
+    validation_generator : Iterator
+        keras ImageDataGenerators for the validation data.
+    test_generator : Iterator
+        keras ImageDataGenerators for the test data.
+
+    Returns
+    -------
+    History
+        The history of the keras model as a History object. To access it as a Dict, use history.history. For an example
+        see plot_results().
+    """
+
+    model_name = "resnet"
+
+    callbacks = get_callbacks(model_name)
+    model = resnet_model()
+    model.summary()
+    # TODO: Install missing packages pydot + graphviz
+    # plot_model(model, to_file=f"outputs/misc/{model_name}.jpg", show_shapes=True)
+
+    # TODO: Different optimizers?
+    model.compile(
+        optimizer=Adam(), loss="mean_absolute_error", metrics=[MeanAbsoluteError(), MeanAbsolutePercentageError()]
+    )
+    history = model.fit(
+        train_generator,
+        epochs=100,
+        validation_data=validation_generator,
+        callbacks=callbacks,
+    )
+
+    model.evaluate(
+        test_generator,
+        callbacks=callbacks,
+    )
+    return history
+
+
+def plot_results(model_history: History, mean_baseline: float):
+    """This function uses seaborn with matplotlib to plot the trainig and validation losses of the input model in an
+    sns.relplot(). The mean baseline is plotted as a horizontal red dotted line.
+
+    Parameters
+    ----------
+    model_history : History
+        keras History object of the model.fit() method.
+    mean_baseline : float
+        Result of the get_mean_baseline() function.
+    """
+
+    # create a dictionary for each model history and loss type
+    dict1 = {
+        "MAPE": model_history.history["mean_absolute_percentage_error"],
+        "type": "training",
+        "model": "resnet",
+    }
+    dict2 = {
+        "MAPE": model_history.history["val_mean_absolute_percentage_error"],
+        "type": "validation",
+        "model": "resnet",
+    }
+
+    # convert the dicts to pd.Series and concat them to a pd.DataFrame in the long format
+    s1 = pd.DataFrame(dict1)
+    s2 = pd.DataFrame(dict2)
+    dataframe = pd.concat([s1, s2], axis=0).reset_index()
+    grid = relplot(data=dataframe, x=dataframe["index"], y="MAPE", hue="model", col="type", kind="line", legend=False)
+    grid.set(ylim=(20, 100))  # set the y-axis limit
+    for ax in grid.axes.flat:
+        ax.axhline(
+            y=mean_baseline, color="lightcoral", linestyle="dashed"
+        )  # add a mean baseline horizontal bar to each plot
+        ax.set(xlabel="Epoch")
+    labels = ["resnet", "mean_baseline"]  # custom labels for the plot
+
+    plt.legend(labels=labels)
+    plt.savefig("outputs/misc/training_validation.png")
 
 
 def main() -> None:
@@ -272,12 +412,20 @@ def main() -> None:
 
     # A naive benchmark to compare results to
     # Uses the mean of the training data as the predicted value for all x values and calculates error based on that
-    get_mean_baseline(train, val)
+    mean_baseline = get_mean_baseline(train, val)
 
     # Get data generators
     train_generator, validation_generator, test_generator = create_generators(
         df=dataset, train=train, val=val, test=test, visualize_augmentations_flag=1
     )
+
+    # Run model
+    resnet_history = run_model(
+        train_generator=train_generator,
+        validation_generator=validation_generator,
+        test_generator=test_generator,
+    )
+    plot_results(resnet_history, mean_baseline)
 
     # # TODO: Add data augmentation
     #
@@ -333,3 +481,14 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+# TODO: Cite possibly at least in repo?
+# https://rosenfelder.ai/keras-regression-efficient-net/
+# @misc{rosenfelderaikeras2020,
+#   author = {Rosenfelder, Markus},
+#   title = {Transfer Learning with EfficientNet for Image Regression in Keras - Using Custom Data in Keras},
+#   year = {2020},
+#   publisher = {rosenfelder.ai},
+#   journal = {rosenfelder.ai},
+#   howpublished = {\url{https://rosenfelder.ai/keras-regression-efficient-net/}},
+# }
