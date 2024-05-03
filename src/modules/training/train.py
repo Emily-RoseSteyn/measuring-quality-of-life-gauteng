@@ -427,46 +427,6 @@ def main() -> None:
     )
     plot_results(resnet_history, mean_baseline)
 
-    # # TODO: Add data augmentation
-    #
-    # # Creating model
-    # input_shape = (256, 256, 3)
-    # base_model, model = create_model(input_shape=input_shape)
-    #
-    # model.compile(
-    #     optimizer=Adam(),
-    #     loss=MeanSquaredError(),
-    # )
-    #
-    # # TODO: What am I doing after this??
-    #
-    # # checkpoint
-    # filepath = "../outputs/checkpoints/weights-improvement-{epoch:02d}-{val_loss:.2f}.hdf5"
-    # checkpoint = ModelCheckpoint(filepath, monitor="val_loss", verbose=1, save_best_only=True, mode="max")
-    # callbacks_list = [checkpoint]
-    #
-    # # Top layer fit
-    # epochs = 20
-    # # print("Fitting the top layer of the model")
-    # # TODO: What does this mean again?
-    # model.fit(train, epochs=epochs, validation_data=validation, batch_size=10, callbacks=callbacks_list)
-    #
-    # # Unfreeze the base_model. Note that it keeps running in inference mode
-    # # since we passed `training=False` when calling it. This means that
-    # # the batchnorm layers will not update their batch statistics.
-    # # This prevents the batchnorm layers from undoing all the training
-    # # we've done so far.
-    # base_model.trainable = True
-    # model.summary(show_trainable=True)
-    #
-    # model.compile(
-    #     optimizer=Adam(1e-5),  # Low learning rate
-    #     loss=MeanSquaredError(),
-    # )
-    #
-    # epochs = 100
-    # # print("Fitting the end-to-end model")
-    # model.fit(train, epochs=epochs, validation_data=validation)
     # # with Live() as live:
     # #     model.fit(
     # #         train,
