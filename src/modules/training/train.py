@@ -10,6 +10,7 @@ from tensorflow.keras import Input, Model
 from tensorflow.keras.applications import ResNet50V2
 
 from utils.logger import get_logger
+from utils.tensorflow_utils import log_tf_gpu
 
 logger = get_logger()
 
@@ -122,6 +123,7 @@ def create_model(input_shape):
 
 def main() -> None:
     logger.info("In training")
+    log_tf_gpu()
 
     # Seeding
     seed = 42
