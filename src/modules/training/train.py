@@ -10,8 +10,8 @@ import tensorflow as tf
 from keras.callbacks import History, TensorBoard, EarlyStopping, ModelCheckpoint
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator, Iterator
-from keras.src.losses import MeanAbsoluteError, MeanAbsolutePercentageError, MSE
-from keras.src.metrics import R2Score
+from keras.src.losses import MeanAbsoluteError, MeanAbsolutePercentageError
+from keras.src.metrics import R2Score, MeanSquaredError
 from matplotlib import pyplot as plt
 from seaborn import relplot
 from sklearn.model_selection import train_test_split
@@ -339,8 +339,8 @@ def run_model(
 
     # TODO: Different optimizers?
     model.compile(
-        optimizer=Adam(), loss="mean_square_error",
-        metrics=[MeanAbsoluteError(), MeanAbsolutePercentageError(), MSE(), R2Score()]
+        optimizer=Adam(), loss="mean_squared_error",
+        metrics=[MeanAbsoluteError(), MeanAbsolutePercentageError(), MeanSquaredError(), R2Score()]
     )
     history = model.fit(
         train_generator,
