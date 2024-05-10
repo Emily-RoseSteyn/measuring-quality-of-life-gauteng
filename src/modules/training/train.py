@@ -8,9 +8,10 @@ import pandas as pd
 import pytz
 import tensorflow as tf
 from keras.callbacks import History, TensorBoard, EarlyStopping, ModelCheckpoint
-from keras.losses import MeanAbsoluteError, MeanAbsolutePercentageError
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator, Iterator
+from keras.src.losses import MeanAbsoluteError, MeanAbsolutePercentageError, MSE
+from keras.src.metrics import R2Score
 from matplotlib import pyplot as plt
 from seaborn import relplot
 from sklearn.model_selection import train_test_split
@@ -338,7 +339,8 @@ def run_model(
 
     # TODO: Different optimizers?
     model.compile(
-        optimizer=Adam(), loss="mean_absolute_error", metrics=[MeanAbsoluteError(), MeanAbsolutePercentageError()]
+        optimizer=Adam(), loss="mean_square_error",
+        metrics=[MeanAbsoluteError(), MeanAbsolutePercentageError(), MSE(), R2Score()]
     )
     history = model.fit(
         train_generator,
@@ -354,6 +356,7 @@ def run_model(
     return history
 
 
+# TODO: Fix plotting not working - mean is wrong
 def plot_results(model_history: History, mean_baseline: float):
     """This function uses seaborn with matplotlib to plot the trainig and validation losses of the input model in an
     sns.relplot(). The mean baseline is plotted as a horizontal red dotted line.
