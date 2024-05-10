@@ -8,10 +8,10 @@ import pandas as pd
 import pytz
 import tensorflow as tf
 from keras.callbacks import History, TensorBoard, EarlyStopping, ModelCheckpoint
+from keras.losses import MeanAbsoluteError, MeanAbsolutePercentageError
+from keras.metrics import MeanSquaredError, RootMeanSquaredError
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator, Iterator
-from keras.src.losses import MeanAbsoluteError, MeanAbsolutePercentageError
-from keras.src.metrics import MeanSquaredError, RootMeanSquaredError
 from matplotlib import pyplot as plt
 from seaborn import relplot
 from sklearn.model_selection import train_test_split
