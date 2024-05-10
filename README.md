@@ -31,7 +31,13 @@ environments.
 This repository makes use of [Poetry](https://python-poetry.org/) which is a python package management solution. Follow
 the installation instructions [here](https://python-poetry.org/docs/#installation).
 
-Once you have Poetry installed, you can run the following in the root directory to install all required dependencies:
+Once you have Poetry installed, configure it so that the virtual environment is installed inside your project directory:
+
+```shell
+poetry config virtualenvs.in-project true
+```
+
+You can then run the following in the root directory to install all required dependencies:
 
 ```shell
 poetry install
