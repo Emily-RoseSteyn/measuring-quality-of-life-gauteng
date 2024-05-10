@@ -11,7 +11,7 @@ from keras.callbacks import History, TensorBoard, EarlyStopping, ModelCheckpoint
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator, Iterator
 from keras.src.losses import MeanAbsoluteError, MeanAbsolutePercentageError
-from keras.src.metrics import R2Score, MeanSquaredError
+from keras.src.metrics import MeanSquaredError, RootMeanSquaredError
 from matplotlib import pyplot as plt
 from seaborn import relplot
 from sklearn.model_selection import train_test_split
@@ -303,6 +303,15 @@ def resnet_model():
     return base_model
 
 
+# Custom r2 needed because tf 2.11 does not have this as a metric
+# Additionally, have to use tf 2.11 because of cluster constraints
+def r_squared(y_true, y_pred):
+    """Custom metric function to calculate R-squared."""
+    ss_res = tf.reduce_mean(tf.square(y_true - y_pred))
+    ss_tot = tf.reduce_mean(tf.square(tf.math.subtract(y_true, tf.reduce_mean(y_true))))
+    return 1 - ss_res / (ss_tot + tf.keras.backend.epsilon())
+
+
 # TODO: Different models? Fine-tuning? Generalisation (see blog)
 def run_model(
         train_generator: Iterator,
@@ -340,7 +349,8 @@ def run_model(
     # TODO: Different optimizers?
     model.compile(
         optimizer=Adam(), loss="mean_squared_error",
-        metrics=[MeanAbsoluteError(), MeanAbsolutePercentageError(), MeanSquaredError(), R2Score()]
+        metrics=[MeanAbsoluteError(), MeanAbsolutePercentageError(), MeanSquaredError(), RootMeanSquaredError(),
+                 r_squared]
     )
     history = model.fit(
         train_generator,
