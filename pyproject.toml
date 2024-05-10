@@ -31,8 +31,8 @@ seaborn = "^0.13.2"
 # Issue between poetry and tensorflow metadata since >=2.11
 # https://github.com/python-poetry/poetry/issues/8271#issuecomment-1697740447
 tensorflow-io-gcs-filesystem = { version = "< 0.32.0", platform = "win32" }
-tensorflow = "~2.13.0"
-tensorflow-intel = { version = "~2.13.0", platform = "win32" }
+tensorflow = "~2.11.0"
+tensorflow-intel = { version = "~2.11.0", platform = "win32" }
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"
