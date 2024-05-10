@@ -32,7 +32,7 @@ def main() -> None:
     joined_data = tile_transforms.sjoin(qol_data, how="inner")
 
     # Plot
-    joined_data.plot(column="qol_index", legend=True)
+    joined_data.plot(column="qol_index", legend=True, aspect=1)
     plt.savefig(os.path.join(results_dir, "gauteng-qol-cluster-tiles.png"))
 
     # Save
