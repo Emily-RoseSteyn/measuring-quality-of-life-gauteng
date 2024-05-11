@@ -348,7 +348,7 @@ def run_model(
 
     # TODO: Different optimizers?
     model.compile(
-        optimizer=Adam(), loss="mean_squared_error",
+        optimizer=Adam(), loss="mean_absolute_error",
         metrics=[MeanAbsoluteError(), MeanAbsolutePercentageError(), MeanSquaredError(), RootMeanSquaredError(),
                  r_squared]
     )
