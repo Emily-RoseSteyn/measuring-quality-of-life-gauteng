@@ -107,7 +107,7 @@ stages:
       - src/modules/training/train.py
       - outputs/matched/gauteng-qol-cluster-tiles.geojson
     outs:
-      - outputs/model.pkl
+      - outputs/checkpoints/resnet.h5
 
   evaluate:
     cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
