@@ -10,9 +10,9 @@ stages:
       - .env
 
   shapefile_processing:
-    cmd: python src/modules/shapefile_processing/shapefile_process.py
+    cmd: python src/modules/1_shapefile_processing/shapefile_process.py
     deps:
-      - src/modules/shapefile_processing/shapefile_process.py
+      - src/modules/1_shapefile_processing/shapefile_process.py
       - data/shapefiles/2011
       - data/shapefiles/2016
       - data/shapefiles/2020
