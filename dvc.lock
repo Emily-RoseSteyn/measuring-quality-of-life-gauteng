@@ -106,8 +106,8 @@ stages:
       size: 34101
     - path: outputs/processed-shapefile/gauteng-boundary.geojson
       hash: md5
-      md5: f1406122f930644e2fe98e3021fbeb29
-      size: 691663
+      md5: 7f7dd407b7d8f29c83d9cf0ba7d6f4f2
+      size: 691662
     - path: outputs/processed-shapefile/gauteng-boundary.png
       hash: md5
       md5: 4bf56ae997d01b72270f6b83a03a6883
@@ -146,8 +146,8 @@ stages:
     outs:
     - path: outputs/processed-gcro/gcro-clustered-data.csv
       hash: md5
-      md5: 39a9842cb9e34dcfd43b41e76a3bccb4
-      size: 82788
+      md5: fd14932c47c6c5032a35f361eb917b09
+      size: 83318
     - path: outputs/processed-gcro/gcro-column-datatypes.json
       hash: md5
       md5: 639dacf242b430f397437fde557da6d5
@@ -161,8 +161,8 @@ stages:
     deps:
     - path: outputs/processed-gcro/gcro-clustered-data.csv
       hash: md5
-      md5: 39a9842cb9e34dcfd43b41e76a3bccb4
-      size: 82788
+      md5: fd14932c47c6c5032a35f361eb917b09
+      size: 83318
     - path: outputs/processed-shapefile/gauteng-wards.geojson
       hash: md5
       md5: c87921e9eea50dc5f5cd0d0d0042f05d
@@ -249,8 +249,8 @@ stages:
     deps:
     - path: src/modules/tiling/tile.sbatch
       hash: md5
-      md5: 66b3c9de8b862502a16171db71575cbb
-      size: 1559
+      md5: d3af3b8f40c80d342fb0c844ad954115
+      size: 1611
     - path: src/modules/tiling/tile_image.py
       hash: md5
       md5: fae35f753aab9f68a2057a3fd1649bdc
@@ -266,7 +266,7 @@ stages:
     outs:
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
-      md5: bc0cd26e11611090eaf77d1ddcf9adff
+      md5: 8c07b0a7e2b2972f2c2501d57aabb57f
       size: 9407715
   tile_cluster_matching:
     cmd: python src/modules/tile_cluster_matching/match_tiles.py
@@ -277,7 +277,7 @@ stages:
       size: 5389380
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
-      md5: bc0cd26e11611090eaf77d1ddcf9adff
+      md5: 8c07b0a7e2b2972f2c2501d57aabb57f
       size: 9407715
     - path: src/modules/tile_cluster_matching/match_tiles.py
       hash: md5
@@ -286,8 +286,8 @@ stages:
     outs:
     - path: outputs/matched/gauteng-qol-cluster-tiles.geojson
       hash: md5
-      md5: 0a57062c6c40932beffac5cac5761648
-      size: 15610727
+      md5: c3fa72f8c0c828dd730a8397a02bb11c
+      size: 15608084
     - path: outputs/matched/gauteng-qol-cluster-tiles.png
       hash: md5
       md5: 2e27236ce0257b04433637067621a06c
