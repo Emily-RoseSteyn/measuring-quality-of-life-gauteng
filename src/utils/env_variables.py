@@ -5,8 +5,7 @@ import logging
 import os
 
 from dotenv import load_dotenv
-
-from utils.enum import enum
+from utils.enum_type import enum
 
 load_dotenv()
 

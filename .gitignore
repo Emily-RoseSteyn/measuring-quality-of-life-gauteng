@@ -170,3 +170,6 @@ data/images/**/
 /model.pkl
 /eval
 
+
+# Logs!
+**/logs
