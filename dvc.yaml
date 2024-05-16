@@ -40,9 +40,9 @@ stages:
       - outputs/processed-shapefile/2020/za-wards.png
 
   gcro_processing:
-    cmd: python src/modules/gcro_processing/gcro_process.py
+    cmd: python src/modules/2_gcro_processing/gcro_process.py
     deps:
-      - src/modules/gcro_processing/gcro_process.py
+      - src/modules/2_gcro_processing/gcro_process.py
       - data/surveys/gcro-2021.dta
       - data/surveys/gcro-2018.dta
       - data/surveys/gcro-2016.dta
