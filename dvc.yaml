@@ -47,10 +47,15 @@ stages:
       - data/surveys/gcro-2018.dta
       - data/surveys/gcro-2016.dta
     outs:
-      - outputs/processed-gcro/gcro-column-datatypes.json
-      - outputs/processed-gcro/gcro-date-info.json
-      - outputs/processed-gcro/gcro-clustered-data.csv
-
+      - outputs/processed-gcro/2021/gcro-column-datatypes.json
+      - outputs/processed-gcro/2021/gcro-date-info.json
+      - outputs/processed-gcro/2021/gcro-clustered-data.csv
+      - outputs/processed-gcro/2018/gcro-column-datatypes.json
+      - outputs/processed-gcro/2018/gcro-date-info.json
+      - outputs/processed-gcro/2018/gcro-clustered-data.csv
+  #      - outputs/processed-gcro/2016/gcro-column-datatypes.json
+  #      - outputs/processed-gcro/2016/gcro-date-info.json
+  #      - outputs/processed-gcro/2016/gcro-clustered-data.csv
 
   data_download:
     cmd: python src/modules/data_download/data_download.py

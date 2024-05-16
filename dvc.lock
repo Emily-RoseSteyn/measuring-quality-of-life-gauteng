@@ -181,7 +181,7 @@ stages:
       md5: 896ce51f0711e44ea35ffc05a919ea01
       size: 116221
   gcro_processing:
-    cmd: python src/modules/gcro_processing/gcro_process.py
+    cmd: python src/modules/2_gcro_processing/gcro_process.py
     deps:
     - path: data/surveys/gcro-2016.dta
       hash: md5
@@ -195,20 +195,32 @@ stages:
       hash: md5
       md5: 3af38f13b58e0bb17be0cf1911b828b4
       size: 8499821
-    - path: src/modules/gcro_processing/gcro_process.py
+    - path: src/modules/2_gcro_processing/gcro_process.py
       hash: md5
-      md5: 2e07910790d67849dc981a0900c6108a
-      size: 2408
+      md5: 4d9abdc125333b6b1539d6d0afd82bc4
+      size: 2771
     outs:
-    - path: outputs/processed-gcro/gcro-clustered-data.csv
+    - path: outputs/processed-gcro/2018/gcro-clustered-data.csv
+      hash: md5
+      md5: 94ca812d3e8aa08d9c0bdd1aa2aef8b2
+      size: 83223
+    - path: outputs/processed-gcro/2018/gcro-column-datatypes.json
+      hash: md5
+      md5: 9629553ee8ac8ed6f9331dda0f8a51f6
+      size: 10152
+    - path: outputs/processed-gcro/2018/gcro-date-info.json
+      hash: md5
+      md5: f83976a35bd65fdab5ea4e9bbdac57fb
+      size: 106
+    - path: outputs/processed-gcro/2021/gcro-clustered-data.csv
       hash: md5
       md5: fd14932c47c6c5032a35f361eb917b09
       size: 83318
-    - path: outputs/processed-gcro/gcro-column-datatypes.json
+    - path: outputs/processed-gcro/2021/gcro-column-datatypes.json
       hash: md5
       md5: 639dacf242b430f397437fde557da6d5
       size: 8646
-    - path: outputs/processed-gcro/gcro-date-info.json
+    - path: outputs/processed-gcro/2021/gcro-date-info.json
       hash: md5
       md5: fe466fbd7f52211d9b3fe35da926acdd
       size: 106
