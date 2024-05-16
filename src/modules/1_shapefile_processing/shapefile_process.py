@@ -6,13 +6,11 @@ import matplotlib.pyplot as plt
 from utils.logger import get_logger
 
 
-def main() -> None:
-    logger = get_logger()
-    logger.info("In shapefile processing")
+def process_shapefile_by_date(date: str):
     # Load shapefile
     # TODO: Figure out best practice for path here
     #  this is executing relative to the root directory when using dvc repro
-    shapefile = gpd.read_file("./data/shapefiles/2016/2016.shp")
+    shapefile = gpd.read_file(f"./data/shapefiles/{date}/{date}.shp")
     shapefile = shapefile.rename(
         columns={
             "ProvinceNa": "Province",
@@ -20,7 +18,7 @@ def main() -> None:
     )
 
     # TODO: Replace with step parameter
-    results_dir = "./outputs/processed-shapefile"
+    results_dir = f"./outputs/processed-shapefile/{date}"
 
     if not os.path.isdir(results_dir):
         os.makedirs(results_dir)
@@ -64,6 +62,15 @@ def main() -> None:
         os.path.join(results_dir, "gauteng-boundary.geojson"),
         driver="GeoJSON",
     )
+
+
+def main() -> None:
+    logger = get_logger()
+    logger.info("In shapefile processing")
+
+    process_shapefile_by_date("2011")
+    process_shapefile_by_date("2016")
+    process_shapefile_by_date("2020")
 
 
 if __name__ == "__main__":
