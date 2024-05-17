@@ -25,8 +25,8 @@ stages:
     deps:
     - path: data/basemap-metadata/basemap-metadata.json
       hash: md5
-      md5: e3c7dbc596c66fb935dea99a8e7f8e5e
-      size: 1837
+      md5: 9c2629fbd053d33ebced08229ec17104
+      size: 3671
     - path: data/surveys/gcro-2016.dta
       hash: md5
       md5: b18fed022c1ad5c6588391a14ce4acac
@@ -41,8 +41,8 @@ stages:
       size: 8499821
     - path: src/modules/data_download/data_download.py
       hash: md5
-      md5: 2cc3020ac94ef7ec011e7df9b11c4289
-      size: 1619
+      md5: babc223f5f3492405c6b0f6b8cba95ad
+      size: 2150
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
     deps:
