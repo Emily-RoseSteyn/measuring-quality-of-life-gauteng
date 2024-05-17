@@ -93,7 +93,7 @@ to [add a remote](https://dvc.org/doc/command-reference/remote/add).
 
 ## Pipeline
 
-1. Data download
+1. [Data download](./data/README.md)
 2. Data preprocessing
 3. Training
 4. Evaluation

@@ -89,7 +89,7 @@ The outputs of these two steps include a gauteng boundary geojson file and date 
 
 We can now use [Planet's basemap viewer](https://www.planet.com/basemaps) to do the following:
 
-* Identify the mean date of the survey outputted from the `gcro_processing` step
+* Identify the mean date of the survey outputted from the `gcro_processing` step in the `gcro-date-info.json` file
 * Search for the monthly MOSAIC that corresponds to the mean date.
     * For example, in the case of the 2021 GCRO survey, the mean date is 2021-01-12. The corresponding monthly mosaic on
       Planet is January 2021 (`global_monthly_2021_01_mosaic`).
