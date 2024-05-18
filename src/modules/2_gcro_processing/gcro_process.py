@@ -51,8 +51,11 @@ def process_gcro_survey_by_date(date: str):
         "F7partic",
         "QoLIndex_Data_Driven",
     ]
+
+    renamed_ward_code_key = "ward_code"
     selected_data = df_gcro[keys].rename(
         columns={
+            ward_code_key: renamed_ward_code_key,
             "F1servic": "services",
             "F2soclas": "socioeconomic_status",
             "F3govsat": "government_satisfaction",
@@ -63,7 +66,7 @@ def process_gcro_survey_by_date(date: str):
             "QoLIndex_Data_Driven": "qol_index",
         }
     )
-    ward_code_group = selected_data.groupby([ward_code_key])
+    ward_code_group = selected_data.groupby([renamed_ward_code_key])
     ward_code_clusters = (
         ward_code_group.size().to_frame(name="counts").join(ward_code_group.mean())
     )
