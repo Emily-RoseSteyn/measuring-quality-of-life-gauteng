@@ -39,9 +39,13 @@ def merge_gcro_shapefile_by_gcro_year(year: str):
     qol_data = pd.read_csv(data_path)
     qol_data["ward_code"] = qol_data["ward_code"].astype(str)
 
-    # Load geojson data and select specific columns
+    # Find shapefile year for gcro year
+    # Tried to do this dynamically but 2020/2021 GCRO survey still used 2016 MDB!!! Therefore manual map
+    # shapefile_year = find_shapefile_year_dynamically(year)
     shapefile_year = GCRO_SHAPEFILE_MAP[year]
     logger.info(f"Found matching shapefile {shapefile_year}")
+
+    # Load geojson data and select specific columns
     geojson_path = f"outputs/processed-shapefile/{shapefile_year}/gauteng-wards.geojson"
     gdf = gpd.read_file(geojson_path)
     gdf = gdf[["WardID", "geometry"]].rename(columns={"WardID": "ward_code"})
