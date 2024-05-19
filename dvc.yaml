@@ -103,7 +103,8 @@ stages:
       - outputs/tiles/tile-transforms.geojson
     outs:
       - outputs/matched/gauteng-qol-cluster-tiles.geojson
-      - outputs/matched/gauteng-qol-cluster-tiles.png
+      - outputs/matched/2018-gauteng-qol-cluster-tiles.png
+      - outputs/matched/2021-gauteng-qol-cluster-tiles.png
 
   train:
     cmd: python src/modules/7_training/train.py
