@@ -106,9 +106,9 @@ stages:
       - outputs/matched/gauteng-qol-cluster-tiles.png
 
   train:
-    cmd: python src/modules/training/train.py
+    cmd: python src/modules/7_training/train.py
     deps:
-      - src/modules/training/train.py
+      - src/modules/7_training/train.py
       - outputs/matched/gauteng-qol-cluster-tiles.geojson
     outs:
       - outputs/checkpoints/resnet.h5
