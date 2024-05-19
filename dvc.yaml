@@ -105,6 +105,24 @@ stages:
       - outputs/matched/gauteng-qol-cluster-tiles.geojson
       - outputs/matched/gauteng-qol-cluster-tiles.png
 
+  train:
+    cmd: python src/modules/training/train.py
+    deps:
+      - src/modules/training/train.py
+      - outputs/matched/gauteng-qol-cluster-tiles.geojson
+    outs:
+      - outputs/checkpoints/resnet.h5
+
+  #  evaluate:
+  #    cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
+  #    deps:
+  #      - src/modules/evaluation/evaluate.py
+  #    - data/intermediate
+  #    - outputs/model.pkl
+  #    outs:
+  #    - eval
+
+
   #  generate_grid:
   #    cmd: python src/modules/grid_generation/generate_grid.py
   #    deps:
@@ -128,20 +146,3 @@ stages:
   #      - outputs/mosaiks-prediction/ridge-observed-vs-predicted.png
   #      - outputs/mosaiks-prediction/ridge-observed.png
   #      - outputs/mosaiks-prediction/ridge-predicted.png
-
-  train:
-    cmd: python src/modules/training/train.py
-    deps:
-      - src/modules/training/train.py
-      - outputs/matched/gauteng-qol-cluster-tiles.geojson
-    outs:
-      - outputs/checkpoints/resnet.h5
-
-  evaluate:
-    cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
-    deps:
-      - src/modules/evaluation/evaluate.py
-#    - data/intermediate
-#    - outputs/model.pkl
-#    outs:
-#    - eval
