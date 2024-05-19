@@ -86,12 +86,12 @@ stages:
   #      - outputs/merged/2016/gauteng-qol.png
 
   tiling:
-    cmd: python src/modules/tiling/tile_images.py
+    cmd: python src/modules/5_tiling/tile_images.py
     deps:
-      - src/modules/tiling/tile_images.py
-      - src/modules/tiling/tile_image.py
-      - src/modules/tiling/tile.sbatch
-      - src/modules/tiling/tile_slurm.py
+      - src/modules/5_tiling/tile_images.py
+      - src/modules/5_tiling/tile_image.py
+      - src/modules/5_tiling/tile.sbatch
+      - src/modules/5_tiling/tile_slurm.py
     outs:
       - outputs/tiles/tile-transforms.geojson
 
