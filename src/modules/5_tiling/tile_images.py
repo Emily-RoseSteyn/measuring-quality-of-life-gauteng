@@ -2,11 +2,11 @@ import os
 import subprocess
 from pathlib import Path
 
-from modules.tiling.get_tile_list import get_tile_list
-from modules.tiling.merge_geojson import merge_geojson
-from modules.tiling.tile_image import tile_image
 from tqdm import tqdm
 
+from get_tile_list import get_tile_list
+from merge_geojson import merge_geojson
+from tile_image import tile_image
 from utils.env_variables import SLURM_ENABLED
 from utils.logger import get_logger
 

@@ -4,8 +4,8 @@ from pathlib import Path
 
 from mpi4py import MPI
 
-from modules.tiling.get_tile_list import get_tile_list
-from modules.tiling.tile_image import tile_image
+from get_tile_list import get_tile_list
+from tile_image import tile_image
 from utils.env_variables import MPI_TAGS, TEMP_WRITE_DIR
 from utils.logger import get_logger
 
