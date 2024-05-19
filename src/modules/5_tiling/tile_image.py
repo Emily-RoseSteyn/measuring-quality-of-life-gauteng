@@ -1,6 +1,7 @@
 import os
 from itertools import product
 from pathlib import Path
+from time import strptime
 from typing import Any
 
 import geopandas as gpd
@@ -80,6 +81,8 @@ def tile_image(
 
         # Storing in geojson to merge in parent
         tile_transforms_df = gpd.GeoDataFrame(tile_transforms, crs=img_object.crs)
+        year = strptime(date, "%Y-%m").tm_year
+        tile_transforms_df["year"] = f"{year}"
         tile_transforms_df.to_file(
             os.path.join(output_dir, f"tile-transforms_{thread}.geojson"),
             driver="GeoJSON",
