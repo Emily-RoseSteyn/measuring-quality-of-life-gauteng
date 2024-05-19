@@ -29,6 +29,7 @@ def main() -> None:
     tile_transforms = tile_transforms.to_crs(qol_data.crs)
 
     # Spatial join of data
+    # Assumes that geometry and year are keys in both qol_data and tile_transforms
     joined_data = tile_transforms.sjoin(qol_data, how="inner")
 
     # Plot

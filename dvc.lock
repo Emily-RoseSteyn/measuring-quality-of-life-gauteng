@@ -345,8 +345,8 @@ stages:
       size: 1561
     - path: src/modules/5_tiling/tile_image.py
       hash: md5
-      md5: 7943fa8446cc02447350b63cd10c7c5f
-      size: 3312
+      md5: 9f3a1583b461c7e60552c2ed2df85f13
+      size: 3435
     - path: src/modules/5_tiling/tile_images.py
       hash: md5
       md5: a315da51ee01492e139b149d668df1a1
@@ -358,29 +358,29 @@ stages:
     outs:
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
-      md5: 35df8e262b80657d10b864dd4e58ade1
-      size: 19188035
+      md5: dd162bb0d166b563877bcf0a2416ba54
+      size: 19933507
   tile_cluster_matching:
-    cmd: python src/modules/tile_cluster_matching/match_tiles.py
+    cmd: python src/modules/6_tile_cluster_matching/match_tiles.py
     deps:
     - path: outputs/merged/gauteng-qol.geojson
       hash: md5
-      md5: 1b0638102484489c12746c8501691ee1
-      size: 5389380
+      md5: 73936358a676db73bc16fcfd637feba0
+      size: 10795762
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
-      md5: 8c07b0a7e2b2972f2c2501d57aabb57f
-      size: 9407715
-    - path: src/modules/tile_cluster_matching/match_tiles.py
+      md5: dd162bb0d166b563877bcf0a2416ba54
+      size: 19933507
+    - path: src/modules/6_tile_cluster_matching/match_tiles.py
       hash: md5
-      md5: a50a27739ed02e43e7998be70e764c4a
-      size: 1296
+      md5: ef52e171ea379b1189344ec86c62deb7
+      size: 1380
     outs:
     - path: outputs/matched/gauteng-qol-cluster-tiles.geojson
       hash: md5
-      md5: c3fa72f8c0c828dd730a8397a02bb11c
-      size: 15608084
+      md5: 1d11ef96b49e3ee08a2912d887cf4555
+      size: 67010456
     - path: outputs/matched/gauteng-qol-cluster-tiles.png
       hash: md5
-      md5: 2e27236ce0257b04433637067621a06c
-      size: 30741
+      md5: 241b5ec23d2d114e6b917a7f84dc0459
+      size: 28545
