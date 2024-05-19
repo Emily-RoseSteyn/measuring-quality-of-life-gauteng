@@ -70,7 +70,8 @@ def main() -> None:
         bm = basemap_metadata[key]
         mosaic_name = bm["mosaic_name"]
         quad_ids = bm["basemap_quad_ids"]
-        download_satellite_basemaps(key, mosaic_name, quad_ids)
+        date = bm["date"]
+        download_satellite_basemaps(date, mosaic_name, quad_ids)
         # TODO: Need some kind of output here
 
 

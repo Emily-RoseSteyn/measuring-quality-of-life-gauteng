@@ -58,9 +58,9 @@ stages:
   #      - outputs/processed-gcro/2016/gcro-clustered-data.csv
 
   data_download:
-    cmd: python src/modules/3_data_download/3_data_download.py
+    cmd: python src/modules/3_data_download/data_download.py
     deps:
-      - src/modules/3_data_download/3_data_download.py
+      - src/modules/3_data_download/data_download.py
       - data/surveys/gcro-2021.dta
       - data/surveys/gcro-2018.dta
       - data/surveys/gcro-2016.dta
