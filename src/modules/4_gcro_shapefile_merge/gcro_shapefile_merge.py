@@ -66,6 +66,10 @@ def merge_gcro_shapefile_by_gcro_year(year: str):
     plt.savefig(os.path.join(results_dir, "gauteng-qol.png"))
     overlap.to_file(os.path.join(results_dir, "gauteng-qol.geojson"), driver="GeoJSON")
 
+    # Add year and return
+    overlap["year"] = year
+    return overlap
+
 
 def main() -> None:
     logger.info("In gcro shapefile merge")
@@ -73,10 +77,16 @@ def main() -> None:
     # Merge each individual gcro and shapefile
     gcro_output = "outputs/processed-gcro"
     gcro_years = sort([f.name for f in os.scandir(gcro_output) if f.is_dir()])
-    for year in gcro_years:
-        merge_gcro_shapefile_by_gcro_year(year)
 
-    # Merge all data together
+    merged = gpd.GeoDataFrame()
+    for year in gcro_years:
+        result = merge_gcro_shapefile_by_gcro_year(year)
+        # Append result to merged dataframe
+        merged = pd.concat([merged, result], ignore_index=True)
+
+    # Write merged data to result dir
+    results_dir = "./outputs/merged"
+    merged.to_file(os.path.join(results_dir, "gauteng-qol.geojson"), driver="GeoJSON")
 
 
 if __name__ == "__main__":

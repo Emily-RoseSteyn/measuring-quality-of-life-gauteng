@@ -225,29 +225,53 @@ stages:
       md5: fe466fbd7f52211d9b3fe35da926acdd
       size: 106
   gcro_shapefile_merge:
-    cmd: python src/modules/gcro_shapefile_merge/gcro_shapefile_merge.py
+    cmd: python src/modules/4_gcro_shapefile_merge/gcro_shapefile_merge.py
     deps:
-    - path: outputs/processed-gcro/gcro-clustered-data.csv
+    - path: outputs/processed-gcro/2018/gcro-clustered-data.csv
+      hash: md5
+      md5: 830d0aea5ee7b4af7f7f1501f40ecaab
+      size: 83228
+    - path: outputs/processed-gcro/2021/gcro-clustered-data.csv
       hash: md5
       md5: fd14932c47c6c5032a35f361eb917b09
       size: 83318
-    - path: outputs/processed-shapefile/gauteng-wards.geojson
+    - path: outputs/processed-shapefile/2011/gauteng-wards.geojson
+      hash: md5
+      md5: cd39f3b48bf05d8dc27cbe16deea56d0
+      size: 10783731
+    - path: outputs/processed-shapefile/2016/gauteng-wards.geojson
       hash: md5
       md5: c87921e9eea50dc5f5cd0d0d0042f05d
       size: 5370316
-    - path: src/modules/gcro_shapefile_merge/gcro_shapefile_merge.py
+    - path: outputs/processed-shapefile/2020/gauteng-wards.geojson
       hash: md5
-      md5: 9b7bc079f113878147cbfa07ddfbd7f6
-      size: 1511
+      md5: fd210f4642ed25a340f12ce85fb524c8
+      size: 5298461
+    - path: src/modules/4_gcro_shapefile_merge/gcro_shapefile_merge.py
+      hash: md5
+      md5: 9c05cc9fcea05c5fea76aa10b95b4965
+      size: 3261
     outs:
-    - path: outputs/merged/gauteng-qol.geojson
+    - path: outputs/merged/2018/gauteng-qol.geojson
+      hash: md5
+      md5: 5cb8fe7b2ada95601f29aa6227498c59
+      size: 5389588
+    - path: outputs/merged/2018/gauteng-qol.png
+      hash: md5
+      md5: bb193a9e51edddafd8148689795129c4
+      size: 78527
+    - path: outputs/merged/2021/gauteng-qol.geojson
       hash: md5
       md5: 1b0638102484489c12746c8501691ee1
       size: 5389380
-    - path: outputs/merged/gauteng-qol.png
+    - path: outputs/merged/2021/gauteng-qol.png
       hash: md5
       md5: ff51e49aad237639b2dc7a73fd3566d0
       size: 78817
+    - path: outputs/merged/gauteng-qol.geojson
+      hash: md5
+      md5: 73936358a676db73bc16fcfd637feba0
+      size: 10795762
   generate_grid:
     cmd: python src/modules/grid_generation/generate_grid.py
     deps:

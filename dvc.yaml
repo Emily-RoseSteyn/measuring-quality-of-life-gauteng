@@ -67,14 +67,23 @@ stages:
       - data/basemap-metadata/basemap-metadata.json
 
   gcro_shapefile_merge:
-    cmd: python src/modules/4_gcro_shapefile_merge/4_gcro_shapefile_merge.py
+    cmd: python src/modules/4_gcro_shapefile_merge/gcro_shapefile_merge.py
     deps:
-      - src/modules/4_gcro_shapefile_merge/4_gcro_shapefile_merge.py
-      - outputs/processed-shapefile/gauteng-wards.geojson
-      - outputs/processed-gcro/gcro-clustered-data.csv
+      - src/modules/4_gcro_shapefile_merge/gcro_shapefile_merge.py
+      - outputs/processed-shapefile/2020/gauteng-wards.geojson
+      - outputs/processed-shapefile/2016/gauteng-wards.geojson
+      - outputs/processed-shapefile/2011/gauteng-wards.geojson
+      - outputs/processed-gcro/2021/gcro-clustered-data.csv
+      - outputs/processed-gcro/2018/gcro-clustered-data.csv
+    #      - outputs/processed-gcro/2016/gcro-clustered-data.csv
     outs:
       - outputs/merged/gauteng-qol.geojson
-      - outputs/merged/gauteng-qol.png
+      - outputs/merged/2021/gauteng-qol.geojson
+      - outputs/merged/2021/gauteng-qol.png
+      - outputs/merged/2018/gauteng-qol.geojson
+      - outputs/merged/2018/gauteng-qol.png
+  #      - outputs/merged/2016/gauteng-qol.geojson
+  #      - outputs/merged/2016/gauteng-qol.png
 
   tiling:
     cmd: python src/modules/tiling/tile_images.py
