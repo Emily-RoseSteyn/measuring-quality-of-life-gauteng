@@ -96,9 +96,9 @@ stages:
       - outputs/tiles/tile-transforms.geojson
 
   tile_cluster_matching:
-    cmd: python src/modules/tile_cluster_matching/match_tiles.py
+    cmd: python src/modules/6_tile_cluster_matching/match_tiles.py
     deps:
-      - src/modules/tile_cluster_matching/match_tiles.py
+      - src/modules/6_tile_cluster_matching/match_tiles.py
       - outputs/merged/gauteng-qol.geojson
       - outputs/tiles/tile-transforms.geojson
     outs:
