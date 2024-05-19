@@ -42,7 +42,10 @@ def tile_image(
         file_path: str, output_dir: str, crop_size: int = 256, thread: int = 0
 ) -> None:
     logger.info("Tiling %s", file_path)
-    basename = Path(os.path.basename(file_path))
+    path = Path(file_path)
+    # Extract date of tiff
+    date = path.parent.name
+    basename = Path(os.path.basename(path))
     file_name = basename.stem
     suffix = basename.suffix
 
@@ -60,7 +63,7 @@ def tile_image(
             tile_number = f"{index_x}_{index_y}"
 
             # Setting file name
-            tile_file_name = f"{file_name}_{tile_number}{suffix}"
+            tile_file_name = f"{date}-{file_name}_{tile_number}{suffix}"
             output_file_path = Path.joinpath(Path(output_dir), tile_file_name)
 
             # Writing file
