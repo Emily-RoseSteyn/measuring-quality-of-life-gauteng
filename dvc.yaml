@@ -53,9 +53,9 @@ stages:
       - outputs/processed-gcro/2018/gcro-column-datatypes.json
       - outputs/processed-gcro/2018/gcro-date-info.json
       - outputs/processed-gcro/2018/gcro-clustered-data.csv
-  #      - outputs/processed-gcro/2016/gcro-column-datatypes.json
-  #      - outputs/processed-gcro/2016/gcro-date-info.json
-  #      - outputs/processed-gcro/2016/gcro-clustered-data.csv
+      - outputs/processed-gcro/2016/gcro-column-datatypes.json
+      - outputs/processed-gcro/2016/gcro-date-info.json
+      - outputs/processed-gcro/2016/gcro-clustered-data.csv
 
   data_download:
     cmd: python src/modules/3_data_download/data_download.py

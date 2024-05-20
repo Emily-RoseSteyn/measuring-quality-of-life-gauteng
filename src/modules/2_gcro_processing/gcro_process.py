@@ -7,11 +7,19 @@ import pandas as pd
 from gcro_constants import GCRO_KEY_MAP
 from utils.logger import get_logger
 
+logger = get_logger()
+
 
 def process_gcro_survey_by_date(date: str):
+    logger.info(f"Processing {date}")
     # Load gcro data
     gcro_dta = f"./data/surveys/gcro-{date}.dta"
     df_gcro = pd.read_stata(gcro_dta, convert_categoricals=False)
+
+    if date == "2016":
+        # 2016 needs some additional processing
+        df_gcro = preprocess_2016(df_gcro)
+
     # TODO: Replace with step parameter
     results_dir = f"./outputs/processed-gcro/{date}"
     if not os.path.isdir(results_dir):
@@ -74,13 +82,18 @@ def process_gcro_survey_by_date(date: str):
     # TODO: Plot of distribution of interview dates
 
 
+def preprocess_2016(original_df: pd.DataFrame) -> pd.DataFrame:
+    additional_data = pd.read_spss("./data/surveys/gcro-2016-additional-data.sav", convert_categoricals=False)
+    return pd.concat([original_df.set_index("SbjNum"), additional_data.set_index("SbjNum")], axis=1,
+                     join="inner").reset_index()
+
+
 def main() -> None:
     logger = get_logger()
     logger.info("In gcro data processing")
     process_gcro_survey_by_date("2021")
     process_gcro_survey_by_date("2018")
-    # TODO: 2016 is an issue because it doesn't have the indexes??
-    # process_gcro_survey_by_date("2016")
+    process_gcro_survey_by_date("2016")
 
 
 if __name__ == "__main__":
