@@ -22,7 +22,7 @@ wait
 echo "Made temp directories on nodes"
 
 # Assuming relative to root project directory
-srun --unbuffered --mpi=pmi2 python src/modules/tiling/tile_slurm.py
+srun --unbuffered --mpi=pmi2 python src/modules/5_tiling/tile_slurm.py
 wait
 echo "Completed tiling"
 

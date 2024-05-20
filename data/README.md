@@ -27,6 +27,12 @@ data
     gcro-2021.dta
 ```
 
+The GCRO 2017/18 and 2020/21 survey methods to calculate the Quality of Life index were modified. For this
+reason an additional data file is included in the
+repo - [gcro-2016-additional-data.sav](./surveys/gcro-2016-additional-data.sav). Make sure to run `dvc pull` if you do
+not have hooks initialised. Then you can proceed with the `gcro-processing` step which will merge this data into the
+gcro-2016 dataset.
+
 ## Shapefiles
 
 The shapefiles have been added to the DVC remote store. Make sure that you have setup DVC as documented in the
@@ -89,7 +95,7 @@ The outputs of these two steps include a gauteng boundary geojson file and date 
 
 We can now use [Planet's basemap viewer](https://www.planet.com/basemaps) to do the following:
 
-* Identify the mean date of the survey outputted from the `gcro_processing` step
+* Identify the mean date of the survey outputted from the `gcro_processing` step in the `gcro-date-info.json` file
 * Search for the monthly MOSAIC that corresponds to the mean date.
     * For example, in the case of the 2021 GCRO survey, the mean date is 2021-01-12. The corresponding monthly mosaic on
       Planet is January 2021 (`global_monthly_2021_01_mosaic`).
