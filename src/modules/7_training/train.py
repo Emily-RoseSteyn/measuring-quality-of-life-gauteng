@@ -359,10 +359,10 @@ def run_model(
         callbacks=callbacks,
     )
 
-    model.evaluate(
-        test_generator,
-        callbacks=callbacks,
-    )
+    score = model.evaluate(test_generator,
+                           callbacks=callbacks)
+    logger.info("Test scores")
+    logger.info(score)
     return history
 
 
