@@ -1,3 +1,4 @@
+import json
 import os
 import random
 from datetime import datetime
@@ -68,6 +69,11 @@ def split_data(df: pd.DataFrame) -> tuple:
     logger.info("Descriptive statistics of test:")
     logger.info(f"Shape: {test.shape}")
     logger.info(test.describe())
+
+    df.loc[train.index, "split"] = "train"
+    df.loc[val.index, "split"] = "val"
+    df.loc[test.index, "split"] = "test"
+    df.to_csv("outputs/model/data-split.csv")
 
     return train, val, test
 
@@ -265,7 +271,7 @@ def get_callbacks(model_name: str) -> list:
     )
 
     model_checkpoint_callback = ModelCheckpoint(
-        "./outputs/checkpoints/" + model_name + ".h5",
+        "./outputs/model/" + model_name + ".h5",
         monitor="val_mean_absolute_percentage_error",
         verbose=0,
         save_best_only=True,  # save the best model
@@ -359,10 +365,15 @@ def run_model(
         callbacks=callbacks,
     )
 
-    model.evaluate(
-        test_generator,
-        callbacks=callbacks,
-    )
+    # Dump the dictionary containing each metric and the loss for each epoch
+    history_save_path = f"./outputs/model/{model_name}-history.json"
+    with open(history_save_path, "w") as history_file:
+        json.dump(history.history, history_file)
+
+    score = model.evaluate(test_generator,
+                           callbacks=callbacks)
+    logger.info("Test scores")
+    logger.info(score)
     return history
 
 
