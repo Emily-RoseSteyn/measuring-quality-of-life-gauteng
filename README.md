@@ -91,6 +91,10 @@ from GCP. Again, please contact [emilyrosesteyn@gmail.com](mailto:emilyrosesteyn
 Alternatively, if you are forking this repository, follow the instructions on the DVC docs
 to [add a remote](https://dvc.org/doc/command-reference/remote/add).
 
+**DVC Studio**
+In order to track experiments, DVC Studio is used. To set this up, one can run `dvc studio login --no-open` and follow
+the instructions.
+
 ## Pipeline
 
 1. [Data download](./data/README.md)
