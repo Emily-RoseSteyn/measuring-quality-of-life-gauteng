@@ -40,7 +40,7 @@ def load_dataset():
 
 def split_data(df: pd.DataFrame) -> tuple:
     """
-    Accepts a Pandas DataFrame and splits it into 7_training, validation, and test data. Returns DataFrames.
+    Accepts a Pandas DataFrame and splits it into 8_training, validation, and test data. Returns DataFrames.
 
     Parameters
     ----------
@@ -52,7 +52,7 @@ def split_data(df: pd.DataFrame) -> tuple:
     Union[pd.DataFrame, pd.DataFrame, pd.DataFrame]
         [description]
     """
-    # TODO: Splits should be params; also note eating into 7_training data here
+    # TODO: Splits should be params; also note eating into 8_training data here
     # TODO: Distribution of these datasets needs to be fair?
     #  See e2e notebooks with stratified shuffle split
     train, val = train_test_split(df, test_size=0.2, random_state=1)  # split the data with a validation size o 20%
@@ -83,14 +83,14 @@ def split_data(df: pd.DataFrame) -> tuple:
 def get_mean_baseline(train: pd.DataFrame, val: pd.DataFrame) -> float:
     """
     Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
-    Calculates the mean MAE and MAPE baselines by taking the mean values of the 7_training data
+    Calculates the mean MAE and MAPE baselines by taking the mean values of the 8_training data
     as a naive prediction for the validation target feature.
     (ie if the model predicted mean values, what would the error be in that case)
 
     Parameters
     ----------
     train : pd.DataFrame
-        Pandas DataFrame containing your 7_training data.
+        Pandas DataFrame containing your 8_training data.
     val : pd.DataFrame
         Pandas DataFrame containing your validation data.
 
@@ -99,7 +99,7 @@ def get_mean_baseline(train: pd.DataFrame, val: pd.DataFrame) -> float:
     float
         MAPE value.
     """
-    # y_hat is the dummy predicted variable set to the mean of the qol index data in the 7_training set
+    # y_hat is the dummy predicted variable set to the mean of the qol index data in the 8_training set
     y_hat = train["qol_index"].mean()
     val["y_hat"] = y_hat
     mae = MeanAbsoluteError()
@@ -123,9 +123,9 @@ def visualize_augmentations(data_generator: ImageDataGenerator, df: pd.DataFrame
     Parameters
     ----------
     data_generator : Iterator
-        The keras data generator of your 7_training data.
+        The keras data generator of your 8_training data.
     df : pd.DataFrame
-        The Pandas DataFrame containing your 7_training data.
+        The Pandas DataFrame containing your 8_training data.
     """
     image_dir = os.path.abspath(Path("./outputs/misc"))
 
@@ -162,7 +162,7 @@ def create_generators(
 ) -> tuple:
     """
     Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
-    Accepts four Pandas DataFrames: all data, the 7_training, validation and test DataFrames. Creates and returns
+    Accepts four Pandas DataFrames: all data, the 8_training, validation and test DataFrames. Creates and returns
     keras ImageDataGenerators.
     The augmentations of the ImageDataGenerators can also be visualised in this function.
 
@@ -171,7 +171,7 @@ def create_generators(
     df : pd.DataFrame
         Pandas DataFrame containing all data.
     train : pd.DataFrame
-        Pandas DataFrame containing 7_training data.
+        Pandas DataFrame containing 8_training data.
     val : pd.DataFrame
         Pandas DataFrame containing validation data.
     test : pd.DataFrame
@@ -182,9 +182,9 @@ def create_generators(
     Returns
     -------
     tuple[Iterator, Iterator, Iterator]
-        keras ImageDataGenerators used for 7_training, validating and testing of your models.
+        keras ImageDataGenerators used for 8_training, validating and testing of your models.
     """
-    # Create 7_training ImageDataGenerator with image augmentations
+    # Create 8_training ImageDataGenerator with image augmentations
     # TODO: Check image augmentation
     train_generator = ImageDataGenerator(
         rescale=1.0 / 255,
@@ -245,7 +245,7 @@ def create_generators(
 def get_callbacks(model_name: str) -> list:
     """
     Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
-    Accepts the model name as a string and returns multiple callbacks for 7_training the keras model.
+    Accepts the model name as a string and returns multiple callbacks for 8_training the keras model.
 
     Parameters
     ----------
@@ -330,12 +330,12 @@ def run_model(
 ) -> History:
     """
     This function runs a keras model with the Adam optimizer and multiple callbacks. The model is evaluated within
-    7_training through the validation generator and one final time on the test generator at the end of fitting.
+    8_training through the validation generator and one final time on the test generator at the end of fitting.
 
     Parameters
     ----------
     train_generator : Iterator
-        keras ImageDataGenerators for the 7_training data.
+        keras ImageDataGenerators for the 8_training data.
     validation_generator : Iterator
         keras ImageDataGenerators for the validation data.
     test_generator : Iterator
@@ -400,7 +400,7 @@ def plot_results(model_history: History, mean_baseline: float):
     # create a dictionary for each model history and loss type
     dict1 = {
         "MAPE": model_history.history["mean_absolute_percentage_error"],
-        "type": "7_training",
+        "type": "8_training",
         "model": "resnet",
     }
     dict2 = {
@@ -427,7 +427,7 @@ def plot_results(model_history: History, mean_baseline: float):
 
 
 def main() -> None:
-    logger.info("In 7_training")
+    logger.info("In 8_training")
     log_tf_gpu()
 
     # Seeding
@@ -438,11 +438,11 @@ def main() -> None:
 
     # Load dataset
     dataset = load_dataset()
-    # Split data into 7_training, validation, test datasets
+    # Split data into 8_training, validation, test datasets
     train, val, test = split_data(dataset)
 
     # A naive benchmark to compare results to
-    # Uses the mean of the 7_training data as the predicted value for all x values and calculates error based on that
+    # Uses the mean of the 8_training data as the predicted value for all x values and calculates error based on that
     mean_baseline = get_mean_baseline(train, val)
 
     # Get data generators
