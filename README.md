@@ -114,6 +114,13 @@ to [add a remote](https://dvc.org/doc/command-reference/remote/add).
       ```
     - To resolve, delete the [`gdrive credentials`](/.dvc/gdrive-credentials.json) file and retry `git push`. This will
       regenerate a new credentials file and the push should work.
+- **DVC exp config error**
+    - I had the following error when I first started using DVC experiments
+      ```text
+        ERROR: configuration error - config file error: extra keys not allowed @ data['exp']['auto_push']
+      ```
+    - I resolved it by switching off autopush `dvc config --global -u exp.auto_push`
+    - However, this means that it is imperative to ensure experiments are pushed from remote locations
 
 #### Poetry
 
