@@ -8,6 +8,8 @@ import geopandas as gpd
 import pandas as pd
 import pytz
 import tensorflow as tf
+from dvclive import Live
+from dvclive.keras import DVCLiveCallback
 from keras.callbacks import History, TensorBoard, EarlyStopping, ModelCheckpoint
 from keras.losses import MeanAbsoluteError, MeanAbsolutePercentageError
 from keras.metrics import MeanSquaredError, RootMeanSquaredError
@@ -277,7 +279,8 @@ def get_callbacks(model_name: str) -> list:
         save_best_only=True,  # save the best model
         mode="min",
         save_freq="epoch",  # save every epoch
-    )  # saving eff_net takes quite a bit of time
+    )
+
     return [tensorboard_callback, early_stopping_callback, model_checkpoint_callback]
 
 
@@ -358,12 +361,15 @@ def run_model(
         metrics=[MeanAbsoluteError(), MeanAbsolutePercentageError(), MeanSquaredError(), RootMeanSquaredError(),
                  r_squared]
     )
-    history = model.fit(
-        train_generator,
-        epochs=100,
-        validation_data=validation_generator,
-        callbacks=callbacks,
-    )
+    with Live(save_dvc_exp=True) as live:
+        callbacks = callbacks.append(DVCLiveCallback(save_dvc_exp=True, live=live))
+        history = model.fit(
+            train_generator,
+            epochs=100,
+            validation_data=validation_generator,
+            callbacks=callbacks,
+        )
+        live.log_artifact(model_name, type="model")
 
     # Dump the dictionary containing each metric and the loss for each epoch
     history_save_path = f"./outputs/model/{model_name}-history.json"
@@ -450,17 +456,6 @@ def main() -> None:
         test_generator=test_generator,
     )
     plot_results(resnet_history, mean_baseline)
-
-    # # with Live() as live:
-    # #     model.fit(
-    # #         train,
-    # #         validation_data=validation,
-    # #         callbacks=[
-    # #             DVCLiveCallback(live=live)
-    # #         ]
-    # #     )
-    # #     model.save("model")
-    # #     live.log_artifact("model", type="model")
 
 
 if __name__ == "__main__":
