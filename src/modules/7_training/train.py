@@ -260,6 +260,7 @@ def get_callbacks(model_name: str) -> list:
     logdir = (
             "logs/scalars/" + model_name + "_" + datetime.now(tz=pytz.utc).strftime("%Y%m%d-%H%M%S")
     )  # create a folder for each model.
+    # TODO: Write gradients deprecated?
     tensorboard_callback = TensorBoard(log_dir=logdir, write_grads=True)
     # use tensorboard --logdir logs in your command line to startup tensorboard with the correct logs
 
