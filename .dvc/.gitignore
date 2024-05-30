@@ -1,0 +1,5 @@
+/config.local
+/tmp
+/cache
+gdrive-credentials.json
+dvc-service-account-key.json

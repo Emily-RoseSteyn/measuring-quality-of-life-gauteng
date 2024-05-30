@@ -1,0 +1,151 @@
+# NB: Script must be included in deps in order to trigger changed stage
+stages:
+  install:
+    cmd: poetry install
+
+  load_env:
+    cmd: python src/utils/load_env.py
+    deps:
+      - src/utils/load_env.py
+      - .env
+
+  shapefile_processing:
+    cmd: python src/modules/1_shapefile_processing/shapefile_process.py
+    deps:
+      - src/modules/1_shapefile_processing/shapefile_process.py
+      - data/shapefiles/2011
+      - data/shapefiles/2016
+      - data/shapefiles/2020
+    outs:
+      - outputs/processed-shapefile/2011/gauteng-boundary.geojson
+      - outputs/processed-shapefile/2011/gauteng-boundary-unprocessed.geojson
+      - outputs/processed-shapefile/2011/gauteng-wards.geojson
+      - outputs/processed-shapefile/2011/gauteng-boundary.png
+      - outputs/processed-shapefile/2011/gauteng-boundary-unprocessed.png
+      - outputs/processed-shapefile/2011/gauteng-wards.png
+      - outputs/processed-shapefile/2011/za-wards.png
+      - outputs/processed-shapefile/2016/gauteng-boundary.geojson
+      - outputs/processed-shapefile/2016/gauteng-boundary-unprocessed.geojson
+      - outputs/processed-shapefile/2016/gauteng-wards.geojson
+      - outputs/processed-shapefile/2016/gauteng-boundary.png
+      - outputs/processed-shapefile/2016/gauteng-boundary-unprocessed.png
+      - outputs/processed-shapefile/2016/gauteng-wards.png
+      - outputs/processed-shapefile/2016/za-wards.png
+      - outputs/processed-shapefile/2020/gauteng-boundary.geojson
+      - outputs/processed-shapefile/2020/gauteng-boundary-unprocessed.geojson
+      - outputs/processed-shapefile/2020/gauteng-wards.geojson
+      - outputs/processed-shapefile/2020/gauteng-boundary.png
+      - outputs/processed-shapefile/2020/gauteng-boundary-unprocessed.png
+      - outputs/processed-shapefile/2020/gauteng-wards.png
+      - outputs/processed-shapefile/2020/za-wards.png
+
+  gcro_processing:
+    cmd: python src/modules/2_gcro_processing/gcro_process.py
+    deps:
+      - src/modules/2_gcro_processing/gcro_process.py
+      - data/surveys/gcro-2021.dta
+      - data/surveys/gcro-2018.dta
+      - data/surveys/gcro-2016.dta
+    outs:
+      - outputs/processed-gcro/2021/gcro-column-datatypes.json
+      - outputs/processed-gcro/2021/gcro-date-info.json
+      - outputs/processed-gcro/2021/gcro-clustered-data.csv
+      - outputs/processed-gcro/2018/gcro-column-datatypes.json
+      - outputs/processed-gcro/2018/gcro-date-info.json
+      - outputs/processed-gcro/2018/gcro-clustered-data.csv
+      - outputs/processed-gcro/2016/gcro-column-datatypes.json
+      - outputs/processed-gcro/2016/gcro-date-info.json
+      - outputs/processed-gcro/2016/gcro-clustered-data.csv
+
+  data_download:
+    cmd: python src/modules/3_data_download/data_download.py
+    deps:
+      - src/modules/3_data_download/data_download.py
+      - data/surveys/gcro-2021.dta
+      - data/surveys/gcro-2018.dta
+      - data/surveys/gcro-2016.dta
+      - data/basemap-metadata/basemap-metadata.json
+
+  gcro_shapefile_merge:
+    cmd: python src/modules/4_gcro_shapefile_merge/gcro_shapefile_merge.py
+    deps:
+      - src/modules/4_gcro_shapefile_merge/gcro_shapefile_merge.py
+      - outputs/processed-shapefile/2020/gauteng-wards.geojson
+      - outputs/processed-shapefile/2016/gauteng-wards.geojson
+      - outputs/processed-shapefile/2011/gauteng-wards.geojson
+      - outputs/processed-gcro/2021/gcro-clustered-data.csv
+      - outputs/processed-gcro/2018/gcro-clustered-data.csv
+    #      - outputs/processed-gcro/2016/gcro-clustered-data.csv
+    outs:
+      - outputs/merged/gauteng-qol.geojson
+      - outputs/merged/2021/gauteng-qol.geojson
+      - outputs/merged/2021/gauteng-qol.png
+      - outputs/merged/2018/gauteng-qol.geojson
+      - outputs/merged/2018/gauteng-qol.png
+  #      - outputs/merged/2016/gauteng-qol.geojson
+  #      - outputs/merged/2016/gauteng-qol.png
+
+  tiling:
+    cmd: python src/modules/5_tiling/tile_images.py
+    deps:
+      - src/modules/5_tiling/tile_images.py
+      - src/modules/5_tiling/tile_image.py
+      - src/modules/5_tiling/tile.sbatch
+      - src/modules/5_tiling/tile_slurm.py
+    outs:
+      - outputs/tiles/tile-transforms.geojson
+
+  tile_cluster_matching:
+    cmd: python src/modules/6_tile_cluster_matching/match_tiles.py
+    deps:
+      - src/modules/6_tile_cluster_matching/match_tiles.py
+      - outputs/merged/gauteng-qol.geojson
+      - outputs/tiles/tile-transforms.geojson
+    outs:
+      - outputs/matched/gauteng-qol-cluster-tiles.geojson
+      - outputs/matched/2018-gauteng-qol-cluster-tiles.png
+      - outputs/matched/2021-gauteng-qol-cluster-tiles.png
+
+  train:
+    cmd: python src/modules/7_training/train.py
+    deps:
+      - src/modules/7_training/train.py
+      - outputs/matched/gauteng-qol-cluster-tiles.geojson
+    outs:
+      - outputs/model/resnet.h5
+      - outputs/model/resnet-history.json
+      - outputs/model/data-split.csv
+
+  #  evaluate:
+  #    cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
+  #    deps:
+  #      - src/modules/evaluation/evaluate.py
+  #    - data/intermediate
+  #    - outputs/model.pkl
+  #    outs:
+  #    - eval
+
+
+  #  generate_grid:
+  #    cmd: python src/modules/grid_generation/generate_grid.py
+  #    deps:
+  #      - src/modules/grid_generation/generate_grid.py
+  #      - outputs/merged/gauteng-qol.geojson
+  #    outs:
+  #      - outputs/grid/grid-overlay.png
+  #      - outputs/grid/grid-gauteng-qol.png
+  #      - outputs/grid/qol-labelled-grid.csv
+  #
+  #  mosaiks_prediction:
+  #    cmd: python src/modules/mosaiks_prediction/predict.py
+  #    deps:
+  #      - src/modules/mosaiks_prediction/predict.py
+  #      - data/mosaiks-features/mosaiks_features.csv
+  #      - outputs/grid/qol-labelled-grid.csv
+  #    outs:
+  #      - outputs/mosaiks-prediction/ols-observed-vs-predicted.png
+  #      - outputs/mosaiks-prediction/ols-observed.png
+  #      - outputs/mosaiks-prediction/ols-predicted.png
+  #      - outputs/mosaiks-prediction/ridge-observed-vs-predicted.png
+  #      - outputs/mosaiks-prediction/ridge-observed.png
+  #      - outputs/mosaiks-prediction/ridge-predicted.png

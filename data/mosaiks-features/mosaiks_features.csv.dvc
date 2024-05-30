@@ -1,0 +1,5 @@
+outs:
+- md5: b4991d36a61ae9646fe377a50658a037
+  size: 1261893911
+  hash: md5
+  path: mosaiks_features.csv

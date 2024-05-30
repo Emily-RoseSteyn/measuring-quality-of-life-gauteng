@@ -1,0 +1,6 @@
+outs:
+- md5: e506ece68c603f5f346a71419331b389.dir
+  size: 60780086
+  nfiles: 6
+  hash: md5
+  path: '2016'
