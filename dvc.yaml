@@ -75,15 +75,15 @@ stages:
       - outputs/processed-shapefile/2011/gauteng-wards.geojson
       - outputs/processed-gcro/2021/gcro-clustered-data.csv
       - outputs/processed-gcro/2018/gcro-clustered-data.csv
-    #      - outputs/processed-gcro/2016/gcro-clustered-data.csv
+      - outputs/processed-gcro/2016/gcro-clustered-data.csv
     outs:
       - outputs/merged/gauteng-qol.geojson
       - outputs/merged/2021/gauteng-qol.geojson
       - outputs/merged/2021/gauteng-qol.png
       - outputs/merged/2018/gauteng-qol.geojson
       - outputs/merged/2018/gauteng-qol.png
-  #      - outputs/merged/2016/gauteng-qol.geojson
-  #      - outputs/merged/2016/gauteng-qol.png
+      - outputs/merged/2016/gauteng-qol.geojson
+      - outputs/merged/2016/gauteng-qol.png
 
   tiling:
     cmd: python src/modules/5_tiling/tile_images.py

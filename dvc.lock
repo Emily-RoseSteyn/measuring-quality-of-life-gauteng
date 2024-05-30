@@ -205,13 +205,13 @@ stages:
       size: 8499821
     - path: src/modules/2_gcro_processing/gcro_process.py
       hash: md5
-      md5: 260978ca0040d82811c490c08e80a2f5
-      size: 3321
+      md5: 145782053a9932eaed48c4105ac9b679
+      size: 3408
     outs:
     - path: outputs/processed-gcro/2016/gcro-clustered-data.csv
       hash: md5
-      md5: 9c347e1f37b90fa9656fb044cc01ca31
-      size: 80059
+      md5: 93d2d1dfb010c45f355c3dfdd62ec130
+      size: 78505
     - path: outputs/processed-gcro/2016/gcro-column-datatypes.json
       hash: md5
       md5: 6fac0434a3a0b2827f22af8c6dd0c96a
@@ -222,8 +222,8 @@ stages:
       size: 106
     - path: outputs/processed-gcro/2018/gcro-clustered-data.csv
       hash: md5
-      md5: 830d0aea5ee7b4af7f7f1501f40ecaab
-      size: 83228
+      md5: 3fb03f0161db1bda5fee4561bc0544ac
+      size: 81633
     - path: outputs/processed-gcro/2018/gcro-column-datatypes.json
       hash: md5
       md5: 9629553ee8ac8ed6f9331dda0f8a51f6
@@ -234,8 +234,8 @@ stages:
       size: 106
     - path: outputs/processed-gcro/2021/gcro-clustered-data.csv
       hash: md5
-      md5: fd14932c47c6c5032a35f361eb917b09
-      size: 83318
+      md5: 0b3b9f8abd1324f6ff20aab63e2bc87a
+      size: 81724
     - path: outputs/processed-gcro/2021/gcro-column-datatypes.json
       hash: md5
       md5: 639dacf242b430f397437fde557da6d5
@@ -247,14 +247,18 @@ stages:
   gcro_shapefile_merge:
     cmd: python src/modules/4_gcro_shapefile_merge/gcro_shapefile_merge.py
     deps:
+    - path: outputs/processed-gcro/2016/gcro-clustered-data.csv
+      hash: md5
+      md5: 93d2d1dfb010c45f355c3dfdd62ec130
+      size: 78505
     - path: outputs/processed-gcro/2018/gcro-clustered-data.csv
       hash: md5
-      md5: 830d0aea5ee7b4af7f7f1501f40ecaab
-      size: 83228
+      md5: 3fb03f0161db1bda5fee4561bc0544ac
+      size: 81633
     - path: outputs/processed-gcro/2021/gcro-clustered-data.csv
       hash: md5
-      md5: fd14932c47c6c5032a35f361eb917b09
-      size: 83318
+      md5: 0b3b9f8abd1324f6ff20aab63e2bc87a
+      size: 81724
     - path: outputs/processed-shapefile/2011/gauteng-wards.geojson
       hash: md5
       md5: cd39f3b48bf05d8dc27cbe16deea56d0
@@ -272,26 +276,34 @@ stages:
       md5: 9c05cc9fcea05c5fea76aa10b95b4965
       size: 3261
     outs:
+    - path: outputs/merged/2016/gauteng-qol.geojson
+      hash: md5
+      md5: b42f9c41291bf539a77362348d49c7d9
+      size: 10806212
+    - path: outputs/merged/2016/gauteng-qol.png
+      hash: md5
+      md5: 2f80dfaa100bc75318638b0a97271931
+      size: 70240
     - path: outputs/merged/2018/gauteng-qol.geojson
       hash: md5
-      md5: 5cb8fe7b2ada95601f29aa6227498c59
-      size: 5389588
+      md5: 9720a1fc3bedb556eaba7b74e5e97a36
+      size: 5382181
     - path: outputs/merged/2018/gauteng-qol.png
       hash: md5
       md5: bb193a9e51edddafd8148689795129c4
       size: 78527
     - path: outputs/merged/2021/gauteng-qol.geojson
       hash: md5
-      md5: 1b0638102484489c12746c8501691ee1
-      size: 5389380
+      md5: cd9c08baa345b39e2ee4f12b0e9a4360
+      size: 5381974
     - path: outputs/merged/2021/gauteng-qol.png
       hash: md5
       md5: ff51e49aad237639b2dc7a73fd3566d0
       size: 78817
     - path: outputs/merged/gauteng-qol.geojson
       hash: md5
-      md5: 73936358a676db73bc16fcfd637feba0
-      size: 10795762
+      md5: 80c90b2a44434f93592bcec4fb4870f1
+      size: 21603283
   generate_grid:
     cmd: python src/modules/grid_generation/generate_grid.py
     deps:
@@ -385,26 +397,26 @@ stages:
     deps:
     - path: outputs/merged/gauteng-qol.geojson
       hash: md5
-      md5: 73936358a676db73bc16fcfd637feba0
-      size: 10795762
+      md5: 80c90b2a44434f93592bcec4fb4870f1
+      size: 21603283
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
       md5: dd162bb0d166b563877bcf0a2416ba54
       size: 19933507
     - path: src/modules/6_tile_cluster_matching/match_tiles.py
       hash: md5
-      md5: 5849737f2f809e93bc0a685c45fc508c
-      size: 1861
+      md5: 1b8615362d40caf3cd8fa65c03d2e902
+      size: 1878
     outs:
     - path: outputs/matched/2018-gauteng-qol-cluster-tiles.png
       hash: md5
-      md5: 050c06480deec7205012228bd8b3394f
-      size: 30212
+      md5: e6059c38fa5173edcb237931ea6a53a3
+      size: 30186
     - path: outputs/matched/2021-gauteng-qol-cluster-tiles.png
       hash: md5
-      md5: dbbd93a91a4d18c9060574fe243c86ed
-      size: 30902
+      md5: 6d84fa1abb5c29c7f2db45af337a27e8
+      size: 30769
     - path: outputs/matched/gauteng-qol-cluster-tiles.geojson
       hash: md5
-      md5: 7aaf0e12911756c031059ec6f0362368
-      size: 32309195
+      md5: 1244eeea4240ac12f7c44aecd78bdab5
+      size: 30803642

@@ -35,7 +35,7 @@ def main() -> None:
     # Select only the rows with matching years
     joined_data = joined_data.loc[joined_data["year_left"] == joined_data["year_right"]]
     joined_data = joined_data.rename(columns={"year_left": "year"})
-    joined_data = joined_data.drop("year_right", axis=1)
+    joined_data = joined_data.drop(["year_right", "index_right"], axis=1)
 
     # Plot
     joined_data[joined_data["year"] == "2018"].plot(column="qol_index", legend=True, aspect=1)
