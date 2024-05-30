@@ -149,3 +149,7 @@ stages:
   #      - outputs/mosaiks-prediction/ridge-observed-vs-predicted.png
   #      - outputs/mosaiks-prediction/ridge-observed.png
   #      - outputs/mosaiks-prediction/ridge-predicted.png
+artifacts:
+  resnet:
+    path: resnet
+    type: model
