@@ -59,8 +59,8 @@ stages:
       size: 32314481
     - path: src/modules/7_training/train.py
       hash: md5
-      md5: 40b2a2ea3b8747c7b0c66fa6af5f87b8
-      size: 16468
+      md5: 045ae3a5bce4c9e0a988c9fa6c9e0bbc
+      size: 16420
     outs:
     - path: outputs/model/data-split.csv
       hash: md5
@@ -68,11 +68,11 @@ stages:
       size: 2536907
     - path: outputs/model/resnet-history.json
       hash: md5
-      md5: a8c278c6d68b882ec37bad3a45fb20b7
+      md5: c63e7fae3e0958f966af6ecc668cdba7
       size: 2845
     - path: outputs/model/resnet.h5
       hash: md5
-      md5: 0cfe3a519f78faf20bd0f85bb59f3353
+      md5: cde4bbea57ad77f501ab5e7cb8172b78
       size: 94882472
   evaluate:
     cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
