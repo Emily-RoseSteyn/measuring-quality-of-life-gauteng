@@ -363,7 +363,7 @@ def run_model(
                  r_squared]
     )
     with Live(save_dvc_exp=True) as live:
-        callbacks = callbacks.append(DVCLiveCallback(save_dvc_exp=True, live=live))
+        callbacks.append(DVCLiveCallback(save_dvc_exp=True, live=live))
         history = model.fit(
             train_generator,
             epochs=100,
