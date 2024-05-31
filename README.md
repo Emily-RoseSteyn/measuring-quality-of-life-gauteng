@@ -91,6 +91,13 @@ from GCP. Again, please contact [emilyrosesteyn@gmail.com](mailto:emilyrosesteyn
 Alternatively, if you are forking this repository, follow the instructions on the DVC docs
 to [add a remote](https://dvc.org/doc/command-reference/remote/add).
 
+**DVC Studio**
+
+In order to track experiments, DVC Studio can be used. To set this up, one can run `dvc studio login --no-open` and
+follow
+the instructions. The code in train and evaluation steps uses Live to track and save metrics and plots. This is synced
+with DVC Studio if enabled.
+
 ## Pipeline
 
 1. [Data download](./data/README.md)
@@ -114,6 +121,13 @@ to [add a remote](https://dvc.org/doc/command-reference/remote/add).
       ```
     - To resolve, delete the [`gdrive credentials`](/.dvc/gdrive-credentials.json) file and retry `git push`. This will
       regenerate a new credentials file and the push should work.
+- **DVC exp config error**
+    - I had the following error when I first started using DVC experiments
+      ```text
+        ERROR: configuration error - config file error: extra keys not allowed @ data['exp']['auto_push']
+      ```
+    - I resolved it by switching off autopush `dvc config --global -u exp.auto_push`
+    - However, this means that it is imperative to ensure experiments are pushed from remote locations
 
 #### Poetry
 
