@@ -92,8 +92,11 @@ Alternatively, if you are forking this repository, follow the instructions on th
 to [add a remote](https://dvc.org/doc/command-reference/remote/add).
 
 **DVC Studio**
-In order to track experiments, DVC Studio is used. To set this up, one can run `dvc studio login --no-open` and follow
-the instructions.
+
+In order to track experiments, DVC Studio can be used. To set this up, one can run `dvc studio login --no-open` and
+follow
+the instructions. The code in train and evaluation steps uses Live to track and save metrics and plots. This is synced
+with DVC Studio if enabled.
 
 ## Pipeline
 
