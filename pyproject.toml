@@ -40,7 +40,6 @@ dvc = { extras = ["gdrive"], version = "^3.51.1" }
 mypy = "^1.5.1"
 ruff = "^0.0.292"
 pre-commit = "^3.4.0"
-dvc = { extras = ["gdrive"], version = "^3.27.0" }
 
 [build-system]
 requires = ["poetry-core"]
