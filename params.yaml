@@ -1,0 +1,7 @@
+constants:
+  random_seed: 42
+
+split:
+  test_size: 0.2
+  folds: 5
+  method: "random" # random; ward_random; ward_stratified

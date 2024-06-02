@@ -2,16 +2,20 @@ import random
 
 import geopandas as gpd
 import pandas as pd
+from dvc.api import params_show
 from sklearn.model_selection import train_test_split
 
 from utils.logger import get_logger
 
 logger = get_logger()
 
+# Get DVC params
+params = params_show()
+
 
 def ward_test_data_split(df: pd.DataFrame) -> tuple:
     """
-    Accepts a Pandas DataFrame and splits it into training and test data. Returns DataFrames.
+    Accepts a Pandas DataFrame and splits it into training and test data. Saves these.
 
     Parameters
     ----------
@@ -23,7 +27,6 @@ def ward_test_data_split(df: pd.DataFrame) -> tuple:
     Union[pd.DataFrame, pd.DataFrame, pd.DataFrame]
         [description]
     """
-    # TODO: Splits should be params; also note eating into training data here
     # TODO: Ensure splitting by ward + distribution of some kind??
     # TODO: Distribution of these datasets needs to be fair?
     #  See e2e notebooks with stratified shuffle split
@@ -32,9 +35,11 @@ def ward_test_data_split(df: pd.DataFrame) -> tuple:
     ward_numeric_df = ward_numeric_df.groupby("ward_code").mean().reset_index()
     ward_tile_df = df[["ward_code", "tile"]]
     ward_tile_df = ward_tile_df.groupby("ward_code").count().rename(columns={"tile": "tile_count"}).reset_index()
-
     wards = ward_numeric_df.merge(ward_tile_df, on="ward_code", how="inner")
-    train, test = train_test_split(wards, test_size=0.2, random_state=1)  # split the data with a validation size o 20%
+
+    # Split data
+    test_size = params["split"]["test_size"]
+    train, test = train_test_split(wards, test_size=test_size, random_state=1)
 
     logger.info("Descriptive statistics of train:")
     logger.info(f"Shape: {train.shape}")
@@ -56,13 +61,17 @@ def main() -> None:
     logger.info("In test data split")
 
     # Seeding
-    seed = 42
+    seed = params["constants"]["random_seed"]
     random.seed(seed)
-    # np.random.seed(seed)  # TODO: Figure out how to fix this
 
     # Load dataset
     dataset = gpd.read_file("outputs/matched/gauteng-qol-cluster-tiles.geojson")
 
+    # If simple random
+
+    # If ward random
+
+    # If ward stratified
     # Split data into 8_training, validation, test datasets
     ward_test_data_split(dataset)
 
