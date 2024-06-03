@@ -8,6 +8,7 @@ import geopandas as gpd
 import pandas as pd
 import pytz
 import tensorflow as tf
+from dvc.api import params_show
 from dvclive import Live
 from dvclive.keras import DVCLiveCallback
 from keras.callbacks import History, TensorBoard, EarlyStopping, ModelCheckpoint
@@ -26,6 +27,18 @@ from utils.logger import get_logger
 from utils.tensorflow_utils import log_tf_gpu
 
 logger = get_logger()
+
+# Get DVC params
+params = params_show()
+
+
+def load_train_dataset():
+    """
+    Loads training data
+    """
+
+    dataset = gpd.read_file("outputs/model/train-test-split.geojson")
+    return dataset[dataset["split"] == "train"]
 
 
 def load_dataset():
