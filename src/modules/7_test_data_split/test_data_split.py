@@ -1,9 +1,8 @@
 import random
 
 import geopandas as gpd
-import pandas as pd
 from dvc.api import params_show
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GroupShuffleSplit
 
 from utils.logger import get_logger
 
@@ -13,7 +12,7 @@ logger = get_logger()
 params = params_show()
 
 
-def ward_test_data_split(df: pd.DataFrame) -> tuple:
+def ward_test_data_split(df: gpd.GeoDataFrame) -> tuple:
     """
     Accepts a Pandas DataFrame and splits it into training and test data. Saves these.
 
@@ -24,36 +23,40 @@ def ward_test_data_split(df: pd.DataFrame) -> tuple:
 
     Returns
     -------
-    Union[pd.DataFrame, pd.DataFrame, pd.DataFrame]
-        [description]
+    Union[pd.DataFrame, pd.DataFrame]
     """
-    # TODO: Ensure splitting by ward + distribution of some kind??
-    # TODO: Distribution of these datasets needs to be fair?
-    #  See e2e notebooks with stratified shuffle split
-    # TODO: Do we care about the year?
-    ward_numeric_df = df.drop(["tile", "geometry", "year"], axis=1)
-    ward_numeric_df = ward_numeric_df.groupby("ward_code").mean().reset_index()
-    ward_tile_df = df[["ward_code", "tile"]]
-    ward_tile_df = ward_tile_df.groupby("ward_code").count().rename(columns={"tile": "tile_count"}).reset_index()
-    wards = ward_numeric_df.merge(ward_tile_df, on="ward_code", how="inner")
-
     # Split data
+    random_state = params["constants"]["random_seed"]
     test_size = params["split"]["test_size"]
-    train, test = train_test_split(wards, test_size=test_size, random_state=1)
 
+    # NB - test size here is for the group (ie 20% of wards will go into group. Not 20% of tiles)
+    gss = GroupShuffleSplit(n_splits=1, test_size=test_size, random_state=random_state)
+    groups = df["ward_code"]
+
+    # Get the next item from the gss iterator. Only expecting one because of n_splits=1 above
+    # Split function returns indexes in group!
+    train_index, test_index = next(gss.split(df, groups=groups))
+
+    # Access train and test grouped data
+    train_groups = groups[train_index]
+    test_groups = groups[test_index]
+    logger.info("Ward information for train and test")
+    logger.info(f"Wards in train: {len(train_groups.unique())}")
+    logger.info(f"Wards in test: {len(test_groups.unique())}")
+
+    train = df.loc[train_groups.index]
     logger.info("Descriptive statistics of train:")
     logger.info(f"Shape: {train.shape}")
     logger.info(train.describe())
-    logger.info(train["ward_code"].head())
 
+    test = df.loc[test_groups.index]
     logger.info("Descriptive statistics of test:")
     logger.info(f"Shape: {test.shape}")
     logger.info(test.describe())
-    logger.info(test["ward_code"].head())
-    #
-    # df.loc[train.index, "split"] = "train"
-    # df.loc[test.index, "split"] = "test"
-    # df.to_csv("outputs/model/train-test-split.csv")
+
+    df.loc[train.index, "split"] = "train"
+    df.loc[test.index, "split"] = "test"
+    df.to_file("outputs/model/train-test-split.geojson", driver="GeoJSON")
     return train, test
 
 
@@ -71,8 +74,7 @@ def main() -> None:
 
     # If ward random
 
-    # If ward stratified
-    # Split data into 8_training, validation, test datasets
+    # Split data into train and test datasets
     ward_test_data_split(dataset)
 
 
