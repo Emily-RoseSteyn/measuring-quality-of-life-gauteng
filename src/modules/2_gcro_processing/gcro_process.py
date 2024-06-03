@@ -74,11 +74,12 @@ def process_gcro_survey_by_date(date: str):
             "QoLIndex_Data_Driven": "qol_index",
         }
     )
-    ward_code_group = selected_data.groupby([renamed_ward_code_key])
-    ward_code_clusters = (
-        ward_code_group.size().to_frame(name="counts").join(ward_code_group.mean())
-    )
-    ward_code_clusters.to_csv(f"{results_dir}/gcro-clustered-data.csv")
+    ward_code_group = selected_data.groupby([renamed_ward_code_key]).mean()
+    # TODO: Is it actually important to track number of interviews in ward?
+    # ward_code_clusters = (
+    #     ward_code_group.size().to_frame(name="counts").join(ward_code_group.mean())
+    # )
+    ward_code_group.to_csv(f"{results_dir}/gcro-clustered-data.csv")
     # TODO: Plot of distribution of interview dates
 
 
