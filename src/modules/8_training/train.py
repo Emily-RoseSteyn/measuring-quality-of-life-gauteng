@@ -1,8 +1,6 @@
 import json
-import os
 import random
 from datetime import datetime
-from pathlib import Path
 
 import geopandas as gpd
 import pandas as pd
@@ -15,13 +13,13 @@ from keras.callbacks import History, TensorBoard, EarlyStopping, ModelCheckpoint
 from keras.losses import MeanAbsoluteError, MeanAbsolutePercentageError
 from keras.metrics import MeanSquaredError, RootMeanSquaredError
 from keras.optimizers import Adam
-from keras.preprocessing.image import ImageDataGenerator, Iterator
-from matplotlib import pyplot as plt
+from keras.preprocessing.image import ImageDataGenerator
 from sklearn.model_selection import train_test_split, StratifiedGroupKFold
 from tensorflow.keras import Model
 from tensorflow.keras import layers
 from tensorflow.keras.applications import ResNet50V2
 
+from keras_data_format_utils import create_generator
 from utils.logger import get_logger
 from utils.tensorflow_utils import log_tf_gpu
 
@@ -36,11 +34,9 @@ def load_train_dataset():
     Loads training data
     """
 
-    training_label = params["train"]["label"]
     dataset = gpd.read_file("outputs/model/train-test-split.geojson")
     train = dataset[dataset["split"] == "train"]
-    labels = train[["tile", training_label]]
-    return labels
+    return train
 
 
 def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> tuple:
@@ -98,135 +94,6 @@ def data_split_simple(df: pd.DataFrame) -> tuple:
     logger.info(val.describe())
 
     return train, val
-
-
-# TODO: Clean up and move elsewhere
-def visualize_augmentations(data_generator: ImageDataGenerator, df: pd.DataFrame):
-    """
-    Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
-    Visualizes the keras augmentations with matplotlib in 3x3 grid. This function is part of create_generators() and
-    can be accessed from there.
-
-    Parameters
-    ----------
-    data_generator : Iterator
-        The keras data generator of your training data.
-    df : pd.DataFrame
-        The Pandas DataFrame containing your training data.
-    """
-    image_dir = os.path.abspath(Path("./outputs/misc"))
-
-    if not os.path.isdir(image_dir):
-        os.makedirs(image_dir)
-
-    # super hacky way of creating a small dataframe with one image
-    series = df.iloc[2]
-
-    df_augmentation_visualization = pd.concat([series, series], axis=1).transpose()
-
-    iterator_visualizations = data_generator.flow_from_dataframe(
-        directory="outputs/tiles",
-        dataframe=df_augmentation_visualization,
-        x_col="tile",
-        y_col="qol_index",
-        class_mode="raw",
-        target_size=(256, 256),
-        batch_size=1,  # use only one image for visualization
-    )
-
-    for i in range(9):
-        plt.subplot(3, 3, i + 1)  # create a 3x3 grid
-        batch = next(iterator_visualizations)  # get the next image of the generator (always the same image)
-        img = batch[0]
-        img = img[0, :, :, :]  # remove one dimension for plotting without issues
-        plt.imshow(img)
-    plt.savefig("outputs/misc/augmentations.png")
-
-
-def create_generators(
-        df: pd.DataFrame, train: pd.DataFrame, val: pd.DataFrame, test: pd.DataFrame,
-        visualize_augmentations_flag: int = 0
-) -> tuple:
-    """
-    Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
-    Accepts four Pandas DataFrames: all data, the training, validation and test DataFrames. Creates and returns
-    keras ImageDataGenerators.
-    The augmentations of the ImageDataGenerators can also be visualised in this function.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Pandas DataFrame containing all data.
-    train : pd.DataFrame
-        Pandas DataFrame containing training data.
-    val : pd.DataFrame
-        Pandas DataFrame containing validation data.
-    test : pd.DataFrame
-        Pandas DataFrame containing testing data.
-    visualize_augmentations_flag: int
-        Flag to visualise augmentations.
-
-    Returns
-    -------
-    tuple[Iterator, Iterator, Iterator]
-        keras ImageDataGenerators used for training, validating and testing of your models.
-    """
-    # Create training ImageDataGenerator with image augmentations
-    # TODO: Check image augmentation
-    train_generator = ImageDataGenerator(
-        rescale=1.0 / 255,
-        rotation_range=5,
-        width_shift_range=0.1,
-        height_shift_range=0.1,
-        brightness_range=(0.75, 1),
-        shear_range=0.1,
-        zoom_range=[0.75, 1],
-        horizontal_flip=True,
-        vertical_flip=True
-    )
-
-    # Visualize image augmentations if flag set before actually getting dataframe
-    if visualize_augmentations_flag == 1:
-        visualize_augmentations(train_generator, df)
-
-    # Create dataframe iterator
-    train_generator = train_generator.flow_from_dataframe(
-        directory="outputs/tiles",
-        dataframe=train,
-        x_col="tile",  # Image location
-        y_col="qol_index",  # Target feature
-        class_mode="raw",  # Use "raw" for regressions TODO: Understand why?
-        target_size=(256, 256),
-        # TODO: increase or decrease to fit GPU
-        batch_size=32,
-    )
-
-    # Create validation and test ImageDataGenerators without image augmentations
-    # Except for rescaling, no augmentations are needed for validation and testing generators
-    validation_generator = ImageDataGenerator(
-        rescale=1.0 / 255
-    )
-    validation_generator = validation_generator.flow_from_dataframe(
-        directory="outputs/tiles",
-        dataframe=val,
-        x_col="tile",  # Image location
-        y_col="qol_index",  # Target feature
-        class_mode="raw",
-        target_size=(256, 256),
-        batch_size=32,
-    )
-
-    test_generator = ImageDataGenerator(rescale=1.0 / 255)
-    test_generator = test_generator.flow_from_dataframe(
-        directory="outputs/tiles",
-        dataframe=test,
-        x_col="tile",  # Image location
-        y_col="qol_index",  # Target feature
-        class_mode="raw",
-        target_size=(256, 256),
-        batch_size=32,
-    )
-    return train_generator, validation_generator, test_generator
 
 
 def get_callbacks(model_name: str) -> list:
@@ -292,6 +159,7 @@ def resnet_model():
     x = layers.Dropout(top_dropout_rate, name="top_dropout")(x)
 
     # final layer, since we are doing regression we will add only one neuron (unit)
+    # TODO: Add more layers
     outputs = layers.Dense(1, name="pred")(x)
 
     # Compile
@@ -311,8 +179,8 @@ def r_squared(y_true, y_pred):
 
 # TODO: Different models? Fine-tuning? Generalisation (see blog)
 def run_model(
-        train_generator: Iterator,
-        validation_generator: Iterator,
+        train_generator: ImageDataGenerator,
+        validation_generator: ImageDataGenerator,
 ) -> History:
     """
     This function runs a keras model with the Adam optimizer and multiple callbacks. The model is evaluated within
@@ -334,7 +202,6 @@ def run_model(
 
     model_name = "resnet"
 
-    callbacks = get_callbacks(model_name)
     model = resnet_model()
     # model.summary()
     # TODO: Install missing packages pydot + graphviz
@@ -347,6 +214,7 @@ def run_model(
                  r_squared]
     )
     with Live(save_dvc_exp=True) as live:
+        callbacks = get_callbacks(model_name)
         callbacks.append(DVCLiveCallback(save_dvc_exp=True, live=live))
         history = model.fit(
             train_generator,
@@ -380,6 +248,7 @@ def main() -> None:
 
     # Load training dataset
     dataset = load_train_dataset()
+    training_label = params["train"]["label"]
 
     # Split training data into train and validation datasets
     # Type of dataset split
@@ -389,21 +258,22 @@ def main() -> None:
     if group_by_ward:
         logger.info("Grouping by ward")
         data_split_ward_group_stratified_k_fold(dataset)
+        # TODO: Do something with this grouping
     # Else assume simple random
     else:
         logger.info("Random splitting")
+        dataset = dataset[["tile", training_label]]
         train, val = data_split_simple(dataset)
 
-    # Get data generators
-    train_generator, validation_generator, test_generator = create_generators(
-        df=dataset, train=train, val=val, visualize_augmentations_flag=1
-    )
+        # Get data generators
+        train_generator = create_generator(train, training_label, apply_augmentation_flag=1)
+        validation_generator = create_generator(val, training_label)
 
-    # Run model
-    run_model(
-        train_generator=train_generator,
-        validation_generator=validation_generator,
-    )
+        # Run model
+        run_model(
+            train_generator=train_generator,
+            validation_generator=validation_generator,
+        )
 
 
 if __name__ == "__main__":
