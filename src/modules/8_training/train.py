@@ -127,6 +127,7 @@ def get_callbacks(model_name: str) -> list:
         restore_best_weights=True,  # restore the best model with the lowest validation error
     )
 
+    # TODO: Different model name depending on index?
     model_checkpoint_callback = ModelCheckpoint(
         "./outputs/model/" + model_name + ".h5",
         monitor="val_mean_absolute_percentage_error",
@@ -252,7 +253,7 @@ def main() -> None:
 
     # Split training data into train and validation datasets
     # Type of dataset split
-    group_by_ward = params["split"]["group_by_ward"]
+    group_by_ward = params["train"]["group_by_ward"]
 
     # If group by ward
     if group_by_ward:

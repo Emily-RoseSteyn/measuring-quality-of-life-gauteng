@@ -11,4 +11,7 @@ train:
   # One of services, socioeconomic_status, government_satisfaction,
   # life_satisfaction, health, safety, participation, qol_index
   label: "qol_index"
+  # Loss to use for training
   loss: "mean_absolute_error"
+  # Group training data by ward
+  group_by_ward: False

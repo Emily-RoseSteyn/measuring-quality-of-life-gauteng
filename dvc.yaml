@@ -124,6 +124,10 @@ stages:
     deps:
       - src/modules/8_training/train.py
       - outputs/model/train-test-split.geojson
+    params:
+      - split
+      - train
+      - constants.random_seed
     outs:
       - outputs/model/resnet.h5
       - outputs/model/resnet-history.json
