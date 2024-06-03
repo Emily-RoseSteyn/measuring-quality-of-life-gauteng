@@ -12,7 +12,7 @@ logger = get_logger()
 params = params_show()
 
 
-def simple_random_split(df: gpd.GeoDataFrame) -> tuple:
+def test_data_split_simple_random(df: gpd.GeoDataFrame) -> tuple:
     """
     Accepts a Geopandas DataFrame and splits it into training and test data randomly.
 
@@ -31,7 +31,7 @@ def simple_random_split(df: gpd.GeoDataFrame) -> tuple:
     return train_test_split(df, test_size=test_size, random_state=random_state)
 
 
-def ward_test_data_split(df: gpd.GeoDataFrame) -> tuple:
+def test_data_split_ward_group_shuffle_split(df: gpd.GeoDataFrame) -> tuple:
     """
     Accepts a Geopandas DataFrame and splits it into training and test data
     grouped by ward so that no ward overlaps between the train/test dataset.
@@ -84,11 +84,11 @@ def main() -> None:
     # If group by ward
     if group_by_ward:
         logger.info("Grouping by ward")
-        train, test = ward_test_data_split(dataset)
+        train, test = test_data_split_ward_group_shuffle_split(dataset)
     # Else assume simple random
     else:
         logger.info("Random splitting")
-        train, test = simple_random_split(dataset)
+        train, test = test_data_split_simple_random(dataset)
 
     logger.info("Ward information for train and test")
     train_wards = train["ward_code"].unique()
