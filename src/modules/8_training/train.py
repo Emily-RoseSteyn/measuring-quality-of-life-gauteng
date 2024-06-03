@@ -17,7 +17,7 @@ from keras.metrics import MeanSquaredError, RootMeanSquaredError
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator, Iterator
 from matplotlib import pyplot as plt
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, StratifiedGroupKFold
 from tensorflow.keras import Model
 from tensorflow.keras import layers
 from tensorflow.keras.applications import ResNet50V2
@@ -43,9 +43,9 @@ def load_train_dataset():
     return labels
 
 
-def split_data(df: pd.DataFrame) -> tuple:
+def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> tuple:
     """
-    Accepts a Pandas DataFrame and splits it into training, validation, and test data. Returns DataFrames.
+    Accepts a Pandas DataFrame and splits it using the group stratified k fold method
 
     Parameters
     ----------
@@ -54,16 +54,40 @@ def split_data(df: pd.DataFrame) -> tuple:
 
     Returns
     -------
-    Union[pd.DataFrame, pd.DataFrame, pd.DataFrame]
+    Generator
+    """
+
+    folds = params["split"]["folds"]
+    sgkf = StratifiedGroupKFold(n_splits=folds)
+    groups = df["ward_code"]
+    return sgkf.split(df, groups=groups)
+
+
+def data_split_simple(df: pd.DataFrame) -> tuple:
+    """
+    Accepts a Pandas DataFrame and splits it into training and validation. Returns DataFrames.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Pandas DataFrame containing all data.
+
+    Returns
+    -------
+    Union[pd.DataFrame, pd.DataFrame]
         [description]
     """
-    # TODO: Splits should be params; also note eating into training data here
-    # TODO: Distribution of these datasets needs to be fair?
-    #  See e2e notebooks with stratified shuffle split
-    train, val = train_test_split(df, test_size=0.2, random_state=1)  # split the data with a validation size o 20%
-    train, test = train_test_split(
-        train, test_size=0.125, random_state=1
-    )  # split the data with an overall  test size of 10%
+    random_state = params["constants"]["random_seed"]
+
+    # Calculate test size for validation
+    # We're applying a split on a reduced dataset - percentage is 1 - hold_out_test_size
+    # Then we want the test_size here to be a percentage of the training set that is equal to the overall percentage
+    # ie split_test_size * (1 - hold_out) = val_size
+    val_size = params["split"]["val_size"]
+    hold_out_test_size = params["split"]["test_size"]
+    split_test_size = val_size / (1 - hold_out_test_size)
+
+    train, val = train_test_split(df, test_size=split_test_size, random_state=random_state)
 
     logger.info("Descriptive statistics of train:")
     logger.info(f"Shape: {train.shape}")
@@ -73,16 +97,7 @@ def split_data(df: pd.DataFrame) -> tuple:
     logger.info(f"Shape: {val.shape}")
     logger.info(val.describe())
 
-    logger.info("Descriptive statistics of test:")
-    logger.info(f"Shape: {test.shape}")
-    logger.info(test.describe())
-
-    df.loc[train.index, "split"] = "train"
-    df.loc[val.index, "split"] = "val"
-    df.loc[test.index, "split"] = "test"
-    df.to_csv("outputs/model/data-split.csv")
-
-    return train, val, test
+    return train, val
 
 
 # TODO: Clean up and move elsewhere
@@ -298,7 +313,6 @@ def r_squared(y_true, y_pred):
 def run_model(
         train_generator: Iterator,
         validation_generator: Iterator,
-        test_generator: Iterator,
 ) -> History:
     """
     This function runs a keras model with the Adam optimizer and multiple callbacks. The model is evaluated within
@@ -310,8 +324,6 @@ def run_model(
         keras ImageDataGenerators for the training data.
     validation_generator : Iterator
         keras ImageDataGenerators for the validation data.
-    test_generator : Iterator
-        keras ImageDataGenerators for the test data.
 
     Returns
     -------
@@ -328,9 +340,9 @@ def run_model(
     # TODO: Install missing packages pydot + graphviz
     # plot_model(model, to_file=f"outputs/misc/{model_name}.jpg", show_shapes=True)
 
-    # TODO: Different optimizers?
+    loss = params["train"]["loss"]
     model.compile(
-        optimizer=Adam(), loss="mean_absolute_error",
+        optimizer=Adam(), loss=loss,
         metrics=[MeanAbsoluteError(), MeanAbsolutePercentageError(), MeanSquaredError(), RootMeanSquaredError(),
                  r_squared]
     )
@@ -349,10 +361,11 @@ def run_model(
     with open(history_save_path, "w") as history_file:
         json.dump(history.history, history_file)
 
-    score = model.evaluate(test_generator,
-                           callbacks=callbacks)
-    logger.info("Test scores")
-    logger.info(score)
+    # TODO: Move evaluation to standalone
+    # score = model.evaluate(test_generator,
+    #                        callbacks=callbacks)
+    # logger.info("Test scores")
+    # logger.info(score)
     return history
 
 
@@ -368,19 +381,28 @@ def main() -> None:
     # Load training dataset
     dataset = load_train_dataset()
 
-    # Split data into training, validation, test datasets
-    train, val, test = split_data(dataset)
+    # Split training data into train and validation datasets
+    # Type of dataset split
+    group_by_ward = params["split"]["group_by_ward"]
+
+    # If group by ward
+    if group_by_ward:
+        logger.info("Grouping by ward")
+        data_split_ward_group_stratified_k_fold(dataset)
+    # Else assume simple random
+    else:
+        logger.info("Random splitting")
+        train, val = data_split_simple(dataset)
 
     # Get data generators
     train_generator, validation_generator, test_generator = create_generators(
-        df=dataset, train=train, val=val, test=test, visualize_augmentations_flag=1
+        df=dataset, train=train, val=val, visualize_augmentations_flag=1
     )
 
     # Run model
     run_model(
         train_generator=train_generator,
         validation_generator=validation_generator,
-        test_generator=test_generator,
     )
 
 
