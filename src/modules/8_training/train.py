@@ -17,7 +17,6 @@ from keras.metrics import MeanSquaredError, RootMeanSquaredError
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator, Iterator
 from matplotlib import pyplot as plt
-from seaborn import relplot
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import Model
 from tensorflow.keras import layers
@@ -37,17 +36,10 @@ def load_train_dataset():
     Loads training data
     """
 
+    training_label = params["train"]["label"]
     dataset = gpd.read_file("outputs/model/train-test-split.geojson")
-    return dataset[dataset["split"] == "train"]
-
-
-def load_dataset():
-    """
-    Loads the data from path
-    """
-
-    labels = gpd.read_file("outputs/matched/gauteng-qol-cluster-tiles.geojson")
-    labels = labels[["tile", "qol_index"]]
+    train = dataset[dataset["split"] == "train"]
+    labels = train[["tile", training_label]]
     return labels
 
 
@@ -91,39 +83,6 @@ def split_data(df: pd.DataFrame) -> tuple:
     df.to_csv("outputs/model/data-split.csv")
 
     return train, val, test
-
-
-def get_mean_baseline(train: pd.DataFrame, val: pd.DataFrame) -> float:
-    """
-    Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
-    Calculates the mean MAE and MAPE baselines by taking the mean values of the training data
-    as a naive prediction for the validation target feature.
-    (ie if the model predicted mean values, what would the error be in that case)
-
-    Parameters
-    ----------
-    train : pd.DataFrame
-        Pandas DataFrame containing your training data.
-    val : pd.DataFrame
-        Pandas DataFrame containing your validation data.
-
-    Returns
-    -------
-    float
-        MAPE value.
-    """
-    # y_hat is the dummy predicted variable set to the mean of the qol index data in the training set
-    y_hat = train["qol_index"].mean()
-    val["y_hat"] = y_hat
-    mae = MeanAbsoluteError()
-    mae = mae(val["qol_index"], val["y_hat"]).numpy()
-    mape = MeanAbsolutePercentageError()
-    mape = mape(val["qol_index"], val["y_hat"]).numpy()
-
-    logger.info(f"Mean Absolute Error baseline: {mae}")
-    logger.info(f"Mean Absolute Percentage Error baseline: {mape}")
-
-    return mape
 
 
 # TODO: Clean up and move elsewhere
@@ -397,48 +356,6 @@ def run_model(
     return history
 
 
-# TODO: Fix plotting not working - mean is wrong
-def plot_results(model_history: History, mean_baseline: float):
-    """This function uses seaborn with matplotlib to plot the trainig and validation losses of the input model in an
-    sns.relplot(). The mean baseline is plotted as a horizontal red dotted line.
-
-    Parameters
-    ----------
-    model_history : History
-        keras History object of the model.fit() method.
-    mean_baseline : float
-        Result of the get_mean_baseline() function.
-    """
-
-    # create a dictionary for each model history and loss type
-    dict1 = {
-        "MAPE": model_history.history["mean_absolute_percentage_error"],
-        "type": "training",
-        "model": "resnet",
-    }
-    dict2 = {
-        "MAPE": model_history.history["val_mean_absolute_percentage_error"],
-        "type": "validation",
-        "model": "resnet",
-    }
-
-    # convert the dicts to pd.Series and concat them to a pd.DataFrame in the long format
-    s1 = pd.DataFrame(dict1)
-    s2 = pd.DataFrame(dict2)
-    dataframe = pd.concat([s1, s2], axis=0).reset_index()
-    grid = relplot(data=dataframe, x=dataframe["index"], y="MAPE", hue="model", col="type", kind="line", legend=False)
-    grid.set(ylim=(20, 100))  # set the y-axis limit
-    for ax in grid.axes.flat:
-        ax.axhline(
-            y=mean_baseline, color="lightcoral", linestyle="dashed"
-        )  # add a mean baseline horizontal bar to each plot
-        ax.set(xlabel="Epoch")
-    labels = ["resnet", "mean_baseline"]  # custom labels for the plot
-
-    plt.legend(labels=labels)
-    plt.savefig("outputs/misc/training_validation.png")
-
-
 def main() -> None:
     logger.info("In training")
     log_tf_gpu()
@@ -449,13 +366,10 @@ def main() -> None:
     tf.random.set_seed(seed)
 
     # Load training dataset
-    dataset = load_dataset()
+    dataset = load_train_dataset()
+
     # Split data into training, validation, test datasets
     train, val, test = split_data(dataset)
-
-    # A naive benchmark to compare results to
-    # Uses the mean of the training data as the predicted value for all x values and calculates error based on that
-    mean_baseline = get_mean_baseline(train, val)
 
     # Get data generators
     train_generator, validation_generator, test_generator = create_generators(
@@ -463,12 +377,11 @@ def main() -> None:
     )
 
     # Run model
-    resnet_history = run_model(
+    run_model(
         train_generator=train_generator,
         validation_generator=validation_generator,
         test_generator=test_generator,
     )
-    plot_results(resnet_history, mean_baseline)
 
 
 if __name__ == "__main__":

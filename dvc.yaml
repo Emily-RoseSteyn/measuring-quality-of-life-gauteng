@@ -123,11 +123,10 @@ stages:
     cmd: python src/modules/8_training/train.py
     deps:
       - src/modules/8_training/train.py
-      - outputs/matched/gauteng-qol-cluster-tiles.geojson
+      - outputs/model/train-test-split.geojson
     outs:
       - outputs/model/resnet.h5
       - outputs/model/resnet-history.json
-      - outputs/model/data-split.csv
 
   #  evaluate:
   #    cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
