@@ -2,7 +2,7 @@ import random
 
 import geopandas as gpd
 from dvc.api import params_show
-from sklearn.model_selection import GroupShuffleSplit
+from sklearn.model_selection import GroupShuffleSplit, train_test_split
 
 from utils.logger import get_logger
 
@@ -12,9 +12,29 @@ logger = get_logger()
 params = params_show()
 
 
+def simple_random_split(df: gpd.GeoDataFrame) -> tuple:
+    """
+    Accepts a Geopandas DataFrame and splits it into training and test data randomly.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Pandas DataFrame containing all data.
+
+    Returns
+    -------
+    Union[pd.DataFrame, pd.DataFrame]
+    """
+    # Split data
+    random_state = params["constants"]["random_seed"]
+    test_size = params["split"]["test_size"]
+    return train_test_split(df, test_size=test_size, random_state=random_state)
+
+
 def ward_test_data_split(df: gpd.GeoDataFrame) -> tuple:
     """
-    Accepts a Pandas DataFrame and splits it into training and test data. Saves these.
+    Accepts a Geopandas DataFrame and splits it into training and test data
+    grouped by ward so that no ward overlaps between the train/test dataset.
 
     Parameters
     ----------
@@ -40,23 +60,10 @@ def ward_test_data_split(df: gpd.GeoDataFrame) -> tuple:
     # Access train and test grouped data
     train_groups = groups[train_index]
     test_groups = groups[test_index]
-    logger.info("Ward information for train and test")
-    logger.info(f"Wards in train: {len(train_groups.unique())}")
-    logger.info(f"Wards in test: {len(test_groups.unique())}")
 
     train = df.loc[train_groups.index]
-    logger.info("Descriptive statistics of train:")
-    logger.info(f"Shape: {train.shape}")
-    logger.info(train.describe())
-
     test = df.loc[test_groups.index]
-    logger.info("Descriptive statistics of test:")
-    logger.info(f"Shape: {test.shape}")
-    logger.info(test.describe())
 
-    df.loc[train.index, "split"] = "train"
-    df.loc[test.index, "split"] = "test"
-    df.to_file("outputs/model/train-test-split.geojson", driver="GeoJSON")
     return train, test
 
 
@@ -70,12 +77,36 @@ def main() -> None:
     # Load dataset
     dataset = gpd.read_file("outputs/matched/gauteng-qol-cluster-tiles.geojson")
 
-    # If simple random
-
-    # If ward random
-
     # Split data into train and test datasets
-    ward_test_data_split(dataset)
+    # Type of dataset split
+    group_by_ward = params["split"]["group_by_ward"]
+
+    # If group by ward
+    if group_by_ward:
+        logger.info("Grouping by ward")
+        train, test = ward_test_data_split(dataset)
+    # Else assume simple random
+    else:
+        logger.info("Random splitting")
+        train, test = simple_random_split(dataset)
+
+    logger.info("Ward information for train and test")
+    train_wards = train["ward_code"].unique()
+    test_wards = test["ward_code"].unique()
+    logger.info(f"Wards in train: {len(train_wards)}")
+    logger.info(f"Wards in test: {len(test_wards)}")
+
+    logger.info("Descriptive statistics of train:")
+    logger.info(f"Shape: {train.shape}")
+    logger.info(train.describe())
+
+    logger.info("Descriptive statistics of test:")
+    logger.info(f"Shape: {test.shape}")
+    logger.info(test.describe())
+
+    dataset.loc[train.index, "split"] = "train"
+    dataset.loc[test.index, "split"] = "test"
+    dataset.to_file("outputs/model/train-test-split.geojson", driver="GeoJSON")
 
 
 if __name__ == "__main__":
