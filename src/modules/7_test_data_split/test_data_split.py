@@ -98,15 +98,17 @@ def main() -> None:
 
     logger.info("Descriptive statistics of train:")
     logger.info(f"Shape: {train.shape}")
-    logger.info(train.describe())
+    train.describe().to_csv("outputs/model/train-stats.csv")
 
     logger.info("Descriptive statistics of test:")
     logger.info(f"Shape: {test.shape}")
-    logger.info(test.describe())
+    test.describe().to_csv("outputs/model/test-stats.csv")
 
     dataset.loc[train.index, "split"] = "train"
     dataset.loc[test.index, "split"] = "test"
     dataset.to_file("outputs/model/train-test-split.geojson", driver="GeoJSON")
+
+    # TODO: Might want to add a plot of train vs test?
 
 
 if __name__ == "__main__":
