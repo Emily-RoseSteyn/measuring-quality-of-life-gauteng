@@ -13,8 +13,7 @@ from keras.callbacks import History, TensorBoard, EarlyStopping, ModelCheckpoint
 from keras.losses import MeanAbsoluteError, MeanAbsolutePercentageError
 from keras.metrics import MeanSquaredError, RootMeanSquaredError
 from keras.optimizers import Adam
-from keras.preprocessing.image import ImageDataGenerator
-from sklearn.model_selection import train_test_split, StratifiedGroupKFold
+from sklearn.model_selection import train_test_split, GroupKFold
 from tensorflow.keras import Model
 from tensorflow.keras import layers
 from tensorflow.keras.applications import ResNet50V2
@@ -35,11 +34,12 @@ def load_train_dataset():
     """
 
     dataset = gpd.read_file("outputs/model/train-test-split.geojson")
-    train = dataset[dataset["split"] == "train"]
+    # Have to reset index here otherwise group split fails
+    train = dataset[dataset["split"] == "train"].reset_index()
     return train
 
 
-def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> tuple:
+def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
     """
     Accepts a Pandas DataFrame and splits it using the group stratified k fold method
 
@@ -50,16 +50,25 @@ def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> tuple:
 
     Returns
     -------
-    Generator
+    None
     """
 
     folds = params["split"]["folds"]
-    sgkf = StratifiedGroupKFold(n_splits=folds)
+    # TODO: Look at continuous target stratification
+    #  https://neptune.ai/blog/cross-validation-mistakes#h-3-choosing-cross-validation-technique-for-a-regression-problem
+    gkf = GroupKFold(n_splits=folds)
     groups = df["ward_code"]
-    return sgkf.split(df, groups=groups)
+
+    # TODO: Do something with this grouping
+    for i, (train_index, test_index) in enumerate(gkf.split(df, groups=groups)):
+        logger.info(f"Processing fold {i}:")
+        logger.debug(f"  Train: index={train_index}")
+        logger.debug(f"         group={groups[train_index]}")
+        logger.debug(f"  Test:  index={test_index}")
+        logger.debug(f"         group={groups[test_index]}")
 
 
-def data_split_simple(df: pd.DataFrame) -> tuple:
+def data_split_simple(df: pd.DataFrame) -> None:
     """
     Accepts a Pandas DataFrame and splits it into training and validation. Returns DataFrames.
 
@@ -70,8 +79,7 @@ def data_split_simple(df: pd.DataFrame) -> tuple:
 
     Returns
     -------
-    Union[pd.DataFrame, pd.DataFrame]
-        [description]
+    None
     """
     random_state = params["constants"]["random_seed"]
 
@@ -93,7 +101,11 @@ def data_split_simple(df: pd.DataFrame) -> tuple:
     logger.info(f"Shape: {val.shape}")
     logger.info(val.describe())
 
-    return train, val
+    # Run model
+    run_model(
+        train=train,
+        val=val,
+    )
 
 
 def get_callbacks(model_name: str) -> list:
@@ -180,8 +192,8 @@ def r_squared(y_true, y_pred):
 
 # TODO: Different models? Fine-tuning? Generalisation (see blog)
 def run_model(
-        train_generator: ImageDataGenerator,
-        validation_generator: ImageDataGenerator,
+        train: pd.DataFrame,
+        val: pd.DataFrame,
 ) -> History:
     """
     This function runs a keras model with the Adam optimizer and multiple callbacks. The model is evaluated within
@@ -189,10 +201,10 @@ def run_model(
 
     Parameters
     ----------
-    train_generator : Iterator
-        keras ImageDataGenerators for the training data.
-    validation_generator : Iterator
-        keras ImageDataGenerators for the validation data.
+    train : Pandas Dataframe
+        keras Pandas Dataframe for the training data.
+    val : Pandas Dataframe
+        keras Pandas Dataframe for the validation data.
 
     Returns
     -------
@@ -201,6 +213,15 @@ def run_model(
         see plot_results().
     """
 
+    # Training label
+    training_label = params["train"]["label"]
+
+    # Get data generators
+    train_generator = create_generator(train, training_label, apply_augmentation_flag=1)
+    validation_generator = create_generator(val, training_label)
+
+    # Set model name
+    # TODO: put this in params? Put it in class?
     model_name = "resnet"
 
     model = resnet_model()
@@ -249,7 +270,6 @@ def main() -> None:
 
     # Load training dataset
     dataset = load_train_dataset()
-    training_label = params["train"]["label"]
 
     # Split training data into train and validation datasets
     # Type of dataset split
@@ -258,23 +278,12 @@ def main() -> None:
     # If group by ward
     if group_by_ward:
         logger.info("Grouping by ward")
+        # Splits and runs model within this
         data_split_ward_group_stratified_k_fold(dataset)
-        # TODO: Do something with this grouping
     # Else assume simple random
     else:
         logger.info("Random splitting")
-        dataset = dataset[["tile", training_label]]
-        train, val = data_split_simple(dataset)
-
-        # Get data generators
-        train_generator = create_generator(train, training_label, apply_augmentation_flag=1)
-        validation_generator = create_generator(val, training_label)
-
-        # Run model
-        run_model(
-            train_generator=train_generator,
-            validation_generator=validation_generator,
-        )
+        data_split_simple(dataset)
 
 
 if __name__ == "__main__":
