@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 import pandas as pd
-from keras_preprocessing.image import ImageDataGenerator, Iterator
+from keras.preprocessing.image import ImageDataGenerator, Iterator
 from matplotlib import pyplot as plt
 
 
