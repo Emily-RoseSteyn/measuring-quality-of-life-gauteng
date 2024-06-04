@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 import pandas as pd
-from keras_preprocessing.image import ImageDataGenerator
+from keras_preprocessing.image import ImageDataGenerator, Iterator
 from matplotlib import pyplot as plt
 
 
@@ -11,7 +11,7 @@ def create_generator(
         label: str,
         apply_augmentation_flag: int = 0,
         visualize_augmentations_flag: int = 0
-):
+) -> Iterator:
     """
     Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
     Accepts a Pandas DataFrames. Creates and returns a keras ImageDataGenerator.
@@ -30,7 +30,7 @@ def create_generator(
 
     Returns
     -------
-    ImageDataGenerator
+    ImageDataGenerator Iterator
         keras ImageDataGenerator.
     """
     # Create training ImageDataGenerator with image augmentations
@@ -56,7 +56,7 @@ def create_generator(
         visualize_augmentations(generator, df)
 
     # Create dataframe iterator
-    generator.flow_from_dataframe(
+    generator = generator.flow_from_dataframe(
         directory="outputs/tiles",
         dataframe=df,
         x_col="tile",  # Image location
