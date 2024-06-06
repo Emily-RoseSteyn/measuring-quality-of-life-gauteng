@@ -196,7 +196,7 @@ def run_model(train: pd.DataFrame, val: pd.DataFrame, fold: int = 0) -> History:
             callbacks=callbacks,
         )
 
-        # Only save artifact if final model
+        # Only save artifact with live if final model
         if fold == 0:
             live.log_artifact(model_path, type="model")
 
@@ -231,7 +231,8 @@ def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
     groups = df["ward_code"]
 
     fold_scores = []
-    for fold, (train_index, val_index) in enumerate(gkf.split(df, groups=groups)):
+    for index, (train_index, val_index) in enumerate(gkf.split(df, groups=groups)):
+        fold = index + 1
         logger.info(f"Training for fold: {fold}")
 
         # Access train and validation grouped data
@@ -244,16 +245,17 @@ def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
         # Run model
         score = run_model(train, val, fold)
         fold_scores.append(score)
-    #
-    # # To test
-    # print("------------------------------------------------------------------------")
-    # print("Score per fold")
-    # for i in range(len(fold_scores)):
-    #     print(
-    #         "------------------------------------------------------------------------"
-    #     )
-    #     print(f"> Fold {i + 1}:")
-    #     print(fold_scores[i])
+
+    logger.info("----------------------------------------------------------")
+    logger.info("Score per fold")
+    for i, score in enumerate(fold_scores):
+        logger.info("----------------------------------------------------------")
+        logger.info(f"> Fold {i + 1}")
+        logger.info(score)
+    # logger.info("----------------------------------------------------------")
+    # logger.info("Average scores for all folds:")
+    # logger.info("----------------------------------------------------------")
+
     # Save the best performing model instance (check "How to save and load a model with Keras?" - do note that this requires retraining because you haven't saved models with the code above), and use it for generating predictions.
     # Retrain the model, but this time with all the data - i.e., without making the train/test split. Save that model, and use it for generating predictions. I do suggest to continue using a validation set, as you want to know when the model is overfitting.
     # live.log_metric("test_loss", test_loss, plot=False)
