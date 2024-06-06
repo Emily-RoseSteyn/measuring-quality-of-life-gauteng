@@ -14,4 +14,6 @@ train:
   # Loss to use for training
   loss: "mean_absolute_error"
   # Group training data by ward
-  group_by_ward: False
+  group_by_ward: True
+  # Number epochs
+  epochs: 50

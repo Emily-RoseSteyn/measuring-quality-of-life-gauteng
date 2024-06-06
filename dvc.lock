@@ -14,8 +14,8 @@ stages:
     deps:
     - path: .env
       hash: md5
-      md5: daae4acc00328a6abd3018baaa900ccf
-      size: 242
+      md5: 4ecbc9087d821964b029547e49daff3f
+      size: 248
     - path: src/utils/load_env.py
       hash: md5
       md5: 0fe59705b0ae888a1d316aa68d209324
@@ -41,8 +41,8 @@ stages:
       size: 8499821
     - path: src/modules/3_data_download/data_download.py
       hash: md5
-      md5: 41b444189b121adb6f4394df1b2deb96
-      size: 2099
+      md5: a2dd4827715a7b2a83d2c55ba0d9d556
+      size: 2178
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
     deps:
@@ -55,12 +55,12 @@ stages:
     deps:
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: e0eb0c76dba7c863a6fd9bf519cdfee0
-      size: 31598544
+      md5: 2709704b6009b5678d446c8025d948df
+      size: 31593258
     - path: src/modules/8_training/train.py
       hash: md5
-      md5: a0238c35ff62e8c77f8852d29d593541
-      size: 9870
+      md5: f31dba03b24cc21b0e83d6ab383ad056
+      size: 11512
     params:
       params.yaml:
         constants.random_seed: 42
@@ -72,16 +72,15 @@ stages:
         train:
           label: qol_index
           loss: mean_absolute_error
-          group_by_ward: false
+          group_by_ward: true
+          epochs: 2
+          batch_size: 1
     outs:
-    - path: outputs/model/resnet-history.json
+    - path: outputs/model/resnet
       hash: md5
-      md5: 71c3743cc80ec5cd6a4b638f2a7aff81
-      size: 4226
-    - path: outputs/model/resnet.h5
-      hash: md5
-      md5: d84379603a94592c548da11011d9ea46
-      size: 94882472
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
   evaluate:
     cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
     deps:
