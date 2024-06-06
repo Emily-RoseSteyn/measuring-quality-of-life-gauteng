@@ -1,6 +1,7 @@
-import json
+import os
 import random
 from datetime import datetime
+from pathlib import Path
 
 import geopandas as gpd
 import pandas as pd
@@ -39,84 +40,15 @@ def load_train_dataset():
     return train
 
 
-def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
-    """
-    Accepts a Pandas DataFrame and splits it using the group stratified k fold method
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Pandas DataFrame containing all data.
-
-    Returns
-    -------
-    None
-    """
-
-    folds = params["split"]["folds"]
-    # TODO: Look at continuous target stratification
-    #  https://neptune.ai/blog/cross-validation-mistakes#h-3-choosing-cross-validation-technique-for-a-regression-problem
-    gkf = GroupKFold(n_splits=folds)
-    groups = df["ward_code"]
-
-    # TODO: Do something with this grouping
-    for i, (train_index, test_index) in enumerate(gkf.split(df, groups=groups)):
-        logger.info(f"Processing fold {i}:")
-        logger.debug(f"  Train: index={train_index}")
-        logger.debug(f"         group={groups[train_index]}")
-        logger.debug(f"  Test:  index={test_index}")
-        logger.debug(f"         group={groups[test_index]}")
-
-
-def data_split_simple(df: pd.DataFrame) -> None:
-    """
-    Accepts a Pandas DataFrame and splits it into training and validation. Returns DataFrames.
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Pandas DataFrame containing all data.
-
-    Returns
-    -------
-    None
-    """
-    random_state = params["constants"]["random_seed"]
-
-    # Calculate test size for validation
-    # We're applying a split on a reduced dataset - percentage is 1 - hold_out_test_size
-    # Then we want the test_size here to be a percentage of the training set that is equal to the overall percentage
-    # ie split_test_size * (1 - hold_out) = val_size
-    val_size = params["split"]["val_size"]
-    hold_out_test_size = params["split"]["test_size"]
-    split_test_size = val_size / (1 - hold_out_test_size)
-
-    train, val = train_test_split(df, test_size=split_test_size, random_state=random_state)
-
-    logger.info("Descriptive statistics of train:")
-    logger.info(f"Shape: {train.shape}")
-    logger.info(train.describe())
-
-    logger.info("Descriptive statistics of validation:")
-    logger.info(f"Shape: {val.shape}")
-    logger.info(val.describe())
-
-    # Run model
-    run_model(
-        train=train,
-        val=val,
-    )
-
-
-def get_callbacks(model_name: str) -> list:
+def get_callbacks(model_path: str) -> list:
     """
     Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
     Accepts the model name as a string and returns multiple callbacks for training the keras model.
 
     Parameters
     ----------
-    model_name : str
-        The name of the model as a string.
+    model_path : str
+        The path of where to save the model as a string.
 
     Returns
     -------
@@ -124,7 +56,10 @@ def get_callbacks(model_name: str) -> list:
         A list of multiple keras callbacks.
     """
     logdir = (
-            "logs/scalars/" + model_name + "_" + datetime.now(tz=pytz.utc).strftime("%Y%m%d-%H%M%S")
+        "logs/scalars/"
+        + model_path
+        + "_"
+        + datetime.now(tz=pytz.utc).strftime("%Y%m%d-%H%M%S")
     )  # create a folder for each model.
     # TODO: Write gradients deprecated?
     tensorboard_callback = TensorBoard(log_dir=logdir, write_grads=True)
@@ -141,7 +76,7 @@ def get_callbacks(model_name: str) -> list:
 
     # TODO: Different model name depending on index?
     model_checkpoint_callback = ModelCheckpoint(
-        "./outputs/model/" + model_name + ".h5",
+        model_path,
         monitor="val_mean_absolute_percentage_error",
         verbose=0,
         save_best_only=True,  # save the best model
@@ -157,9 +92,7 @@ def resnet_model():
     """
     Defines the model
     """
-    inputs = layers.Input(
-        shape=(256, 256, 3)
-    )
+    inputs = layers.Input(shape=(256, 256, 3))
 
     # Using ResNet50 architecture - freezing base model
     base_model = ResNet50V2(input_tensor=inputs, weights="imagenet", include_top=False)
@@ -191,13 +124,10 @@ def r_squared(y_true, y_pred):
 
 
 # TODO: Different models? Fine-tuning? Generalisation (see blog)
-def run_model(
-        train: pd.DataFrame,
-        val: pd.DataFrame,
-) -> History:
+def run_model(train: pd.DataFrame, val: pd.DataFrame, fold: int = 0) -> History:
     """
-    This function runs a keras model with the Adam optimizer and multiple callbacks. The model is evaluated within
-    training through the validation generator and one final time on the test generator at the end of fitting.
+    This function runs a keras model with the Adam optimizer and multiple callbacks.
+    The model is evaluated within training through the validation generator.
 
     Parameters
     ----------
@@ -205,6 +135,7 @@ def run_model(
         keras Pandas Dataframe for the training data.
     val : Pandas Dataframe
         keras Pandas Dataframe for the validation data.
+    fold :
 
     Returns
     -------
@@ -222,7 +153,14 @@ def run_model(
 
     # Set model name
     # TODO: put this in params? Put it in class?
-    model_name = "resnet"
+    model_path = "./outputs/model/final.h5"
+
+    # If cross-validation, set model to current fold
+    if fold > 0:
+        results_dir = Path("./outputs/model/folds")
+        if not os.path.isdir(results_dir):
+            os.makedirs(results_dir)
+        model_path = f"{results_dir}/fold_{fold}.h5"
 
     model = resnet_model()
     # model.summary()
@@ -231,32 +169,135 @@ def run_model(
 
     loss = params["train"]["loss"]
     model.compile(
-        optimizer=Adam(), loss=loss,
-        metrics=[MeanAbsoluteError(), MeanAbsolutePercentageError(), MeanSquaredError(), RootMeanSquaredError(),
-                 r_squared]
+        optimizer=Adam(),
+        loss=loss,
+        metrics=[
+            MeanAbsoluteError(),
+            MeanAbsolutePercentageError(),
+            MeanSquaredError(),
+            RootMeanSquaredError(),
+            r_squared,
+        ],
     )
+
+    # Training label
+    epochs = params["train"]["epochs"]
+
     with Live(save_dvc_exp=True) as live:
-        callbacks = get_callbacks(model_name)
+        callbacks = get_callbacks(model_path)
         callbacks.append(DVCLiveCallback(save_dvc_exp=True, live=live))
-        history = model.fit(
+
+        # Fit data to model
+        # Note - don't worry about batch size because dataset is in the form of generators which already has batches
+        model.fit(
             train_generator,
-            epochs=100,
+            epochs=epochs,
             validation_data=validation_generator,
             callbacks=callbacks,
         )
-        live.log_artifact(model_name, type="model")
 
-    # Dump the dictionary containing each metric and the loss for each epoch
-    history_save_path = f"./outputs/model/{model_name}-history.json"
-    with open(history_save_path, "w") as history_file:
-        json.dump(history.history, history_file)
+        # Only save artifact if final model
+        if fold == 0:
+            live.log_artifact(model_path, type="model")
 
-    # TODO: Move evaluation to standalone
-    # score = model.evaluate(test_generator,
-    #                        callbacks=callbacks)
-    # logger.info("Test scores")
-    # logger.info(score)
-    return history
+    # Generate generalization metrics
+    score = model.evaluate(validation_generator, callbacks=callbacks)
+    logger.info("Validation scores")
+    logger.info(score)
+
+    # TODO: Move TEST evaluation to standalone
+
+    return score
+
+
+def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
+    """
+    Accepts a Pandas DataFrame and splits it using the group stratified k fold method
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Pandas DataFrame containing all data.
+
+    Returns
+    -------
+    None
+    """
+
+    folds = params["split"]["folds"]
+    # TODO: Look at continuous target stratification
+    #  https://neptune.ai/blog/cross-validation-mistakes#h-3-choosing-cross-validation-technique-for-a-regression-problem
+    gkf = GroupKFold(n_splits=folds)
+    groups = df["ward_code"]
+
+    fold_scores = []
+    for fold, (train_index, val_index) in enumerate(gkf.split(df, groups=groups)):
+        logger.info(f"Training for fold: {fold}")
+
+        # Access train and validation grouped data
+        train_groups = groups[train_index]
+        val_groups = groups[val_index]
+
+        train = df.loc[train_groups.index]
+        val = df.loc[val_groups.index]
+
+        # Run model
+        score = run_model(train, val, fold)
+        fold_scores.append(score)
+    #
+    # # To test
+    # print("------------------------------------------------------------------------")
+    # print("Score per fold")
+    # for i in range(len(fold_scores)):
+    #     print(
+    #         "------------------------------------------------------------------------"
+    #     )
+    #     print(f"> Fold {i + 1}:")
+    #     print(fold_scores[i])
+    # Save the best performing model instance (check "How to save and load a model with Keras?" - do note that this requires retraining because you haven't saved models with the code above), and use it for generating predictions.
+    # Retrain the model, but this time with all the data - i.e., without making the train/test split. Save that model, and use it for generating predictions. I do suggest to continue using a validation set, as you want to know when the model is overfitting.
+    # live.log_metric("test_loss", test_loss, plot=False)
+    # live.log_metric("test_acc", test_acc, plot=False)
+
+
+def data_split_simple(df: pd.DataFrame) -> None:
+    """
+    Accepts a Pandas DataFrame and splits it into training and validation. Returns DataFrames.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Pandas DataFrame containing all data.
+
+    Returns
+    -------
+    None
+    """
+    logger.info("Training model with simple random split")
+    random_state = params["constants"]["random_seed"]
+
+    # Calculate dataset size for validation
+    # We're applying a split on a reduced dataset - percentage is 1 - hold_out_test_size
+    # Then we want the test_size here to be a percentage of the training set that is equal to the overall percentage
+    # ie split_test_size * (1 - hold_out) = val_size
+    val_size = params["split"]["val_size"]
+    hold_out_test_size = params["split"]["test_size"]
+    split_test_size = val_size / (1 - hold_out_test_size)
+
+    train, val = train_test_split(
+        df, test_size=split_test_size, random_state=random_state
+    )
+
+    logger.info("Descriptive statistics of train:")
+    logger.info(f"Shape: {train.shape}")
+    logger.info(train.describe())
+
+    logger.info("Descriptive statistics of validation:")
+    logger.info(f"Shape: {val.shape}")
+    logger.info(val.describe())
+
+    # Run model
+    run_model(train, val)
 
 
 def main() -> None:
