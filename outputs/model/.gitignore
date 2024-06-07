@@ -5,3 +5,5 @@
 /train-stats.csv
 /test-stats.csv
 /resnet
+/folds
+/final.h5

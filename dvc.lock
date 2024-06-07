@@ -55,12 +55,12 @@ stages:
     deps:
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: 2709704b6009b5678d446c8025d948df
-      size: 31593258
+      md5: e0eb0c76dba7c863a6fd9bf519cdfee0
+      size: 31598544
     - path: src/modules/8_training/train.py
       hash: md5
-      md5: f31dba03b24cc21b0e83d6ab383ad056
-      size: 11512
+      md5: f18bb1587cc4159f4824d9e4bd47c9d0
+      size: 12000
     params:
       params.yaml:
         constants.random_seed: 42
@@ -73,14 +73,17 @@ stages:
           label: qol_index
           loss: mean_absolute_error
           group_by_ward: true
-          epochs: 2
-          batch_size: 1
+          epochs: 50
     outs:
-    - path: outputs/model/resnet
+    - path: outputs/model/final.h5
       hash: md5
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: ca6900bdcd033912534940dc4f719325
+      size: 94882480
+    - path: outputs/model/folds
+      hash: md5
+      md5: b3469c7f25db9ee7eb44900987cb2f88.dir
+      size: 379529928
+      nfiles: 4
   evaluate:
     cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
     deps:

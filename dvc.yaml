@@ -169,6 +169,9 @@ artifacts:
   resnet:
     path: resnet
     type: model
+  fold_0:
+    path: outputs/model/folds/fold_0.h5
+    type: model
 metrics:
 - dvclive/metrics.json
 plots:
