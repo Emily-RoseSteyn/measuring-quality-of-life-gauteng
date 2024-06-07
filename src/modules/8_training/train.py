@@ -200,9 +200,7 @@ def run_model(
             callbacks=callbacks,
         )
 
-        # Only save artifact with live if final model
-        if fold < 0:
-            live.log_artifact(model_path, type="model")
+        live.log_artifact(model_path, type="model")
 
     # Generate generalization metrics
     score = model.evaluate(validation_generator, callbacks=callbacks)
