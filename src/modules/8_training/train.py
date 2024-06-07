@@ -156,6 +156,7 @@ def run_model(
     # Set model name
     # TODO: put this in params? Put it in class?
     model_path = "./outputs/model/final.h5"
+    exp_dir = "dvclive"
 
     # If cross-validation, set model to current fold
     if fold >= 0:
@@ -163,6 +164,7 @@ def run_model(
         if not os.path.isdir(results_dir):
             os.makedirs(results_dir)
         model_path = f"{results_dir}/fold_{fold}.h5"
+        exp_dir += f"/fold_{fold}"
 
     model = resnet_model()
     # model.summary()
@@ -185,7 +187,7 @@ def run_model(
     # Training label
     epochs = params["train"]["epochs"]
 
-    with Live(save_dvc_exp=True) as live:
+    with Live(save_dvc_exp=True, dir=exp_dir) as live:
         callbacks = get_callbacks(model_path)
         callbacks.append(DVCLiveCallback(save_dvc_exp=True, live=live))
 
@@ -198,9 +200,7 @@ def run_model(
             callbacks=callbacks,
         )
 
-        # Only save artifact with live if final model
-        if fold == 0:
-            live.log_artifact(model_path, type="model")
+        live.log_artifact(model_path, type="model")
 
     # Generate generalization metrics
     score = model.evaluate(validation_generator, callbacks=callbacks)
