@@ -2,6 +2,7 @@ import os
 import random
 from datetime import datetime
 from pathlib import Path
+from typing import Dict
 
 import geopandas as gpd
 import pandas as pd
@@ -10,7 +11,7 @@ import tensorflow as tf
 from dvc.api import params_show
 from dvclive import Live
 from dvclive.keras import DVCLiveCallback
-from keras.callbacks import History, TensorBoard, EarlyStopping, ModelCheckpoint
+from keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint
 from keras.losses import MeanAbsoluteError, MeanAbsolutePercentageError
 from keras.metrics import MeanSquaredError, RootMeanSquaredError
 from keras.optimizers import Adam
@@ -124,7 +125,9 @@ def r_squared(y_true, y_pred):
 
 
 # TODO: Different models? Fine-tuning? Generalisation (see blog)
-def run_model(train: pd.DataFrame, val: pd.DataFrame, fold: int = 0) -> History:
+def run_model(
+    train: pd.DataFrame, val: pd.DataFrame, fold: int = -1
+) -> Dict[str, float]:  # noqa: FA100
     """
     This function runs a keras model with the Adam optimizer and multiple callbacks.
     The model is evaluated within training through the validation generator.
@@ -139,9 +142,8 @@ def run_model(train: pd.DataFrame, val: pd.DataFrame, fold: int = 0) -> History:
 
     Returns
     -------
-    History
-        The history of the keras model as a History object. To access it as a Dict, use history.history. For an example
-        see plot_results().
+    Score
+        The score of the model
     """
 
     # Training label
@@ -156,7 +158,7 @@ def run_model(train: pd.DataFrame, val: pd.DataFrame, fold: int = 0) -> History:
     model_path = "./outputs/model/final.h5"
 
     # If cross-validation, set model to current fold
-    if fold > 0:
+    if fold >= 0:
         results_dir = Path("./outputs/model/folds")
         if not os.path.isdir(results_dir):
             os.makedirs(results_dir)
@@ -202,12 +204,14 @@ def run_model(train: pd.DataFrame, val: pd.DataFrame, fold: int = 0) -> History:
 
     # Generate generalization metrics
     score = model.evaluate(validation_generator, callbacks=callbacks)
+
+    score_dictionary = dict(zip(model.metrics_names, score))
     logger.info("Validation scores")
-    logger.info(score)
+    logger.info(score_dictionary)
 
     # TODO: Move TEST evaluation to standalone
 
-    return score
+    return score_dictionary
 
 
 def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
@@ -232,7 +236,7 @@ def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
 
     fold_scores = []
     for index, (train_index, val_index) in enumerate(gkf.split(df, groups=groups)):
-        fold = index + 1
+        fold = index
         logger.info(f"Training for fold: {fold}")
 
         # Access train and validation grouped data
@@ -248,16 +252,38 @@ def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
 
     logger.info("----------------------------------------------------------")
     logger.info("Score per fold")
-    for i, score in enumerate(fold_scores):
-        logger.info("----------------------------------------------------------")
-        logger.info(f"> Fold {i + 1}")
-        logger.info(score)
-    # logger.info("----------------------------------------------------------")
-    # logger.info("Average scores for all folds:")
-    # logger.info("----------------------------------------------------------")
+    fold_scores_df = pd.DataFrame(fold_scores)
+    logger.info(fold_scores_df)
 
-    # Save the best performing model instance (check "How to save and load a model with Keras?" - do note that this requires retraining because you haven't saved models with the code above), and use it for generating predictions.
-    # Retrain the model, but this time with all the data - i.e., without making the train/test split. Save that model, and use it for generating predictions. I do suggest to continue using a validation set, as you want to know when the model is overfitting.
+    logger.info("----------------------------------------------------------")
+    logger.info("Average scores for all folds:")
+    logger.info("----------------------------------------------------------")
+    logger.info(fold_scores_df.mean(axis=0))
+
+    logger.info("----------------------------------------------------------")
+    logger.info("Standard deviation scores for all folds:")
+    logger.info("----------------------------------------------------------")
+    logger.info(fold_scores_df.std(axis=0))
+
+    logger.info("----------------------------------------------------------")
+    logger.info("Best fold:")
+    logger.info("----------------------------------------------------------")
+    loss_param = params["train"]["loss"]
+    loss = fold_scores_df[loss_param]
+    min_loss_fold = loss.idxmin()
+    min_loss = loss.min()
+    logger.info(f"Fold {min_loss_fold} with a loss of {min_loss}")
+
+    # TODO: Load the best performing model instance
+
+    result_dir = "./outputs/model"
+    fold_model = Path(f"{result_dir}/folds/fold_{min_loss_fold}.h5")
+    final_model = Path(f"{result_dir}/final.h5")
+    os.replace(fold_model, final_model)
+
+    # TODO: Retrain the model, but this time with all the data
+    #  - i.e., without making the train/test split.
+    #  Save that model, and use it for generating predictions.
     # live.log_metric("test_loss", test_loss, plot=False)
     # live.log_metric("test_acc", test_acc, plot=False)
 
