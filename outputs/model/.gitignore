@@ -1,3 +1,9 @@
 /resnet.h5
 /resnet-history.json
 /data-split.csv
+/train-test-split.geojson
+/train-stats.csv
+/test-stats.csv
+/resnet
+/folds
+/final.h5

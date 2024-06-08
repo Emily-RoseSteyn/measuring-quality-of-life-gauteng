@@ -1,0 +1,19 @@
+constants:
+  random_seed: 42
+
+split:
+  test_size: 0.2
+  val_size: 0.2
+  folds: 5
+  group_by_ward: True
+
+train:
+  # One of services, socioeconomic_status, government_satisfaction,
+  # life_satisfaction, health, safety, participation, qol_index
+  label: "qol_index"
+  # Loss to use for training
+  loss: "mean_absolute_error"
+  # Group training data by ward
+  group_by_ward: True
+  # Number epochs
+  epochs: 50

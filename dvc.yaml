@@ -75,15 +75,15 @@ stages:
     - outputs/processed-shapefile/2011/gauteng-wards.geojson
     - outputs/processed-gcro/2021/gcro-clustered-data.csv
     - outputs/processed-gcro/2018/gcro-clustered-data.csv
-    #      - outputs/processed-gcro/2016/gcro-clustered-data.csv
+    - outputs/processed-gcro/2016/gcro-clustered-data.csv
     outs:
     - outputs/merged/gauteng-qol.geojson
     - outputs/merged/2021/gauteng-qol.geojson
     - outputs/merged/2021/gauteng-qol.png
     - outputs/merged/2018/gauteng-qol.geojson
     - outputs/merged/2018/gauteng-qol.png
-  #      - outputs/merged/2016/gauteng-qol.geojson
-  #      - outputs/merged/2016/gauteng-qol.png
+    - outputs/merged/2016/gauteng-qol.geojson
+    - outputs/merged/2016/gauteng-qol.png
 
   tiling:
     cmd: python src/modules/5_tiling/tile_images.py
@@ -106,15 +106,31 @@ stages:
     - outputs/matched/2018-gauteng-qol-cluster-tiles.png
     - outputs/matched/2021-gauteng-qol-cluster-tiles.png
 
-  train:
-    cmd: python src/modules/7_training/train.py
+  train_test_split:
+    cmd: python src/modules/7_test_data_split/test_data_split.py
     deps:
-    - src/modules/7_training/train.py
+    - src/modules/7_test_data_split/test_data_split.py
     - outputs/matched/gauteng-qol-cluster-tiles.geojson
+    params:
+    - split
+    - constants.random_seed
     outs:
-    - outputs/model/resnet.h5
-    - outputs/model/resnet-history.json
-    - outputs/model/data-split.csv
+    - outputs/model/train-test-split.geojson
+    - outputs/model/train-stats.csv
+    - outputs/model/test-stats.csv
+
+  train:
+    cmd: python src/modules/8_training/train.py
+    deps:
+    - src/modules/8_training/train.py
+    - outputs/model/train-test-split.geojson
+    params:
+    - split
+    - train
+    - constants.random_seed
+    outs:
+    - outputs/model/folds
+    - outputs/model/final.h5
 
   #  evaluate:
   #    cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
@@ -153,8 +169,38 @@ artifacts:
   resnet:
     path: resnet
     type: model
+  fold_0:
+    path: outputs/model/folds/fold_0.h5
+    type: model
+  fold_1:
+    path: outputs/model/folds/fold_1.h5
+    type: model
+  fold_2:
+    path: outputs/model/folds/fold_2.h5
+    type: model
+  fold_3:
+    path: outputs/model/folds/fold_3.h5
+    type: model
+  fold_4:
+    path: outputs/model/folds/fold_4.h5
+    type: model
 metrics:
 - dvclive/metrics.json
+- dvclive/fold_0/metrics.json
+- dvclive/fold_1/metrics.json
+- dvclive/fold_2/metrics.json
+- dvclive/fold_3/metrics.json
+- dvclive/fold_4/metrics.json
 plots:
 - dvclive/plots/metrics:
+    x: step
+- dvclive/fold_0/plots/metrics:
+    x: step
+- dvclive/fold_1/plots/metrics:
+    x: step
+- dvclive/fold_2/plots/metrics:
+    x: step
+- dvclive/fold_3/plots/metrics:
+    x: step
+- dvclive/fold_4/plots/metrics:
     x: step
