@@ -1,0 +1,19 @@
+{
+    "train": {
+        "loss": 4.579554080963135,
+        "mean_absolute_error": 4.579564094543457,
+        "mean_absolute_percentage_error": 7.794200420379639,
+        "mean_squared_error": 34.26033401489258,
+        "root_mean_squared_error": 5.853233337402344,
+        "r_squared": 0.24020391702651978
+    },
+    "eval": {
+        "loss": 5.986127853393555,
+        "mean_absolute_error": 5.981371879577637,
+        "mean_absolute_percentage_error": 11.253560066223145,
+        "mean_squared_error": 59.838897705078125,
+        "root_mean_squared_error": 7.735560417175293,
+        "r_squared": -0.0009579148609191179
+    },
+    "step": 10
+}
