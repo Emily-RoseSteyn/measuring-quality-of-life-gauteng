@@ -172,8 +172,35 @@ artifacts:
   fold_0:
     path: outputs/model/folds/fold_0.h5
     type: model
+  fold_1:
+    path: outputs/model/folds/fold_1.h5
+    type: model
+  fold_2:
+    path: outputs/model/folds/fold_2.h5
+    type: model
+  fold_3:
+    path: outputs/model/folds/fold_3.h5
+    type: model
+  fold_4:
+    path: outputs/model/folds/fold_4.h5
+    type: model
 metrics:
 - dvclive/metrics.json
+- dvclive/fold_0/metrics.json
+- dvclive/fold_1/metrics.json
+- dvclive/fold_2/metrics.json
+- dvclive/fold_3/metrics.json
+- dvclive/fold_4/metrics.json
 plots:
 - dvclive/plots/metrics:
+    x: step
+- dvclive/fold_0/plots/metrics:
+    x: step
+- dvclive/fold_1/plots/metrics:
+    x: step
+- dvclive/fold_2/plots/metrics:
+    x: step
+- dvclive/fold_3/plots/metrics:
+    x: step
+- dvclive/fold_4/plots/metrics:
     x: step
