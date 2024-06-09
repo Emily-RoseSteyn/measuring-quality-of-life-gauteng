@@ -4,7 +4,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict
 
-import geopandas as gpd
 import pandas as pd
 import pytz
 import tensorflow as tf
@@ -20,7 +19,8 @@ from tensorflow.keras import Model
 from tensorflow.keras import layers
 from tensorflow.keras.applications import ResNet50V2
 
-from keras_data_format_utils import create_generator
+from utils.keras_data_format import create_generator
+from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
 from utils.tensorflow_utils import log_tf_gpu
 
@@ -28,17 +28,6 @@ logger = get_logger()
 
 # Get DVC params
 params = params_show()
-
-
-def load_train_dataset():
-    """
-    Loads training data
-    """
-
-    dataset = gpd.read_file("outputs/model/train-test-split.geojson")
-    # Have to reset index here otherwise group split fails
-    train = dataset[dataset["split"] == "train"].reset_index()
-    return train
 
 
 def get_callbacks(model_path: str) -> list:
@@ -66,6 +55,7 @@ def get_callbacks(model_path: str) -> list:
     tensorboard_callback = TensorBoard(log_dir=logdir, write_grads=True)
     # use tensorboard --logdir logs in your command line to startup tensorboard with the correct logs
 
+    # TODO: Something wrong with early stopping?
     early_stopping_callback = EarlyStopping(
         monitor="val_mean_absolute_percentage_error",
         min_delta=1,  # model should improve by at least 1%
@@ -209,8 +199,6 @@ def run_model(
     logger.info("Validation scores")
     logger.info(score_dictionary)
 
-    # TODO: Move TEST evaluation to standalone
-
     return score_dictionary
 
 
@@ -338,7 +326,7 @@ def main() -> None:
     tf.random.set_seed(seed)
 
     # Load training dataset
-    dataset = load_train_dataset()
+    dataset = load_dataset("train")
 
     # Split training data into train and validation datasets
     # Type of dataset split
