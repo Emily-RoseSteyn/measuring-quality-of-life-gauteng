@@ -50,12 +50,12 @@ def main() -> None:
     model = load_model(model_file)
 
     # Load datasets
-    train = load_dataset("train")
+    # train = load_dataset("train")
     test = load_dataset("test")
 
     # Evaluate train and test datasets.
     with Live(dir=eval_path) as live:
-        evaluate(model, train, "train", live)
+        # evaluate(model, train, "train", live)
         evaluate(model, test, "test", live)
 
 
