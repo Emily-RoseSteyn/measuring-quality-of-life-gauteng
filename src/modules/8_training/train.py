@@ -11,8 +11,12 @@ from dvc.api import params_show
 from dvclive import Live
 from dvclive.keras import DVCLiveCallback
 from keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint
-from keras.losses import MeanAbsoluteError, MeanAbsolutePercentageError
-from keras.metrics import MeanSquaredError, RootMeanSquaredError
+from keras.metrics import (
+    MeanSquaredError,
+    RootMeanSquaredError,
+    MeanAbsoluteError,
+    MeanAbsolutePercentageError,
+)
 from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split, GroupKFold
 from tensorflow.keras import Model
