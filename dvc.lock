@@ -97,14 +97,8 @@ stages:
       size: 31598544
     - path: src/modules/9_evaluation/evaluate.py
       hash: md5
-      md5: 9578167d10aea782c46862b7e7b78726
-      size: 2579
-    outs:
-    - path: outputs/eval
-      hash: md5
-      md5: 2a03d540ba9feecdcd60641fac59d211.dir
-      size: 42
-      nfiles: 1
+      md5: 308c3305d30eb85757544538acebad66
+      size: 2629
   shapefile_processing:
     cmd: python src/modules/1_shapefile_processing/shapefile_process.py
     deps:

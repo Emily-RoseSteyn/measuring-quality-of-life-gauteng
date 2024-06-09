@@ -1,3 +1,4 @@
+import keras
 from dvc.api import params_show
 from dvclive import Live
 from tensorflow.keras.models import load_model
@@ -12,7 +13,7 @@ logger = get_logger()
 params = params_show()
 
 
-def evaluate(model, dataset, split, live):
+def evaluate(model: keras.Model, dataset, split, live):
     """
     Dump all evaluation metrics and plots for given datasets.
 
@@ -36,8 +37,9 @@ def evaluate(model, dataset, split, live):
     logger.info(f"{split} scores")
     logger.info(score_dictionary)
 
-    loss = params["train"]["loss"]
-    live.log_metric(f"{split}_loss", score_dictionary[loss], plot=False)
+    # Log to DVC
+    for key, value in score_dictionary.items():
+        live.log_metric(f"{split}_{key}", value, plot=False)
 
 
 def main() -> None:
