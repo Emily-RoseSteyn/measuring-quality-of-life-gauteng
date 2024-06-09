@@ -1,0 +1,8 @@
+{
+    "test_loss": 6.4183030128479,
+    "test_mean_absolute_error": 6.4183030128479,
+    "test_mean_absolute_percentage_error": 10.95645523071289,
+    "test_mean_squared_error": 62.28374481201172,
+    "test_root_mean_squared_error": 7.89200496673584,
+    "test_r_squared": 0.0310808252543211
+}

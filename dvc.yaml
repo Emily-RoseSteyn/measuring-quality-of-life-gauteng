@@ -132,14 +132,12 @@ stages:
     - outputs/model/folds
     - outputs/model/final.h5
 
-  #  evaluate:
-  #    cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
-  #    deps:
-  #      - src/modules/evaluation/evaluate.py
-  #    - data/intermediate
-  #    - outputs/model.pkl
-  #    outs:
-  #    - eval
+  evaluate:
+    cmd: python src/modules/9_evaluation/evaluate.py
+    deps:
+    - src/modules/9_evaluation/evaluate.py
+    - outputs/model/train-test-split.geojson
+    - outputs/model/final.h5
 
 
   #  generate_grid:
@@ -191,6 +189,8 @@ metrics:
 - dvclive/fold_2/metrics.json
 - dvclive/fold_3/metrics.json
 - dvclive/fold_4/metrics.json
+- outputs/eval/metrics.json
+- outputs/eval/metrics.json
 plots:
 - dvclive/plots/metrics:
     x: step
