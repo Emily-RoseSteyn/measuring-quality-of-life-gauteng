@@ -89,16 +89,16 @@ stages:
     deps:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 35819d9d727f1bdeb9eef059f4f9fe45
-      size: 94882480
+      md5: 70f5a4940315e009f2af1ead81836390
+      size: 94882504
     - path: outputs/model/train-test-split.geojson
       hash: md5
       md5: e0eb0c76dba7c863a6fd9bf519cdfee0
       size: 31598544
     - path: src/modules/9_evaluation/evaluate.py
       hash: md5
-      md5: 308c3305d30eb85757544538acebad66
-      size: 2629
+      md5: 8512b09b8401dd84e7cddc722dd695fd
+      size: 1673
   shapefile_processing:
     cmd: python src/modules/1_shapefile_processing/shapefile_process.py
     deps:
