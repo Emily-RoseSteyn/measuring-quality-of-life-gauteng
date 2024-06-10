@@ -59,8 +59,8 @@ stages:
       size: 31598544
     - path: src/modules/8_training/train.py
       hash: md5
-      md5: 817060faf2f8b60868d27cb2c3574c52
-      size: 11740
+      md5: 0863c8892a1b8f6c3644d624d496fcc1
+      size: 11347
     params:
       params.yaml:
         constants.random_seed: 42
@@ -77,11 +77,11 @@ stages:
     outs:
     - path: outputs/model/final.h5
       hash: md5
-      md5: e3cdc20778f7809eeaf15c94048e34b6
+      md5: 70f5a4940315e009f2af1ead81836390
       size: 94882504
     - path: outputs/model/folds
       hash: md5
-      md5: a6696ad90febcd35130212c5990b63bf.dir
+      md5: c13d75d4fa86cbf9151bfa9c37599a44.dir
       size: 379530024
       nfiles: 4
   evaluate:
