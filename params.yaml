@@ -1,6 +1,9 @@
 constants:
   random_seed: 42
 
+preprocessing:
+  drop_overlap: True
+
 split:
   test_size: 0.2
   val_size: 0.2
