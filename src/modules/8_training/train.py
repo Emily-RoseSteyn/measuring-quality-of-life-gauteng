@@ -26,6 +26,7 @@ from tensorflow.keras.applications import ResNet50V2
 from utils.keras_data_format import create_generator
 from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
+from utils.r2_score import r_squared
 from utils.tensorflow_utils import log_tf_gpu
 
 logger = get_logger()
@@ -107,15 +108,6 @@ def resnet_model():
     base_model = Model(inputs, outputs, name="ResNet50V2")
 
     return base_model
-
-
-# Custom r2 needed because tf 2.11 does not have this as a metric
-# Additionally, have to use tf 2.11 because of cluster constraints
-def r_squared(y_true, y_pred):
-    """Custom metric function to calculate R-squared."""
-    ss_res = tf.reduce_mean(tf.square(y_true - y_pred))
-    ss_tot = tf.reduce_mean(tf.square(tf.math.subtract(y_true, tf.reduce_mean(y_true))))
-    return 1 - ss_res / (ss_tot + tf.keras.backend.epsilon())
 
 
 # TODO: Different models? Fine-tuning? Generalisation (see blog)
