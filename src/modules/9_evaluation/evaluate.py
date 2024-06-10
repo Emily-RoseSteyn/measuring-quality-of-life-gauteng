@@ -50,7 +50,7 @@ def main() -> None:
     model_file = "outputs/model/final.h5"
 
     # Load model
-    model = load_model(model_file, custom_objects={r_squared})
+    model = load_model(model_file, custom_objects={"r_squared": r_squared})
 
     # Load datasets
     # train = load_dataset("train")
