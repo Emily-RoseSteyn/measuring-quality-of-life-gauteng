@@ -1,19 +1,19 @@
 {
     "train": {
-        "loss": 4.8232526779174805,
-        "mean_absolute_error": 4.823298454284668,
-        "mean_absolute_percentage_error": 8.306358337402344,
-        "mean_squared_error": 38.58827590942383,
-        "root_mean_squared_error": 6.2119460105896,
-        "r_squared": 0.20853720605373383
+        "loss": 4.808528900146484,
+        "mean_absolute_error": 4.808528900146484,
+        "mean_absolute_percentage_error": 8.280553817749023,
+        "mean_squared_error": 38.370086669921875,
+        "root_mean_squared_error": 6.194359302520752,
+        "r_squared": 0.21396233141422272
     },
     "eval": {
-        "loss": 4.847576141357422,
-        "mean_absolute_error": 4.851968765258789,
-        "mean_absolute_percentage_error": 8.49336051940918,
-        "mean_squared_error": 37.974185943603516,
-        "root_mean_squared_error": 6.162319660186768,
-        "r_squared": 0.27117887139320374
+        "loss": 4.787026405334473,
+        "mean_absolute_error": 4.787026405334473,
+        "mean_absolute_percentage_error": 8.338994979858398,
+        "mean_squared_error": 37.25550842285156,
+        "root_mean_squared_error": 6.103728771209717,
+        "r_squared": 0.29021456837654114
     },
     "step": 10
 }

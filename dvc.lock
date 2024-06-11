@@ -59,8 +59,8 @@ stages:
       size: 31598544
     - path: src/modules/8_training/train.py
       hash: md5
-      md5: 94e65361fcd59855eda527f834f825a1
-      size: 11992
+      md5: 0863c8892a1b8f6c3644d624d496fcc1
+      size: 11347
     params:
       params.yaml:
         constants.random_seed: 42
@@ -77,20 +77,28 @@ stages:
     outs:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 35819d9d727f1bdeb9eef059f4f9fe45
-      size: 94882480
+      md5: 70f5a4940315e009f2af1ead81836390
+      size: 94882504
     - path: outputs/model/folds
       hash: md5
-      md5: 075dd5ee8999a36af9bdf320d6a6078b.dir
-      size: 379529928
+      md5: c13d75d4fa86cbf9151bfa9c37599a44.dir
+      size: 379530024
       nfiles: 4
   evaluate:
-    cmd: python src/modules/evaluation/evaluate.py outputs/model.pkl data/intermediate
+    cmd: python src/modules/9_evaluation/evaluate.py
     deps:
-    - path: src/modules/evaluation/evaluate.py
+    - path: outputs/model/final.h5
       hash: md5
-      md5: 68e6bd006412722cad6419059024f557
-      size: 165
+      md5: 70f5a4940315e009f2af1ead81836390
+      size: 94882504
+    - path: outputs/model/train-test-split.geojson
+      hash: md5
+      md5: e0eb0c76dba7c863a6fd9bf519cdfee0
+      size: 31598544
+    - path: src/modules/9_evaluation/evaluate.py
+      hash: md5
+      md5: 8512b09b8401dd84e7cddc722dd695fd
+      size: 1673
   shapefile_processing:
     cmd: python src/modules/1_shapefile_processing/shapefile_process.py
     deps:
