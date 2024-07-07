@@ -2,9 +2,13 @@ import os
 from pathlib import Path
 
 import geopandas as gpd
+from dvc.api import params_show
 from matplotlib import pyplot as plt
 
 from utils.logger import get_logger
+
+# Get DVC params
+params = params_show()
 
 
 # NB: This is separate to tiles because we may want to match different clustered data with the same tiles
@@ -37,10 +41,22 @@ def main() -> None:
     joined_data = joined_data.rename(columns={"year_left": "year"})
     joined_data = joined_data.drop(["year_right", "index_right"], axis=1)
 
+    # If drop overlap, remove any duplicate tiles
+    drop_overlap = params["preprocessing"]["drop_overlap"]
+
+    if drop_overlap:
+        grouped_by_tile = joined_data.groupby("tile").count()
+        multi_ward_tiles = grouped_by_tile[grouped_by_tile["year"] > 1].reset_index()
+        joined_data = joined_data[~joined_data["tile"].isin(multi_ward_tiles["tile"])]
+
     # Plot
-    joined_data[joined_data["year"] == "2018"].plot(column="qol_index", legend=True, aspect=1)
+    joined_data[joined_data["year"] == "2018"].plot(
+        column="qol_index", legend=True, aspect=1
+    )
     plt.savefig(os.path.join(results_dir, "2018-gauteng-qol-cluster-tiles.png"))
-    joined_data[joined_data["year"] == "2021"].plot(column="qol_index", legend=True, aspect=1)
+    joined_data[joined_data["year"] == "2021"].plot(
+        column="qol_index", legend=True, aspect=1
+    )
     plt.savefig(os.path.join(results_dir, "2021-gauteng-qol-cluster-tiles.png"))
 
     # Save

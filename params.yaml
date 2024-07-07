@@ -1,6 +1,10 @@
 constants:
   random_seed: 42
 
+preprocessing:
+  drop_overlap: False
+  crop_size: 256
+
 split:
   test_size: 0.2
   val_size: 0.2
