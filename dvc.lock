@@ -395,8 +395,8 @@ stages:
       size: 1561
     - path: src/modules/5_tiling/tile_image.py
       hash: md5
-      md5: 3661d94a38b946d13abd3958b95f7b8e
-      size: 3345
+      md5: a54ac7cad4197689869588fbf87120b4
+      size: 3468
     - path: src/modules/5_tiling/tile_images.py
       hash: md5
       md5: 5cd2eaabb6bd17dbbb26638424556573
@@ -405,6 +405,9 @@ stages:
       hash: md5
       md5: 075127b4916cf5cd72c70c661b3f7cea
       size: 3070
+    params:
+      params.yaml:
+        preprocessing.crop_size: 256
     outs:
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
@@ -423,8 +426,11 @@ stages:
       size: 19933507
     - path: src/modules/6_tile_cluster_matching/match_tiles.py
       hash: md5
-      md5: d774d3ad371cc747387c5d4d6337ad9b
-      size: 1825
+      md5: 0513c87ad6eeb94c110e4f20a1ce604f
+      size: 2293
+    params:
+      params.yaml:
+        preprocessing.drop_overlap: false
     outs:
     - path: outputs/matched/2018-gauteng-qol-cluster-tiles.png
       hash: md5
