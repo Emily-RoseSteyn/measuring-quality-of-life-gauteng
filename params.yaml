@@ -2,7 +2,7 @@ constants:
   random_seed: 42
 
 preprocessing:
-  drop_overlap: false
+  drop_overlap: true
   crop_size: 256
 
 split:
@@ -21,4 +21,3 @@ train:
   group_by_ward: true
   # Number epochs
   epochs: 50
-drop_overlap: true
