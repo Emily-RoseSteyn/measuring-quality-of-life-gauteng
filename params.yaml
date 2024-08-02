@@ -19,5 +19,5 @@ train:
   loss: "mean_squared_error"
   # Group training data by ward
   group_by_ward: True
-  # Number epochs
-  epochs: 50
+  # Up number epochs
+  epochs: 150
