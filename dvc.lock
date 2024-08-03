@@ -71,17 +71,17 @@ stages:
           group_by_ward: true
         train:
           label: qol_index
-          loss: mean_absolute_error
+          loss: mean_squared_error
           group_by_ward: true
-          epochs: 50
+          epochs: 150
     outs:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 10a93839a29440ed42aebfe1133c90fe
+      md5: 0f606e746398a0e88bd133f4415d6f65
       size: 94882512
     - path: outputs/model/folds
       hash: md5
-      md5: e82eced2f8af8d01bf27ac3a3c32c829.dir
+      md5: 1e45666bcccdfba86d40c4314c9f9f97.dir
       size: 379530016
       nfiles: 4
   evaluate:
@@ -89,7 +89,7 @@ stages:
     deps:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 10a93839a29440ed42aebfe1133c90fe
+      md5: 0f606e746398a0e88bd133f4415d6f65
       size: 94882512
     - path: outputs/model/train-test-split.geojson
       hash: md5
