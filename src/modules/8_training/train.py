@@ -1,5 +1,6 @@
 import os
 import random
+from contextlib import redirect_stdout
 from datetime import datetime
 from pathlib import Path
 from typing import Dict
@@ -141,19 +142,23 @@ def run_model(
 
     # Set model name
     # TODO: put this in params? Put it in class?
-    model_path = "./outputs/model/final.h5"
+    output_dir = "./outputs/model"
+    model_path = f"{output_dir}/final.h5"
     exp_dir = "dvclive"
 
     # If cross-validation, set model to current fold
     if fold >= 0:
-        results_dir = Path("./outputs/model/folds")
-        if not os.path.isdir(results_dir):
-            os.makedirs(results_dir)
-        model_path = f"{results_dir}/fold_{fold}.h5"
+        fold_dir = Path(f"{output_dir}/folds")
+        if not os.path.isdir(fold_dir):
+            os.makedirs(fold_dir)
+        model_path = f"{fold_dir}/fold_{fold}.h5"
         exp_dir += f"/fold_{fold}"
 
     model = resnet_model()
-    # model.summary()
+
+    with open(f"{output_dir}/model_summary.txt", "w") as f, redirect_stdout(f):
+        model.summary()
+
     # TODO: Install missing packages pydot + graphviz
     # plot_model(model, to_file=f"outputs/misc/{model_name}.jpg", show_shapes=True)
 
