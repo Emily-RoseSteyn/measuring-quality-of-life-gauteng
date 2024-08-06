@@ -168,3 +168,5 @@ with DVC Studio if enabled.
       machine:
         - `ssh -fNL 8888:<NODE_NAME>:8888 <user>@<cluster-ip>`
         - Where `NODE_NAME` is the node name as seen from the head node that you connect to at `user@cluster-ip`
+
+[//]: # (TODO: Rename outputs -> output)
