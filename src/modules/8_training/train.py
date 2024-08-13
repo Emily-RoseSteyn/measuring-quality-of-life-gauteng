@@ -183,7 +183,8 @@ def run_model(
         callbacks.append(DVCLiveCallback(save_dvc_exp=True, live=live))
 
         # Fit data to model
-        # Note - don't worry about batch size because dataset is in the form of generators which already has batches
+        # Note - don't worry about batch size because dataset is in the form of generators
+        # which already has batches
         model.fit(
             train_generator,
             epochs=epochs,
