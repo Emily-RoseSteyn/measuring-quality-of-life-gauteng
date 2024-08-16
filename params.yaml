@@ -14,10 +14,10 @@ split:
 train:
   # One of services, socioeconomic_status, government_satisfaction,
   # life_satisfaction, health, safety, participation, qol_index
-  label: qol_index
+  label: services
   # Loss to use for training
-  loss: "mean_squared_error"
+  loss: mean_squared_error
   # Group training data by ward
-  group_by_ward: True
+  group_by_ward: true
   # Up number epochs
   epochs: 150
