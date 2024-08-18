@@ -1,6 +1,5 @@
 import os
 import random
-from contextlib import redirect_stdout
 from datetime import datetime
 from pathlib import Path
 from typing import Dict
@@ -21,7 +20,7 @@ from keras.metrics import (
 from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split, GroupKFold
 
-from models.resnet_model import ResnetModel
+from models.model_factory import ModelFactory
 from utils.keras_data_format import create_generator
 from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
@@ -125,14 +124,15 @@ def run_model(
         model_path = f"{fold_dir}/fold_{fold}.h5"
         exp_dir += f"/fold_{fold}"
 
-    model = ResnetModel().model
+    # Dynamically create model class from model name
+    model_name = params["train"]["model_name"]
+    model_class = ModelFactory.get(model_name)
+    model_class.save_model_summary(output_dir)
 
-    with open(f"{output_dir}/model_summary.txt", "w") as f, redirect_stdout(f):
-        model.summary()
+    # Get actual keras model
+    model = model_class.keras_model
 
-    # TODO: Install missing packages pydot + graphviz
-    # plot_model(model, to_file=f"outputs/misc/{model_name}.jpg", show_shapes=True)
-
+    # TODO: Consider moving into base model/child model classes?
     loss = params["train"]["loss"]
     learning_rate = params["train"]["learning_rate"]
     model.compile(

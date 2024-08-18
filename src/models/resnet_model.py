@@ -3,19 +3,23 @@ from keras import layers, Model
 from keras.applications import ResNet50V2
 from keras.layers import GlobalAveragePooling2D, Dense, BatchNormalization, Dropout
 
+from models.base_model import BaseModel
+from models.model_types import ModelType
 
-class ResnetModel:
-    def __init__(self):
-        """
-        Defines the model
-        """
-        self.name = "resnet50v2"
+
+class ResnetModel(BaseModel):
+    @property
+    def name(self) -> ModelType:
+        return ModelType.Resnet50V2
+
+    @property
+    def keras_model(self) -> Model:
         params = params_show()["model"][self.name]
-        self.inputs = layers.Input(shape=(256, 256, 3))
+        inputs = layers.Input(shape=(256, 256, 3))
 
         # Using ResNet50 architecture - freezing base model
         base_model = ResNet50V2(
-            input_tensor=self.inputs, weights="imagenet", include_top=False
+            input_tensor=inputs, weights="imagenet", include_top=False
         )
         base_model.trainable = False
 
@@ -40,6 +44,4 @@ class ResnetModel:
         predictions = Dense(1, activation="linear", name="pred")(x)
 
         # Create the new model
-        model = Model(self.inputs, outputs=predictions, name=self.name)
-
-        self.model = model
+        return Model(inputs, outputs=predictions, name=self.name)
