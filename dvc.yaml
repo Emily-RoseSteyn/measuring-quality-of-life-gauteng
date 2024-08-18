@@ -6,142 +6,143 @@ stages:
   load_env:
     cmd: python src/utils/load_env.py
     deps:
-    - src/utils/load_env.py
-    - .env
+      - src/utils/load_env.py
+      - .env
 
   shapefile_processing:
     cmd: python src/modules/1_shapefile_processing/shapefile_process.py
     deps:
-    - src/modules/1_shapefile_processing/shapefile_process.py
-    - data/shapefiles/2011
-    - data/shapefiles/2016
-    - data/shapefiles/2020
+      - src/modules/1_shapefile_processing/shapefile_process.py
+      - data/shapefiles/2011
+      - data/shapefiles/2016
+      - data/shapefiles/2020
     outs:
-    - outputs/processed-shapefile/2011/gauteng-boundary.geojson
-    - outputs/processed-shapefile/2011/gauteng-boundary-unprocessed.geojson
-    - outputs/processed-shapefile/2011/gauteng-wards.geojson
-    - outputs/processed-shapefile/2011/gauteng-boundary.png
-    - outputs/processed-shapefile/2011/gauteng-boundary-unprocessed.png
-    - outputs/processed-shapefile/2011/gauteng-wards.png
-    - outputs/processed-shapefile/2011/za-wards.png
-    - outputs/processed-shapefile/2016/gauteng-boundary.geojson
-    - outputs/processed-shapefile/2016/gauteng-boundary-unprocessed.geojson
-    - outputs/processed-shapefile/2016/gauteng-wards.geojson
-    - outputs/processed-shapefile/2016/gauteng-boundary.png
-    - outputs/processed-shapefile/2016/gauteng-boundary-unprocessed.png
-    - outputs/processed-shapefile/2016/gauteng-wards.png
-    - outputs/processed-shapefile/2016/za-wards.png
-    - outputs/processed-shapefile/2020/gauteng-boundary.geojson
-    - outputs/processed-shapefile/2020/gauteng-boundary-unprocessed.geojson
-    - outputs/processed-shapefile/2020/gauteng-wards.geojson
-    - outputs/processed-shapefile/2020/gauteng-boundary.png
-    - outputs/processed-shapefile/2020/gauteng-boundary-unprocessed.png
-    - outputs/processed-shapefile/2020/gauteng-wards.png
-    - outputs/processed-shapefile/2020/za-wards.png
+      - outputs/processed-shapefile/2011/gauteng-boundary.geojson
+      - outputs/processed-shapefile/2011/gauteng-boundary-unprocessed.geojson
+      - outputs/processed-shapefile/2011/gauteng-wards.geojson
+      - outputs/processed-shapefile/2011/gauteng-boundary.png
+      - outputs/processed-shapefile/2011/gauteng-boundary-unprocessed.png
+      - outputs/processed-shapefile/2011/gauteng-wards.png
+      - outputs/processed-shapefile/2011/za-wards.png
+      - outputs/processed-shapefile/2016/gauteng-boundary.geojson
+      - outputs/processed-shapefile/2016/gauteng-boundary-unprocessed.geojson
+      - outputs/processed-shapefile/2016/gauteng-wards.geojson
+      - outputs/processed-shapefile/2016/gauteng-boundary.png
+      - outputs/processed-shapefile/2016/gauteng-boundary-unprocessed.png
+      - outputs/processed-shapefile/2016/gauteng-wards.png
+      - outputs/processed-shapefile/2016/za-wards.png
+      - outputs/processed-shapefile/2020/gauteng-boundary.geojson
+      - outputs/processed-shapefile/2020/gauteng-boundary-unprocessed.geojson
+      - outputs/processed-shapefile/2020/gauteng-wards.geojson
+      - outputs/processed-shapefile/2020/gauteng-boundary.png
+      - outputs/processed-shapefile/2020/gauteng-boundary-unprocessed.png
+      - outputs/processed-shapefile/2020/gauteng-wards.png
+      - outputs/processed-shapefile/2020/za-wards.png
 
   gcro_processing:
     cmd: python src/modules/2_gcro_processing/gcro_process.py
     deps:
-    - src/modules/2_gcro_processing/gcro_process.py
-    - data/surveys/gcro-2021.dta
-    - data/surveys/gcro-2018.dta
-    - data/surveys/gcro-2016.dta
+      - src/modules/2_gcro_processing/gcro_process.py
+      - data/surveys/gcro-2021.dta
+      - data/surveys/gcro-2018.dta
+      - data/surveys/gcro-2016.dta
     outs:
-    - outputs/processed-gcro/2021/gcro-column-datatypes.json
-    - outputs/processed-gcro/2021/gcro-date-info.json
-    - outputs/processed-gcro/2021/gcro-clustered-data.csv
-    - outputs/processed-gcro/2018/gcro-column-datatypes.json
-    - outputs/processed-gcro/2018/gcro-date-info.json
-    - outputs/processed-gcro/2018/gcro-clustered-data.csv
-    - outputs/processed-gcro/2016/gcro-column-datatypes.json
-    - outputs/processed-gcro/2016/gcro-date-info.json
-    - outputs/processed-gcro/2016/gcro-clustered-data.csv
+      - outputs/processed-gcro/2021/gcro-column-datatypes.json
+      - outputs/processed-gcro/2021/gcro-date-info.json
+      - outputs/processed-gcro/2021/gcro-clustered-data.csv
+      - outputs/processed-gcro/2018/gcro-column-datatypes.json
+      - outputs/processed-gcro/2018/gcro-date-info.json
+      - outputs/processed-gcro/2018/gcro-clustered-data.csv
+      - outputs/processed-gcro/2016/gcro-column-datatypes.json
+      - outputs/processed-gcro/2016/gcro-date-info.json
+      - outputs/processed-gcro/2016/gcro-clustered-data.csv
 
   data_download:
     cmd: python src/modules/3_data_download/data_download.py
     deps:
-    - src/modules/3_data_download/data_download.py
-    - data/surveys/gcro-2021.dta
-    - data/surveys/gcro-2018.dta
-    - data/surveys/gcro-2016.dta
-    - data/basemap-metadata/basemap-metadata.json
+      - src/modules/3_data_download/data_download.py
+      - data/surveys/gcro-2021.dta
+      - data/surveys/gcro-2018.dta
+      - data/surveys/gcro-2016.dta
+      - data/basemap-metadata/basemap-metadata.json
 
   gcro_shapefile_merge:
     cmd: python src/modules/4_gcro_shapefile_merge/gcro_shapefile_merge.py
     deps:
-    - src/modules/4_gcro_shapefile_merge/gcro_shapefile_merge.py
-    - outputs/processed-shapefile/2020/gauteng-wards.geojson
-    - outputs/processed-shapefile/2016/gauteng-wards.geojson
-    - outputs/processed-shapefile/2011/gauteng-wards.geojson
-    - outputs/processed-gcro/2021/gcro-clustered-data.csv
-    - outputs/processed-gcro/2018/gcro-clustered-data.csv
-    - outputs/processed-gcro/2016/gcro-clustered-data.csv
+      - src/modules/4_gcro_shapefile_merge/gcro_shapefile_merge.py
+      - outputs/processed-shapefile/2020/gauteng-wards.geojson
+      - outputs/processed-shapefile/2016/gauteng-wards.geojson
+      - outputs/processed-shapefile/2011/gauteng-wards.geojson
+      - outputs/processed-gcro/2021/gcro-clustered-data.csv
+      - outputs/processed-gcro/2018/gcro-clustered-data.csv
+      - outputs/processed-gcro/2016/gcro-clustered-data.csv
     outs:
-    - outputs/merged/gauteng-qol.geojson
-    - outputs/merged/2021/gauteng-qol.geojson
-    - outputs/merged/2021/gauteng-qol.png
-    - outputs/merged/2018/gauteng-qol.geojson
-    - outputs/merged/2018/gauteng-qol.png
-    - outputs/merged/2016/gauteng-qol.geojson
-    - outputs/merged/2016/gauteng-qol.png
+      - outputs/merged/gauteng-qol.geojson
+      - outputs/merged/2021/gauteng-qol.geojson
+      - outputs/merged/2021/gauteng-qol.png
+      - outputs/merged/2018/gauteng-qol.geojson
+      - outputs/merged/2018/gauteng-qol.png
+      - outputs/merged/2016/gauteng-qol.geojson
+      - outputs/merged/2016/gauteng-qol.png
 
   tiling:
     cmd: python src/modules/5_tiling/tile_images.py
     deps:
-    - src/modules/5_tiling/tile_images.py
-    - src/modules/5_tiling/tile_image.py
-    - src/modules/5_tiling/tile.sbatch
-    - src/modules/5_tiling/tile_slurm.py
+      - src/modules/5_tiling/tile_images.py
+      - src/modules/5_tiling/tile_image.py
+      - src/modules/5_tiling/tile.sbatch
+      - src/modules/5_tiling/tile_slurm.py
     params:
-    - preprocessing.crop_size
+      - preprocessing.crop_size
     outs:
-    - outputs/tiles/tile-transforms.geojson
+      - outputs/tiles/tile-transforms.geojson
 
   tile_cluster_matching:
     cmd: python src/modules/6_tile_cluster_matching/match_tiles.py
     deps:
-    - src/modules/6_tile_cluster_matching/match_tiles.py
-    - outputs/merged/gauteng-qol.geojson
-    - outputs/tiles/tile-transforms.geojson
+      - src/modules/6_tile_cluster_matching/match_tiles.py
+      - outputs/merged/gauteng-qol.geojson
+      - outputs/tiles/tile-transforms.geojson
     params:
-    - preprocessing.drop_overlap
+      - preprocessing.drop_overlap
     outs:
-    - outputs/matched/gauteng-qol-cluster-tiles.geojson
-    - outputs/matched/2018-gauteng-qol-cluster-tiles.png
-    - outputs/matched/2021-gauteng-qol-cluster-tiles.png
+      - outputs/matched/gauteng-qol-cluster-tiles.geojson
+      - outputs/matched/2018-gauteng-qol-cluster-tiles.png
+      - outputs/matched/2021-gauteng-qol-cluster-tiles.png
 
   train_test_split:
     cmd: python src/modules/7_test_data_split/test_data_split.py
     deps:
-    - src/modules/7_test_data_split/test_data_split.py
-    - outputs/matched/gauteng-qol-cluster-tiles.geojson
+      - src/modules/7_test_data_split/test_data_split.py
+      - outputs/matched/gauteng-qol-cluster-tiles.geojson
     params:
-    - split
-    - constants.random_seed
+      - split
+      - constants.random_seed
     outs:
-    - outputs/model/train-test-split.geojson
-    - outputs/model/train-stats.csv
-    - outputs/model/test-stats.csv
+      - outputs/model/train-test-split.geojson
+      - outputs/model/train-stats.csv
+      - outputs/model/test-stats.csv
 
   train:
     cmd: python src/modules/8_training/train.py
     deps:
-    - src/modules/8_training/train.py
-    - outputs/model/train-test-split.geojson
+      - src/modules/8_training/train.py
+      - outputs/model/train-test-split.geojson
     params:
-    - split
-    - train
-    - constants.random_seed
+      - split
+      - train
+      - constants.random_seed
     outs:
-    - outputs/model/folds
-    - outputs/model/final.h5
+      - outputs/model/folds
+      - outputs/model/final.h5
+      - outputs/model/model_summary.txt
 
   evaluate:
     cmd: python src/modules/9_evaluation/evaluate.py
     deps:
-    - src/modules/9_evaluation/evaluate.py
-    - outputs/model/train-test-split.geojson
-    - outputs/model/final.h5
+      - src/modules/9_evaluation/evaluate.py
+      - outputs/model/train-test-split.geojson
+      - outputs/model/final.h5
 
 
   #  generate_grid:
@@ -187,23 +188,23 @@ artifacts:
     path: outputs/model/folds/fold_4.h5
     type: model
 metrics:
-- dvclive/metrics.json
-- dvclive/fold_0/metrics.json
-- dvclive/fold_1/metrics.json
-- dvclive/fold_2/metrics.json
-- dvclive/fold_3/metrics.json
-- dvclive/fold_4/metrics.json
-- outputs/eval/metrics.json
+  - dvclive/metrics.json
+  - dvclive/fold_0/metrics.json
+  - dvclive/fold_1/metrics.json
+  - dvclive/fold_2/metrics.json
+  - dvclive/fold_3/metrics.json
+  - dvclive/fold_4/metrics.json
+  - outputs/eval/metrics.json
 plots:
-- dvclive/plots/metrics:
-    x: step
-- dvclive/fold_0/plots/metrics:
-    x: step
-- dvclive/fold_1/plots/metrics:
-    x: step
-- dvclive/fold_2/plots/metrics:
-    x: step
-- dvclive/fold_3/plots/metrics:
-    x: step
-- dvclive/fold_4/plots/metrics:
-    x: step
+  - dvclive/plots/metrics:
+      x: step
+  - dvclive/fold_0/plots/metrics:
+      x: step
+  - dvclive/fold_1/plots/metrics:
+      x: step
+  - dvclive/fold_2/plots/metrics:
+      x: step
+  - dvclive/fold_3/plots/metrics:
+      x: step
+  - dvclive/fold_4/plots/metrics:
+      x: step
