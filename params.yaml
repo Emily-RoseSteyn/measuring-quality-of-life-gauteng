@@ -17,7 +17,16 @@ train:
   label: qol_index
   # Loss to use for training
   loss: "mean_squared_error"
+  # Learning rate to use for training
+  learning_rate: 0.0001
   # Group training data by ward
-  group_by_ward: True
+  group_by_ward: true
   # Up number epochs
   epochs: 150
+  # Model name. One of: resnet50v2
+  model_name: resnet50v2
+
+model:
+  resnet50v2:
+    fc_units: 1024
+    dropout_rate: 0.2

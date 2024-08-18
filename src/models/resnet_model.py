@@ -1,3 +1,4 @@
+from dvc.api import params_show
 from keras import layers, Model
 from keras.applications import ResNet50V2
 from keras.layers import GlobalAveragePooling2D, Dense, BatchNormalization, Dropout
@@ -8,7 +9,8 @@ class ResnetModel:
         """
         Defines the model
         """
-        self.name = "ResNet50V2"
+        self.name = "resnet50v2"
+        params = params_show()["model"][self.name]
         self.inputs = layers.Input(shape=(256, 256, 3))
 
         # Using ResNet50 architecture - freezing base model
@@ -24,14 +26,14 @@ class ResnetModel:
         x = GlobalAveragePooling2D(name="avg_pool")(x)
 
         # Add a fully connected layer
-        fc_units = 1024
+        fc_units = params["fc_units"]
         x = Dense(fc_units, activation="relu", name="fc")(x)
 
         # Add batch normalization
         x = BatchNormalization(name="batch_norm")(x)
 
-        # Add dropout with 20% rate
-        dropout_rate = 0.2
+        # Add dropout
+        dropout_rate = params["dropout_rate"]
         x = Dropout(dropout_rate, name="top_dropout")(x)
 
         # Add the final output layer for regression

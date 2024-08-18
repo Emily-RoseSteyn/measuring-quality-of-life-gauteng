@@ -134,8 +134,9 @@ def run_model(
     # plot_model(model, to_file=f"outputs/misc/{model_name}.jpg", show_shapes=True)
 
     loss = params["train"]["loss"]
+    learning_rate = params["train"]["learning_rate"]
     model.compile(
-        optimizer=Adam(),
+        optimizer=Adam(learning_rate=learning_rate),
         loss=loss,
         metrics=[
             MeanAbsoluteError(),
