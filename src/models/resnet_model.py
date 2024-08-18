@@ -1,5 +1,6 @@
 from keras import layers, Model
 from keras.applications import ResNet50V2
+from keras.layers import GlobalAveragePooling2D, Dense, BatchNormalization, Dropout
 
 
 class ResnetModel:
@@ -11,22 +12,32 @@ class ResnetModel:
         self.inputs = layers.Input(shape=(256, 256, 3))
 
         # Using ResNet50 architecture - freezing base model
-        model = ResNet50V2(
+        base_model = ResNet50V2(
             input_tensor=self.inputs, weights="imagenet", include_top=False
         )
-        model.trainable = False
+        base_model.trainable = False
 
-        # Rebuild top
-        x = layers.GlobalAveragePooling2D(name="avg_pool")(model.output)
-        x = layers.BatchNormalization()(x)
-        top_dropout_rate = 0.2
-        x = layers.Dropout(top_dropout_rate, name="top_dropout")(x)
+        # Get outputs of base model
+        x = base_model.output
 
-        # final layer, since we are doing regression we will add only one neuron (unit)
-        # TODO: Add more layers
-        outputs = layers.Dense(1, name="pred")(x)
+        # Add global average pooling layer
+        x = GlobalAveragePooling2D(name="avg_pool")(x)
 
-        # Compile
-        model = Model(self.inputs, outputs, name=self.name)
+        # Add a fully connected layer
+        fc_units = 1024
+        x = Dense(fc_units, activation="relu", name="fc")(x)
+
+        # Add batch normalization
+        x = BatchNormalization(name="batch_norm")(x)
+
+        # Add dropout with 20% rate
+        dropout_rate = 0.2
+        x = Dropout(dropout_rate, name="top_dropout")(x)
+
+        # Add the final output layer for regression
+        predictions = Dense(1, activation="linear", name="pred")(x)
+
+        # Create the new model
+        model = Model(self.inputs, outputs=predictions, name=self.name)
 
         self.model = model
