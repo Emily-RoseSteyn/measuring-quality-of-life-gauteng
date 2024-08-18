@@ -1,5 +1,2 @@
-from enum import Enum
-
-
-class ModelType(Enum):
+class ModelType:
     Resnet50V2 = "resnet50v2"
