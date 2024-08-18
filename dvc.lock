@@ -59,8 +59,8 @@ stages:
       size: 15584527
     - path: src/modules/8_training/train.py
       hash: md5
-      md5: 0863c8892a1b8f6c3644d624d496fcc1
-      size: 11347
+      md5: acebfb6460e2a12c2470957c78e545e6
+      size: 11499
     params:
       params.yaml:
         constants.random_seed: 42
@@ -70,26 +70,30 @@ stages:
           folds: 5
           group_by_ward: true
         train:
-          label: services
+          label: qol_index
           loss: mean_squared_error
           group_by_ward: true
-          epochs: 150
+          epochs: 1
     outs:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 3450fcc7b020c839fc9b92250cdc7172
+      md5: f226862ca5638e40f931f778a38c20fc
       size: 94882512
     - path: outputs/model/folds
       hash: md5
-      md5: 43407d730397ba1099e1ac739bcbc9b7.dir
+      md5: 609d30e7b75c69215cfee38e03aa7616.dir
       size: 379530016
       nfiles: 4
+    - path: outputs/model/model_summary.txt
+      hash: md5
+      md5: f37c858246c265e30756e9b132757076
+      size: 54948
   evaluate:
     cmd: python src/modules/9_evaluation/evaluate.py
     deps:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 3450fcc7b020c839fc9b92250cdc7172
+      md5: f226862ca5638e40f931f778a38c20fc
       size: 94882512
     - path: outputs/model/train-test-split.geojson
       hash: md5
