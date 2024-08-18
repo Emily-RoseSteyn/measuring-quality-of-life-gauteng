@@ -59,8 +59,8 @@ stages:
       size: 15584527
     - path: src/modules/8_training/train.py
       hash: md5
-      md5: acebfb6460e2a12c2470957c78e545e6
-      size: 11499
+      md5: ad46adba45333cbc3c45cca638c99778
+      size: 10767
     params:
       params.yaml:
         constants.random_seed: 42
@@ -72,29 +72,31 @@ stages:
         train:
           label: qol_index
           loss: mean_squared_error
+          learning_rate: 0.0001
           group_by_ward: true
-          epochs: 1
+          epochs: 150
+          model_name: resnet50v2
     outs:
     - path: outputs/model/final.h5
       hash: md5
-      md5: f226862ca5638e40f931f778a38c20fc
-      size: 94882512
+      md5: fc9309aaa52348aa1b47858fe03f9d61
+      size: 120023360
     - path: outputs/model/folds
       hash: md5
-      md5: 609d30e7b75c69215cfee38e03aa7616.dir
-      size: 379530016
+      md5: e585879314e0598630819e604fe51533.dir
+      size: 480093400
       nfiles: 4
     - path: outputs/model/model_summary.txt
       hash: md5
-      md5: f37c858246c265e30756e9b132757076
-      size: 54948
+      md5: 60597ac485d9510f36d8b52142aaf470
+      size: 55150
   evaluate:
     cmd: python src/modules/9_evaluation/evaluate.py
     deps:
     - path: outputs/model/final.h5
       hash: md5
-      md5: f226862ca5638e40f931f778a38c20fc
-      size: 94882512
+      md5: fc9309aaa52348aa1b47858fe03f9d61
+      size: 120023360
     - path: outputs/model/train-test-split.geojson
       hash: md5
       md5: 19be8a2e823d7f015998078c441b3255
