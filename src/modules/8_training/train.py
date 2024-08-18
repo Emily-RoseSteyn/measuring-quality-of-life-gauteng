@@ -20,10 +20,8 @@ from keras.metrics import (
 )
 from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split, GroupKFold
-from tensorflow.keras import Model
-from tensorflow.keras import layers
-from tensorflow.keras.applications import ResNet50V2
 
+from models.resnet_model import ResnetModel
 from utils.keras_data_format import create_generator
 from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
@@ -62,6 +60,7 @@ def get_callbacks(model_path: str) -> list:
     # use tensorboard --logdir logs in your command line to startup tensorboard with the correct logs
 
     # TODO: Something wrong with early stopping?
+    # TODO: Monitoring here is wrong??
     early_stopping_callback = EarlyStopping(
         monitor="val_mean_absolute_percentage_error",
         min_delta=1,  # model should improve by at least 1%
@@ -84,33 +83,6 @@ def get_callbacks(model_path: str) -> list:
     return [tensorboard_callback, early_stopping_callback, model_checkpoint_callback]
 
 
-# TODO: Refactor into class model building
-def resnet_model():
-    """
-    Defines the model
-    """
-    inputs = layers.Input(shape=(256, 256, 3))
-
-    # Using ResNet50 architecture - freezing base model
-    base_model = ResNet50V2(input_tensor=inputs, weights="imagenet", include_top=False)
-    base_model.trainable = False
-
-    # Rebuild top
-    x = layers.GlobalAveragePooling2D(name="avg_pool")(base_model.output)
-    x = layers.BatchNormalization()(x)
-    top_dropout_rate = 0.2
-    x = layers.Dropout(top_dropout_rate, name="top_dropout")(x)
-
-    # final layer, since we are doing regression we will add only one neuron (unit)
-    # TODO: Add more layers
-    outputs = layers.Dense(1, name="pred")(x)
-
-    # Compile
-    base_model = Model(inputs, outputs, name="ResNet50V2")
-
-    return base_model
-
-
 # TODO: Different models? Fine-tuning? Generalisation (see blog)
 def run_model(
     train: pd.DataFrame, val: pd.DataFrame, fold: int = -1
@@ -125,7 +97,9 @@ def run_model(
         keras Pandas Dataframe for the training data.
     val : Pandas Dataframe
         keras Pandas Dataframe for the validation data.
-    fold :
+    fold : int
+        The fold that is currently running
+        Set to -1 if no cross-fold validation
 
     Returns
     -------
@@ -154,7 +128,7 @@ def run_model(
         model_path = f"{fold_dir}/fold_{fold}.h5"
         exp_dir += f"/fold_{fold}"
 
-    model = resnet_model()
+    model = ResnetModel().model
 
     with open(f"{output_dir}/model_summary.txt", "w") as f, redirect_stdout(f):
         model.summary()
@@ -171,7 +145,7 @@ def run_model(
             MeanAbsolutePercentageError(),
             MeanSquaredError(),
             RootMeanSquaredError(),
-            r_squared,
+            r_squared,  # Custom r_squared function because tf 2.11 did not have this available
         ],
     )
 
