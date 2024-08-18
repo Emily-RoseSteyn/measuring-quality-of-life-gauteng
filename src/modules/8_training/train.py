@@ -1,6 +1,5 @@
 import os
 import random
-from contextlib import redirect_stdout
 from datetime import datetime
 from pathlib import Path
 from typing import Dict
@@ -20,10 +19,8 @@ from keras.metrics import (
 )
 from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split, GroupKFold
-from tensorflow.keras import Model
-from tensorflow.keras import layers
-from tensorflow.keras.applications import ResNet50V2
 
+from models.model_factory import ModelFactory
 from utils.keras_data_format import create_generator
 from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
@@ -63,7 +60,6 @@ def get_callbacks(model_path: str) -> list:
 
     # TODO: Something wrong with early stopping?
     early_stopping_callback = EarlyStopping(
-        monitor="val_mean_absolute_percentage_error",
         min_delta=1,  # model should improve by at least 1%
         patience=10,  # amount of epochs  with improvements worse than 1% until the model stops
         verbose=2,
@@ -74,7 +70,6 @@ def get_callbacks(model_path: str) -> list:
     # TODO: Different model name depending on index?
     model_checkpoint_callback = ModelCheckpoint(
         model_path,
-        monitor="val_mean_absolute_percentage_error",
         verbose=0,
         save_best_only=True,  # save the best model
         mode="min",
@@ -82,33 +77,6 @@ def get_callbacks(model_path: str) -> list:
     )
 
     return [tensorboard_callback, early_stopping_callback, model_checkpoint_callback]
-
-
-# TODO: Refactor into class model building
-def resnet_model():
-    """
-    Defines the model
-    """
-    inputs = layers.Input(shape=(256, 256, 3))
-
-    # Using ResNet50 architecture - freezing base model
-    base_model = ResNet50V2(input_tensor=inputs, weights="imagenet", include_top=False)
-    base_model.trainable = False
-
-    # Rebuild top
-    x = layers.GlobalAveragePooling2D(name="avg_pool")(base_model.output)
-    x = layers.BatchNormalization()(x)
-    top_dropout_rate = 0.2
-    x = layers.Dropout(top_dropout_rate, name="top_dropout")(x)
-
-    # final layer, since we are doing regression we will add only one neuron (unit)
-    # TODO: Add more layers
-    outputs = layers.Dense(1, name="pred")(x)
-
-    # Compile
-    base_model = Model(inputs, outputs, name="ResNet50V2")
-
-    return base_model
 
 
 # TODO: Different models? Fine-tuning? Generalisation (see blog)
@@ -125,7 +93,9 @@ def run_model(
         keras Pandas Dataframe for the training data.
     val : Pandas Dataframe
         keras Pandas Dataframe for the validation data.
-    fold :
+    fold : int
+        The fold that is currently running
+        Set to -1 if no cross-fold validation
 
     Returns
     -------
@@ -154,24 +124,26 @@ def run_model(
         model_path = f"{fold_dir}/fold_{fold}.h5"
         exp_dir += f"/fold_{fold}"
 
-    model = resnet_model()
+    # Dynamically create model class from model name
+    model_name = params["train"]["model_name"]
+    model_class = ModelFactory.get(model_name)
+    model_class.save_model_summary(output_dir)
 
-    with open(f"{output_dir}/model_summary.txt", "w") as f, redirect_stdout(f):
-        model.summary()
+    # Get actual keras model
+    model = model_class.keras_model
 
-    # TODO: Install missing packages pydot + graphviz
-    # plot_model(model, to_file=f"outputs/misc/{model_name}.jpg", show_shapes=True)
-
+    # TODO: Consider moving into base model/child model classes?
     loss = params["train"]["loss"]
+    learning_rate = params["train"]["learning_rate"]
     model.compile(
-        optimizer=Adam(),
+        optimizer=Adam(learning_rate=learning_rate),
         loss=loss,
         metrics=[
             MeanAbsoluteError(),
             MeanAbsolutePercentageError(),
             MeanSquaredError(),
             RootMeanSquaredError(),
-            r_squared,
+            r_squared,  # Custom r_squared function because tf 2.11 did not have this available
         ],
     )
 
