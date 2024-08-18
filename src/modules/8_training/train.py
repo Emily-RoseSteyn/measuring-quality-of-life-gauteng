@@ -60,9 +60,7 @@ def get_callbacks(model_path: str) -> list:
     # use tensorboard --logdir logs in your command line to startup tensorboard with the correct logs
 
     # TODO: Something wrong with early stopping?
-    # TODO: Monitoring here is wrong??
     early_stopping_callback = EarlyStopping(
-        monitor="val_mean_absolute_percentage_error",
         min_delta=1,  # model should improve by at least 1%
         patience=10,  # amount of epochs  with improvements worse than 1% until the model stops
         verbose=2,
@@ -73,7 +71,6 @@ def get_callbacks(model_path: str) -> list:
     # TODO: Different model name depending on index?
     model_checkpoint_callback = ModelCheckpoint(
         model_path,
-        monitor="val_mean_absolute_percentage_error",
         verbose=0,
         save_best_only=True,  # save the best model
         mode="min",
