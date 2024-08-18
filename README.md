@@ -168,3 +168,33 @@ with DVC Studio if enabled.
       machine:
         - `ssh -fNL 8888:<NODE_NAME>:8888 <user>@<cluster-ip>`
         - Where `NODE_NAME` is the node name as seen from the head node that you connect to at `user@cluster-ip`
+
+#### Tensorflow
+
+- **Multiple processes with GPU**
+    - If you are running multiple processes with a GPU in parallel, you want to ensure that each process has sufficient
+      memory allocated. By default, tensorflow seems to allocate all the GPU memory to a running process and so
+      subsequent processes that are started in parallel will have insufficient memory.
+    - To solve this, you can make use of the memory growth flag for tensorflow which "attempts to allocate only as much
+      GPU memory as needed for the runtime allocations". Minimum memory is initially allocated and as more GPU memory is
+      needed, the GPU memory is extended for the specific tensorflow process. See
+      more [here](https://www.tensorflow.org/guide/gpu#limiting_gpu_memory_growth).
+    - Code:
+
+```python
+import tensorflow as tf
+
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    try:
+        # Currently, memory growth needs to be the same across GPUs
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+        logical_gpus = tf.config.list_logical_devices('GPU')
+        print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+    except RuntimeError as e:
+        # Memory growth must be set before GPUs have been initialized
+        print(e)
+```
+
+[//]: # (TODO: Rename outputs -> output)

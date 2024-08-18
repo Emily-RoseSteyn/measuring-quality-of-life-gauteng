@@ -7,10 +7,11 @@ from matplotlib import pyplot as plt
 
 
 def create_generator(
-        df: pd.DataFrame,
-        label: str,
-        apply_augmentation_flag: int = 0,
-        visualize_augmentations_flag: int = 0
+    df: pd.DataFrame,
+    label: str,
+    apply_augmentation_flag: int = 0,
+    visualize_augmentations_flag: int = 0,
+    batch_size: int = 32,
 ) -> Iterator:
     """
     Adapted from https://rosenfelder.ai/keras-regression-efficient-net/
@@ -27,6 +28,8 @@ def create_generator(
         Flag to apply augmentations.
     visualize_augmentations_flag: int
         Flag to visualise augmentations.
+    batch_size: int
+        Batch size of the generator
 
     Returns
     -------
@@ -35,9 +38,7 @@ def create_generator(
     """
     # Create training ImageDataGenerator with image augmentations
 
-    generator = ImageDataGenerator(
-        rescale=1.0 / 255
-    )
+    generator = ImageDataGenerator(rescale=1.0 / 255)
 
     if apply_augmentation_flag:
         generator.horizontal_flip = True
@@ -64,7 +65,7 @@ def create_generator(
         class_mode="raw",  # Use "raw" for regressions TODO: Understand why?
         target_size=(256, 256),
         # TODO: increase or decrease to fit GPU
-        batch_size=32,
+        batch_size=batch_size,
     )
     return generator
 
@@ -105,7 +106,9 @@ def visualize_augmentations(data_generator: ImageDataGenerator, df: pd.DataFrame
 
     for i in range(9):
         plt.subplot(3, 3, i + 1)  # create a 3x3 grid
-        batch = next(iterator_visualizations)  # get the next image of the generator (always the same image)
+        batch = next(
+            iterator_visualizations
+        )  # get the next image of the generator (always the same image)
         img = batch[0]
         img = img[0, :, :, :]  # remove one dimension for plotting without issues
         plt.imshow(img)
