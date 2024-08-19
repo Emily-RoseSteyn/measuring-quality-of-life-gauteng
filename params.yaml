@@ -25,10 +25,13 @@ train:
   group_by_ward: true
   # Up number epochs
   epochs: 150
-  # Model name. One of: resnet50v2
+  # Model name. One of: resnet50v2, vgg16
   model_name: resnet50v2
 
 model:
   resnet50v2:
     fc_units: 1024
+    dropout_rate: 0.2
+  vgg16:
+    fc_units: 256
     dropout_rate: 0.2
