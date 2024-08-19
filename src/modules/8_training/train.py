@@ -107,7 +107,10 @@ def run_model(
     training_label = params["train"]["label"]
 
     # Get data generators
-    train_generator = create_generator(train, training_label, apply_augmentation_flag=1)
+    apply_augmentations = params["train"]["augment_training_data"]
+    train_generator = create_generator(
+        train, training_label, apply_augmentation_flag=apply_augmentations
+    )
     validation_generator = create_generator(val, training_label)
 
     # Set model name
