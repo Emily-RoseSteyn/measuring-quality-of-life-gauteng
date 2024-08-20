@@ -3,6 +3,7 @@ import random
 import geopandas as gpd
 from dvc.api import params_show
 
+from select_data import select_data
 from utils.logger import get_logger
 from utils.test_data_split import (
     test_data_split_ward_group_shuffle_split,
@@ -24,6 +25,9 @@ def main() -> None:
 
     # Load dataset
     dataset = gpd.read_file("outputs/matched/gauteng-qol-cluster-tiles.geojson")
+
+    # Select data
+    dataset = select_data(dataset)
 
     # Split data into train and test datasets
     # Type of dataset split
