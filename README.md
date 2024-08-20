@@ -171,6 +171,10 @@ with DVC Studio if enabled.
 
 #### Tensorflow
 
+- **Tensorboard**
+    - To view logs from tensorflow and access tensorboard functionality, you can run:
+      `tensorboard --logdir logs/scalars --host=0.0.0.0`
+    - This must be run on the node where the logs are generated as logs are not committed
 - **Multiple processes with GPU**
     - If you are running multiple processes with a GPU in parallel, you want to ensure that each process has sufficient
       memory allocated. By default, tensorflow seems to allocate all the GPU memory to a running process and so
