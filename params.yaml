@@ -22,8 +22,8 @@ train:
   loss: "mean_squared_error"
   # Learning rate to use for training
   learning_rate: 0.0001
-  # Group training data by ward
-  group_by_ward: true
+  # Whether to implement k-fold cross validation
+  cross_val: true
   # Up number epochs
   epochs: 150
   # Model name. One of: resnet50v2, vgg16

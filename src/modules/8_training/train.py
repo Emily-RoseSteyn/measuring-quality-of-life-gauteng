@@ -18,7 +18,7 @@ from keras.metrics import (
     MeanAbsolutePercentageError,
 )
 from keras.optimizers import Adam
-from sklearn.model_selection import train_test_split, GroupKFold
+from sklearn.model_selection import GroupKFold
 
 from models.model_factory import ModelFactory
 from utils.keras_data_format import create_generator
@@ -26,6 +26,10 @@ from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
 from utils.r2_score import r_squared
 from utils.tensorflow_utils import log_tf_gpu
+from utils.test_data_split import (
+    test_data_split_ward_group_shuffle_split,
+    test_data_split_simple_random,
+)
 
 logger = get_logger()
 
@@ -253,9 +257,40 @@ def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
     # live.log_metric("test_acc", test_acc, plot=False)
 
 
+def data_split_ward_grouped(df: pd.DataFrame) -> None:
+    """
+    Accepts a Pandas DataFrame and splits it into training and validation where these are grouped by ward.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Pandas DataFrame containing all data.
+
+    Returns
+    -------
+    None
+    """
+    logger.info("Training model with grouped ward split")
+
+    # Calculate dataset size for validation
+    # We're applying a split on a reduced dataset - percentage is 1 - hold_out_test_size
+    # Then we want the test_size here to be a percentage of the training set that is equal to the overall percentage
+    # ie split_test_size * (1 - hold_out) = val_size
+    val_size = params["split"]["val_size"]
+    hold_out_test_size = params["split"]["test_size"]
+    split_test_size = val_size / (1 - hold_out_test_size)
+
+    train, val = test_data_split_ward_group_shuffle_split(df, test_size=split_test_size)
+
+    log_train_val_statistics(train, val)
+
+    # Run model
+    run_model(train, val)
+
+
 def data_split_simple(df: pd.DataFrame) -> None:
     """
-    Accepts a Pandas DataFrame and splits it into training and validation. Returns DataFrames.
+    Accepts a Pandas DataFrame and splits it into training and validation.
 
     Parameters
     ----------
@@ -267,7 +302,6 @@ def data_split_simple(df: pd.DataFrame) -> None:
     None
     """
     logger.info("Training model with simple random split")
-    random_state = params["constants"]["random_seed"]
 
     # Calculate dataset size for validation
     # We're applying a split on a reduced dataset - percentage is 1 - hold_out_test_size
@@ -277,20 +311,21 @@ def data_split_simple(df: pd.DataFrame) -> None:
     hold_out_test_size = params["split"]["test_size"]
     split_test_size = val_size / (1 - hold_out_test_size)
 
-    train, val = train_test_split(
-        df, test_size=split_test_size, random_state=random_state
-    )
+    train, val = test_data_split_simple_random(df, split_test_size)
 
-    logger.info("Descriptive statistics of train:")
-    logger.info(f"Shape: {train.shape}")
-    logger.info(train.describe())
-
-    logger.info("Descriptive statistics of validation:")
-    logger.info(f"Shape: {val.shape}")
-    logger.info(val.describe())
+    log_train_val_statistics(train, val)
 
     # Run model
     run_model(train, val)
+
+
+def log_train_val_statistics(train, val):
+    logger.info("Descriptive statistics of train:")
+    logger.info(f"Shape: {train.shape}")
+    logger.info(train.describe())
+    logger.info("Descriptive statistics of validation:")
+    logger.info(f"Shape: {val.shape}")
+    logger.info(val.describe())
 
 
 def main() -> None:
@@ -307,13 +342,25 @@ def main() -> None:
 
     # Split training data into train and validation datasets
     # Type of dataset split
-    group_by_ward = params["train"]["group_by_ward"]
+    group_by_ward = params["split"]["group_by_ward"]
+    cross_val = params["train"]["cross_val"]
 
-    # If group by ward
-    if group_by_ward:
-        logger.info("Grouping by ward")
+    # If group by ward and cross validation
+    if group_by_ward and cross_val:
+        logger.info("Grouping by ward and running cross-validation")
         # Splits and runs model within this
         data_split_ward_group_stratified_k_fold(dataset)
+    # If group by ward
+    elif group_by_ward:
+        logger.info("Grouping by ward without cross-validation")
+        data_split_ward_grouped(dataset)
+
+    # If cross validation
+    elif cross_val:
+        logger.error("Not implemented")
+        raise NotImplementedError(
+            "Cross-validation without grouping wards is not implemented"
+        )
     # Else assume simple random
     else:
         logger.info("Random splitting")
