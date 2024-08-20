@@ -3,7 +3,7 @@ constants:
 
 preprocessing:
   drop_overlap: true
-  crop_size: 256
+  crop_size: 128
 
 split:
   test_size: 0.2
@@ -16,7 +16,7 @@ train:
   # life_satisfaction, health, safety, participation, qol_index
   label: qol_index
   # Loss to use for training
-  loss: "mean_squared_error"
+  loss: mean_squared_error
   # Learning rate to use for training
   learning_rate: 0.0001
   # Group training data by ward
