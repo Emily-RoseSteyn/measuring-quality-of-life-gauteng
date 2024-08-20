@@ -5,6 +5,7 @@ from keras.layers import Dense, BatchNormalization, Dropout
 
 from models.base_model import BaseModel
 from models.model_types import ModelType
+from utils.env_variables import TILE_SIZE_WITH_CHANNELS
 
 
 class ResnetModel(BaseModel):
@@ -15,7 +16,7 @@ class ResnetModel(BaseModel):
     @property
     def keras_model(self) -> Model:
         params = params_show()["model"][self.name]
-        inputs = layers.Input(shape=(256, 256, 3))
+        inputs = layers.Input(shape=TILE_SIZE_WITH_CHANNELS)
 
         # Using ResNet50 architecture - freezing base model
         base_keras_model = ResNet50V2(

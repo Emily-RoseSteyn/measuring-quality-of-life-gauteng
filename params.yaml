@@ -4,6 +4,7 @@ constants:
 preprocessing:
   drop_overlap: true
   crop_size: 256
+  channels: 3
 
 split:
   test_size: 0.2
