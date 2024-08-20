@@ -5,6 +5,8 @@ import pandas as pd
 from keras.preprocessing.image import ImageDataGenerator, Iterator
 from matplotlib import pyplot as plt
 
+from utils.env_variables import TILE_SIZE
+
 
 def create_generator(
     df: pd.DataFrame,
@@ -63,7 +65,7 @@ def create_generator(
         x_col="tile",  # Image location
         y_col=label,  # Target feature
         class_mode="raw",  # Use "raw" for regressions TODO: Understand why?
-        target_size=(256, 256),
+        target_size=TILE_SIZE,
         # TODO: increase or decrease to fit GPU
         batch_size=batch_size,
     )
@@ -100,7 +102,7 @@ def visualize_augmentations(data_generator: ImageDataGenerator, df: pd.DataFrame
         x_col="tile",
         y_col="qol_index",
         class_mode="raw",
-        target_size=(256, 256),
+        target_size=TILE_SIZE,
         batch_size=1,  # use only one image for visualization
     )
 
