@@ -18,7 +18,7 @@ split:
   test_size: 0.2
   val_size: 0.2
   folds: 5
-  group_by_ward: true
+  group_by_ward: false
 
 train:
   # One of services, socioeconomic_status, government_satisfaction,
