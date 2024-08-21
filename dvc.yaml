@@ -133,7 +133,7 @@ stages:
       - train
       - constants.random_seed
     outs:
-      - outputs/model/folds
+      #      - outputs/model/folds
       - outputs/model/final.h5
       - outputs/model/model_summary.txt
 
