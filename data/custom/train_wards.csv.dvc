@@ -1,5 +1,5 @@
 outs:
-- md5: 878126bf954a6fa35513fbca53199f97
-  size: 381
+- md5: 6a7ca0d46ffdf6bb34bf0f9776c2dd4b
+  size: 111
   hash: md5
   path: train_wards.csv

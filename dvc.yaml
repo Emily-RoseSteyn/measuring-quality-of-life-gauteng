@@ -133,9 +133,9 @@ stages:
     - train
     - constants.random_seed
     outs:
-    - outputs/model/folds
-    - outputs/model/final.h5
-    - outputs/model/model_summary.txt
+      #      - outputs/model/folds
+      - outputs/model/final.h5
+      - outputs/model/model_summary.txt
 
   evaluate:
     cmd: python src/modules/9_evaluation/evaluate.py

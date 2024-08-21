@@ -7,7 +7,7 @@ preprocessing_params = params["preprocessing"]
 
 
 # Need more than k-fold wards => k-folds for training set + at least 1 more for test
-MIN_CUSTOM_WARDS = params["split"]["folds"]
+MIN_DATA_COUNT = params["split"]["folds"]
 
 # def select_tiles(dataset: gpd.GeoDataFrame):
 #     # If drop overlap, remove any duplicate tiles
@@ -33,18 +33,26 @@ def select_year(dataset: gpd.GeoDataFrame):
 
 def select_wards(dataset: gpd.GeoDataFrame):
     custom_wards = preprocessing_params["custom_wards"]
+    group_by_ward = preprocessing_params["group_by_ward"]
     if custom_wards:
         # Get custom wards and current wards
         wards = pd.read_csv("data/custom/train_wards.csv", dtype=str)
         current_ward_codes = dataset["ward_code"].unique()
 
+        # Get selected data
+        selected_data = dataset[dataset["ward_code"].isin(wards["ward_code"])]
+
         # Check if sufficient wards match
         wards_match = wards.isin(current_ward_codes)
         wards_match = wards_match[wards_match.ward_code]
-        if len(wards_match) <= MIN_CUSTOM_WARDS:
+
+        if group_by_ward and len(wards_match) <= MIN_DATA_COUNT:
             raise Exception("Too few valid wards in custom ward data")  # noqa: TRY002
 
-        return dataset[dataset["ward_code"].isin(wards["ward_code"])]
+        if len(selected_data) <= MIN_DATA_COUNT:
+            raise Exception("Too few data samples in custom ward data")  # noqa: TRY002
+
+        return selected_data
 
     return dataset
 
