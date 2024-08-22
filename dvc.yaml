@@ -113,8 +113,8 @@ stages:
   train_test_split:
     cmd: python src/modules/7_data_splitting/split_data.py
     deps:
-      - src/modules/7_data_splitting/split_data.py
-      - outputs/matched/gauteng-qol-cluster-tiles.geojson
+    - src/modules/7_data_splitting/split_data.py
+    - outputs/matched/gauteng-qol-cluster-tiles.geojson
     params:
     - split
     - constants.random_seed
@@ -134,8 +134,8 @@ stages:
     - constants.random_seed
     outs:
       #      - outputs/model/folds
-      - outputs/model/final.h5
-      - outputs/model/model_summary.txt
+    - outputs/model/final.h5
+    - outputs/model/model_summary.txt
 
   evaluate:
     cmd: python src/modules/9_evaluation/evaluate.py
@@ -187,24 +187,12 @@ artifacts:
   fold_4:
     path: outputs/model/folds/fold_4.h5
     type: model
+  final:
+    path: outputs/model/final.h5
+    type: model
 metrics:
 - dvclive/metrics.json
-- dvclive/fold_0/metrics.json
-- dvclive/fold_1/metrics.json
-- dvclive/fold_2/metrics.json
-- dvclive/fold_3/metrics.json
-- dvclive/fold_4/metrics.json
 - outputs/eval/metrics.json
 plots:
 - dvclive/plots/metrics:
-    x: step
-- dvclive/fold_0/plots/metrics:
-    x: step
-- dvclive/fold_1/plots/metrics:
-    x: step
-- dvclive/fold_2/plots/metrics:
-    x: step
-- dvclive/fold_3/plots/metrics:
-    x: step
-- dvclive/fold_4/plots/metrics:
     x: step
