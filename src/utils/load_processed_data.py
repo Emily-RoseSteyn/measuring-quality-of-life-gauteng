@@ -1,7 +1,7 @@
 import geopandas as gpd
 
 
-def load_dataset(split: str):
+def load_dataset(split: str) -> gpd.GeoDataFrame:
     """
     Loads data
     """

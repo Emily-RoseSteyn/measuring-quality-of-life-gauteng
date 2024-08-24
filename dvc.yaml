@@ -147,6 +147,16 @@ stages:
     - outputs/eval/train_scores.pkl
     - outputs/eval/test_scores.pkl
 
+  results:
+    cmd: python src/modules/10_predictions_and_plots/main.py
+    deps:
+    - src/modules/10_predictions_and_plots/main.py
+    - src/modules/10_predictions_and_plots/predict.py
+    - src/modules/10_predictions_and_plots/plot.py
+    - outputs/model/train-test-split.geojson
+    - outputs/model/final.h5
+    outs:
+    - outputs/results
 
   #  generate_grid:
   #    cmd: python src/modules/grid_generation/generate_grid.py

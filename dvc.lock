@@ -487,3 +487,32 @@ stages:
       hash: md5
       md5: 4798a452ae43b91891b243d0d22af916
       size: 1061257
+  results:
+    cmd: python src/modules/10_predictions_and_plots/main.py
+    deps:
+    - path: outputs/model/final.h5
+      hash: md5
+      md5: 2cf915cee6d68400143362ab4b2c8e1b
+      size: 120023344
+    - path: outputs/model/train-test-split.geojson
+      hash: md5
+      md5: 4798a452ae43b91891b243d0d22af916
+      size: 1061257
+    - path: src/modules/10_predictions_and_plots/main.py
+      hash: md5
+      md5: 40d11308e1aea6691da60626b55325a3
+      size: 961
+    - path: src/modules/10_predictions_and_plots/plot.py
+      hash: md5
+      md5: ba0a6b01e7ec627552eb312e2bd9bc2c
+      size: 1089
+    - path: src/modules/10_predictions_and_plots/predict.py
+      hash: md5
+      md5: 16de223a55422f246e5cf9fe9628095c
+      size: 676
+    outs:
+    - path: outputs/results
+      hash: md5
+      md5: 94c5333c6ace7bd7051808905850c92b.dir
+      size: 63796
+      nfiles: 2
