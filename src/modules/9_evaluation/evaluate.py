@@ -3,10 +3,10 @@ from dvc.api import params_show
 from dvclive import Live
 from tensorflow.keras.models import load_model
 
+from utils import r2_score_wrapper
 from utils.keras_data_format import create_generator
 from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
-from utils.r2_score import r_squared
 
 logger = get_logger()
 
@@ -50,7 +50,7 @@ def main() -> None:
     model_file = "outputs/model/final.h5"
 
     # Load model
-    model = load_model(model_file, custom_objects={"r_squared": r_squared})
+    model = load_model(model_file, custom_objects={"r_squared": r2_score_wrapper})
 
     # Load datasets
     # train = load_dataset("train")

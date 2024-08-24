@@ -21,10 +21,10 @@ from keras.optimizers import Adam
 from sklearn.model_selection import GroupKFold
 
 from models.model_factory import ModelFactory
+from utils import r2_score_wrapper
 from utils.keras_data_format import create_generator
 from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
-from utils.r2_score import r_squared
 from utils.tensorflow_utils import log_tf_gpu
 from utils.test_data_split import (
     test_data_split_ward_group_shuffle_split,
@@ -150,7 +150,7 @@ def run_model(
             MeanAbsolutePercentageError(),
             MeanSquaredError(),
             RootMeanSquaredError(),
-            r_squared,  # Custom r_squared function because tf 2.11 did not have this available
+            r2_score_wrapper,  # Custom r_squared function because tf 2.11 did not have this available
         ],
     )
 
