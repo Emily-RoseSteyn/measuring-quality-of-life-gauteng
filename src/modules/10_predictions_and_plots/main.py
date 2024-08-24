@@ -19,14 +19,15 @@ def predict_and_plot(split: str):
     # Make predictions
     data_predictions = make_predictions(data_split)
 
+    # TODO: Calculate metrics on a per row basis depending on params?
+    # TODO: Save predictions
+
     # Plot predictions
     plot_actual_vs_predicted(data_predictions, split)
 
-    # Map activations
-
-    # Map some examples
-
     # TODO: Other plots
+    # Map activations
+    # Map some examples
 
 
 def main():
