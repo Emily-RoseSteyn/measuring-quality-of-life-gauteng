@@ -55,12 +55,12 @@ stages:
     deps:
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: 19be8a2e823d7f015998078c441b3255
-      size: 15584527
+      md5: 79c1ffa8734f3d5b2ed2c300e2e7fc2d
+      size: 530470
     - path: src/modules/8_training/train.py
       hash: md5
-      md5: 0863c8892a1b8f6c3644d624d496fcc1
-      size: 11347
+      md5: 452c007f49e9d568bff67bfece49fc0f
+      size: 12411
     params:
       params.yaml:
         constants.random_seed: 42
@@ -68,33 +68,35 @@ stages:
           test_size: 0.2
           val_size: 0.2
           folds: 5
-          group_by_ward: true
+          group_by_ward: false
         train:
           label: qol_index
+          augment_training_data: 0
           loss: mean_squared_error
-          group_by_ward: true
-          epochs: 150
+          learning_rate: 0.0001
+          cross_val: false
+          epochs: 500
+          model_name: resnet50v2
     outs:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 0f606e746398a0e88bd133f4415d6f65
-      size: 94882512
-    - path: outputs/model/folds
+      md5: 31e2471fa726fb9a3750ad4ebb239c7c
+      size: 120023344
+    - path: outputs/model/model_summary.txt
       hash: md5
-      md5: 1e45666bcccdfba86d40c4314c9f9f97.dir
-      size: 379530016
-      nfiles: 4
+      md5: ea0203e877d67bdc96228af4775c7e4a
+      size: 54160
   evaluate:
     cmd: python src/modules/9_evaluation/evaluate.py
     deps:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 0f606e746398a0e88bd133f4415d6f65
-      size: 94882512
+      md5: 31e2471fa726fb9a3750ad4ebb239c7c
+      size: 120023344
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: 19be8a2e823d7f015998078c441b3255
-      size: 15584527
+      md5: 79c1ffa8734f3d5b2ed2c300e2e7fc2d
+      size: 530470
     - path: src/modules/9_evaluation/evaluate.py
       hash: md5
       md5: 8512b09b8401dd84e7cddc722dd695fd
@@ -119,8 +121,8 @@ stages:
       nfiles: 6
     - path: src/modules/1_shapefile_processing/shapefile_process.py
       hash: md5
-      md5: e90e93b1a31e72dfc39f1508a8ba0f1d
-      size: 2476
+      md5: 56b5efbf41c7cfbca2e3fb4aa0dc35ad
+      size: 2607
     outs:
     - path: outputs/processed-shapefile/2011/gauteng-boundary-unprocessed.geojson
       hash: md5
@@ -407,12 +409,12 @@ stages:
       size: 3070
     params:
       params.yaml:
-        preprocessing.crop_size: 256
+        preprocessing.crop_size: 128
     outs:
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
-      md5: edfb02b8165d2a1eabfa79010f0f0d6c
-      size: 19933507
+      md5: 331c387acea8b1a8a2835d777ed63f8f
+      size: 79730691
   tile_cluster_matching:
     cmd: python src/modules/6_tile_cluster_matching/match_tiles.py
     deps:
@@ -422,39 +424,39 @@ stages:
       size: 21603283
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
-      md5: edfb02b8165d2a1eabfa79010f0f0d6c
-      size: 19933507
+      md5: 331c387acea8b1a8a2835d777ed63f8f
+      size: 79730691
     - path: src/modules/6_tile_cluster_matching/match_tiles.py
       hash: md5
       md5: 0513c87ad6eeb94c110e4f20a1ce604f
       size: 2293
     params:
       params.yaml:
-        preprocessing.drop_overlap: true
+        preprocessing.drop_overlap: false
     outs:
     - path: outputs/matched/2018-gauteng-qol-cluster-tiles.png
       hash: md5
-      md5: 361975ecbe97c1508a1f075074d5d905
-      size: 28564
+      md5: e6871478cc81adaf89cb8df570cb6f71
+      size: 37807
     - path: outputs/matched/2021-gauteng-qol-cluster-tiles.png
       hash: md5
-      md5: ee65c6b9d02150f13c85805964274a87
-      size: 29139
+      md5: 707412d052c9bddba3b060190bde4cf6
+      size: 38213
     - path: outputs/matched/gauteng-qol-cluster-tiles.geojson
       hash: md5
-      md5: 09a0c613702f177a7dfbc20b90540d84
-      size: 15196491
+      md5: 3b998ad2b923c85b7a811f3fe021b80d
+      size: 103563140
   train_test_split:
-    cmd: python src/modules/7_test_data_split/test_data_split.py
+    cmd: python src/modules/7_data_splitting/split_data.py
     deps:
     - path: outputs/matched/gauteng-qol-cluster-tiles.geojson
       hash: md5
-      md5: 09a0c613702f177a7dfbc20b90540d84
-      size: 15196491
-    - path: src/modules/7_test_data_split/test_data_split.py
+      md5: 3b998ad2b923c85b7a811f3fe021b80d
+      size: 103563140
+    - path: src/modules/7_data_splitting/split_data.py
       hash: md5
-      md5: 9c7c070d7ed53e55ad630142e2d2e2a0
-      size: 3444
+      md5: 0baae544cedd04073a96d811bb9bfdb0
+      size: 1885
     params:
       params.yaml:
         constants.random_seed: 42
@@ -462,17 +464,17 @@ stages:
           test_size: 0.2
           val_size: 0.2
           folds: 5
-          group_by_ward: true
+          group_by_ward: false
     outs:
     - path: outputs/model/test-stats.csv
       hash: md5
-      md5: 220de2d1e6438f751cdb30a8da98bafc
-      size: 1195
+      md5: 24046b2d24c570ea4b816c07b8b1d2d1
+      size: 1299
     - path: outputs/model/train-stats.csv
       hash: md5
-      md5: 8eefdecb8b1940b4f7f490138e258e45
-      size: 1219
+      md5: 8df06544c946ef1ad2fd6a1fb92b0c19
+      size: 1289
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: 19be8a2e823d7f015998078c441b3255
-      size: 15584527
+      md5: 79c1ffa8734f3d5b2ed2c300e2e7fc2d
+      size: 530470
