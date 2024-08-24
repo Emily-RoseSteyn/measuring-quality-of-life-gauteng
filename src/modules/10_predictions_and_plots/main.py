@@ -1,6 +1,6 @@
 from tensorflow.keras.models import load_model
 
-from utils import r2_score_wrapper
+from utils import custom_r_squared
 from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
 
@@ -13,7 +13,7 @@ def main():
     model_file = "outputs/model/final.h5"
 
     # Load model
-    model = load_model(model_file, custom_objects={"r_squared": r2_score_wrapper})
+    model = load_model(model_file, custom_objects={"r_squared": custom_r_squared})
 
     # Load full dataset
     # TODO: Modify load to load everything rather and then can group by train/test?
