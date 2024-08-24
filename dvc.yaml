@@ -133,7 +133,7 @@ stages:
     - train
     - constants.random_seed
     outs:
-      #      - outputs/model/folds
+    #      - outputs/model/folds
     - outputs/model/final.h5
     - outputs/model/model_summary.txt
 
@@ -143,6 +143,9 @@ stages:
     - src/modules/9_evaluation/evaluate.py
     - outputs/model/train-test-split.geojson
     - outputs/model/final.h5
+    outs:
+    - outputs/eval/train_scores.pkl
+    - outputs/eval/test_scores.pkl
 
 
   #  generate_grid:
@@ -187,9 +190,14 @@ artifacts:
   fold_4:
     path: outputs/model/folds/fold_4.h5
     type: model
+  final:
+    path: outputs/model/final.h5
+    type: model
 metrics:
 - outputs/eval/metrics.json
 - dvclive/metrics.json
+- outputs/eval/metrics.json
+- outputs/eval/metrics.json
 plots:
 - dvclive/plots/metrics:
     x: step

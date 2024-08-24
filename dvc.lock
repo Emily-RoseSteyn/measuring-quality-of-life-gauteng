@@ -55,12 +55,12 @@ stages:
     deps:
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: 79c1ffa8734f3d5b2ed2c300e2e7fc2d
-      size: 530470
+      md5: 4798a452ae43b91891b243d0d22af916
+      size: 1061257
     - path: src/modules/8_training/train.py
       hash: md5
-      md5: 452c007f49e9d568bff67bfece49fc0f
-      size: 12411
+      md5: 37a85b8f1e36facad9ae988c7ed06b97
+      size: 12798
     params:
       params.yaml:
         constants.random_seed: 42
@@ -75,32 +75,41 @@ stages:
           loss: mean_squared_error
           learning_rate: 0.0001
           cross_val: false
-          epochs: 500
+          epochs: 10
           model_name: resnet50v2
     outs:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 31e2471fa726fb9a3750ad4ebb239c7c
+      md5: 2cf915cee6d68400143362ab4b2c8e1b
       size: 120023344
     - path: outputs/model/model_summary.txt
       hash: md5
-      md5: ea0203e877d67bdc96228af4775c7e4a
-      size: 54160
+      md5: e62bcdbd12dbf8d28b4a364ec385fe45
+      size: 54710
   evaluate:
     cmd: python src/modules/9_evaluation/evaluate.py
     deps:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 31e2471fa726fb9a3750ad4ebb239c7c
+      md5: 2cf915cee6d68400143362ab4b2c8e1b
       size: 120023344
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: 79c1ffa8734f3d5b2ed2c300e2e7fc2d
-      size: 530470
+      md5: 4798a452ae43b91891b243d0d22af916
+      size: 1061257
     - path: src/modules/9_evaluation/evaluate.py
       hash: md5
-      md5: 8512b09b8401dd84e7cddc722dd695fd
-      size: 1673
+      md5: 5222ecec0b33eb9793f40e6ccb89a015
+      size: 2132
+    outs:
+    - path: outputs/eval/test_scores.pkl
+      hash: md5
+      md5: 95d1fc2c235ddedc0f959447c96c9baf
+      size: 198
+    - path: outputs/eval/train_scores.pkl
+      hash: md5
+      md5: 48a7ec1ca0bc6f0ddab39aa182a84da7
+      size: 198
   shapefile_processing:
     cmd: python src/modules/1_shapefile_processing/shapefile_process.py
     deps:
