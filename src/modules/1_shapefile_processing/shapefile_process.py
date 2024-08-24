@@ -49,11 +49,12 @@ def process_shapefile_by_date(date: str):
     # Process with buffer so that artifacts are removed
     # Change projection so that buffer applied as expected
     # From geodetic coordinates (EPSG4326) to meters (3857) and back again
-    gauteng_processed_boundary = (
-        gauteng_boundary.to_crs(crs=3857)
-        .buffer(0.01)
-        .buffer(-0.01)
-        .to_crs(crs=gauteng_boundary.crs)
+    gauteng_processed_boundary = gauteng_boundary.to_crs(crs=3857)
+    gauteng_processed_boundary["geometry"] = (
+        gauteng_processed_boundary["geometry"].buffer(0.01).buffer(-0.01)
+    )
+    gauteng_processed_boundary = gauteng_processed_boundary.to_crs(
+        crs=gauteng_boundary.crs
     )
 
     gauteng_processed_boundary.plot(facecolor="none")
