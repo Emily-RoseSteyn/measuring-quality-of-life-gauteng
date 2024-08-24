@@ -111,9 +111,9 @@ stages:
       - outputs/matched/2021-gauteng-qol-cluster-tiles.png
 
   train_test_split:
-    cmd: python src/modules/7_test_data_split/test_data_split.py
+    cmd: python src/modules/7_data_splitting/split_data.py
     deps:
-      - src/modules/7_test_data_split/test_data_split.py
+      - src/modules/7_data_splitting/split_data.py
       - outputs/matched/gauteng-qol-cluster-tiles.geojson
     params:
       - split
@@ -133,7 +133,7 @@ stages:
       - train
       - constants.random_seed
     outs:
-      - outputs/model/folds
+      #      - outputs/model/folds
       - outputs/model/final.h5
       - outputs/model/model_summary.txt
 
