@@ -121,8 +121,8 @@ stages:
       nfiles: 6
     - path: src/modules/1_shapefile_processing/shapefile_process.py
       hash: md5
-      md5: e90e93b1a31e72dfc39f1508a8ba0f1d
-      size: 2476
+      md5: 56b5efbf41c7cfbca2e3fb4aa0dc35ad
+      size: 2607
     outs:
     - path: outputs/processed-shapefile/2011/gauteng-boundary-unprocessed.geojson
       hash: md5
