@@ -1,3 +1,5 @@
+import pickle
+
 import keras
 from dvc.api import params_show
 from dvclive import Live
@@ -14,7 +16,7 @@ logger = get_logger()
 params = params_show()
 
 
-def evaluate(model: keras.Model, dataset, split, live):
+def evaluate(model: keras.Model, dataset, split, eval_dir: str, live: int = 0):
     """
     Dump all evaluation metrics and plots for given datasets.
 
@@ -22,7 +24,8 @@ def evaluate(model: keras.Model, dataset, split, live):
         model: Trained model
         dataset: The input dataset to evaluate
         split (str): Dataset name.
-        live (dvclive.Live): Dvclive instance.
+        eval_dir (str): the directory to save results to
+        live (int): Whether to start a dvclive instance.
     """
 
     # Training label
@@ -38,9 +41,15 @@ def evaluate(model: keras.Model, dataset, split, live):
     logger.info(f"{split} scores")
     logger.info(score_dictionary)
 
+    # Save scores
+    with open(f"{eval_dir}/{split}_scores.pkl", "wb") as f:
+        pickle.dump(score_dictionary, f)
+
     # Log to DVC
-    for key, value in score_dictionary.items():
-        live.log_metric(f"{split}_{key}", value, plot=False)
+    if live:
+        with Live(dir=eval_dir) as live_instance:
+            for key, value in score_dictionary.items():
+                live_instance.log_metric(f"{split}_{key}", value, plot=False)
 
 
 def main() -> None:
@@ -52,14 +61,14 @@ def main() -> None:
     # Load model
     model = load_model(model_file, custom_objects={"r_squared": r2_score_wrapper})
 
-    # Load datasets
-    # train = load_dataset("train")
-    test = load_dataset("test")
+    # Evaluate train dataset
+    train = load_dataset("train")
+    evaluate(model, train, "train", eval_path)
+    # TODO: Is it evaluation on each fold?? Or in simple split, only on val?
 
-    # Evaluate train and test datasets.
-    with Live(dir=eval_path) as live:
-        # evaluate(model, train, "train", live)
-        evaluate(model, test, "test", live)
+    # Evaluate test dataset
+    test = load_dataset("test")
+    evaluate(model, test, "test", eval_path, live=1)
 
 
 if __name__ == "__main__":
