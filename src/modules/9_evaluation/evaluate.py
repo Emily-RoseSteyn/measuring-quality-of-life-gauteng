@@ -27,7 +27,7 @@ def evaluate(model: keras.Model, split, eval_dir: str, live: int = 0):
         eval_dir (str): the directory to save results to
         live (int): Whether to start a dvclive instance.
     """
-    dataset = load_dataset("split", post_training=1)
+    dataset = load_dataset(split, post_training=1)
     # Training label
     training_label = params["train"]["label"]
 
