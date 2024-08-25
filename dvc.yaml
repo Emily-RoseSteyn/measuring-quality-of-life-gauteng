@@ -134,6 +134,7 @@ stages:
     - constants.random_seed
     outs:
     #      - outputs/model/folds
+    - outputs/model/train-test-split.geojson
     - outputs/model/final.h5
     - outputs/model/model_summary.txt
 
