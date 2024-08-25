@@ -33,7 +33,7 @@ train:
   # Whether to implement k-fold cross validation
   cross_val: false
   # Number epochs
-  epochs: 10
+  epochs: 500
   # Model name. One of: resnet50v2, vgg16
   model_name: resnet50v2
 
