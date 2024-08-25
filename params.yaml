@@ -39,8 +39,7 @@ train:
 
 model:
   resnet50v2:
-    fc_units: 1024
-    dropout_rate: 0.2
+    train_base: true
   vgg16:
     fc_units: 256
     dropout_rate: 0.2
