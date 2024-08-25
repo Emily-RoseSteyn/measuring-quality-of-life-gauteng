@@ -127,6 +127,7 @@ stages:
     cmd: python src/modules/8_training/train.py
     deps:
     - src/modules/8_training/train.py
+    - src/models
     - outputs/model/train-test-split.geojson
     params:
     - split
