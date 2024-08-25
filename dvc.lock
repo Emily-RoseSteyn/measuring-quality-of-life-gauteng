@@ -500,8 +500,8 @@ stages:
       size: 1061257
     - path: src/modules/10_predictions_and_plots/main.py
       hash: md5
-      md5: 40d11308e1aea6691da60626b55325a3
-      size: 961
+      md5: 6a6ed22b0fa67f4b20cb4910c0ee60c3
+      size: 1089
     - path: src/modules/10_predictions_and_plots/plot.py
       hash: md5
       md5: ba0a6b01e7ec627552eb312e2bd9bc2c
@@ -513,6 +513,6 @@ stages:
     outs:
     - path: outputs/results
       hash: md5
-      md5: 94c5333c6ace7bd7051808905850c92b.dir
-      size: 63796
+      md5: 8802af32f4a65ba69934f3d0a84eb772.dir
+      size: 63931
       nfiles: 2

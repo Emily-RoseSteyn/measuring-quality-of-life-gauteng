@@ -13,14 +13,16 @@ def predict_and_plot(split: str):
 
     # Load full dataset
     # TODO: Modify load to load everything rather and then can group by train/test?
-    # TODO: Should save folds??
+    # TODO: Should save folds?? To save train, val, and test
     data_split = load_dataset(split)
 
     # Make predictions
     data_predictions = make_predictions(data_split)
 
+    # Save predictions
+    data_predictions.to_file(f"{RESULTS_DIR}/{split}_predictions.geojson", driver="GeoJSON")
+
     # TODO: Calculate metrics on a per row basis depending on params?
-    # TODO: Save predictions
 
     # Plot predictions
     plot_actual_vs_predicted(data_predictions, split)

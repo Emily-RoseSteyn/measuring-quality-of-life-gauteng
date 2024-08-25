@@ -8,7 +8,7 @@ from utils.keras_data_format import create_generator
 params = params_show()
 
 
-def make_predictions(df: gpd.GeoDataFrame):
+def make_predictions(df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     label = params["train"]["label"]
     generator = create_generator(df, label)
 
