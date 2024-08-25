@@ -21,10 +21,10 @@ from keras.optimizers import Adam
 from sklearn.model_selection import GroupKFold
 
 from models.model_factory import ModelFactory
+from utils import custom_r_squared
 from utils.keras_data_format import create_generator
 from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
-from utils.r2_score import r_squared
 from utils.tensorflow_utils import log_tf_gpu
 from utils.test_data_split import (
     test_data_split_ward_group_shuffle_split,
@@ -53,10 +53,10 @@ def get_callbacks(model_path: str) -> list:
         A list of multiple keras callbacks.
     """
     logdir = (
-        "logs/scalars/"
-        + model_path
-        + "_"
-        + datetime.now(tz=pytz.utc).strftime("%Y%m%d-%H%M%S")
+            "logs/scalars/"
+            + model_path
+            + "_"
+            + datetime.now(tz=pytz.utc).strftime("%Y%m%d-%H%M%S")
     )  # create a folder for each model.
     # TODO: Write gradients deprecated?
     tensorboard_callback = TensorBoard(log_dir=logdir, write_grads=True)
@@ -85,7 +85,7 @@ def get_callbacks(model_path: str) -> list:
 
 # TODO: Different models? Fine-tuning? Generalisation (see blog)
 def run_model(
-    train: pd.DataFrame, val: pd.DataFrame, fold: int = -1
+        train: pd.DataFrame, val: pd.DataFrame, fold: int = -1
 ) -> Dict[str, float]:  # noqa: FA100
     """
     This function runs a keras model with the Adam optimizer and multiple callbacks.
@@ -150,7 +150,7 @@ def run_model(
             MeanAbsolutePercentageError(),
             MeanSquaredError(),
             RootMeanSquaredError(),
-            r_squared,  # Custom r_squared function because tf 2.11 did not have this available
+            custom_r_squared,  # Custom r_squared function because tf 2.11 did not have this available
         ],
     )
 
@@ -183,6 +183,12 @@ def run_model(
     return score_dictionary
 
 
+def save_updated_splits(selected_validation):
+    dataset = load_dataset("all")
+    dataset.loc[selected_validation, "split"] = "validation"
+    dataset.to_file("outputs/model/train-validation-test-split.geojson", driver="GeoJSON")
+
+
 def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
     """
     Accepts a Pandas DataFrame and splits it using the group stratified k fold method
@@ -202,9 +208,10 @@ def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
     #  https://neptune.ai/blog/cross-validation-mistakes#h-3-choosing-cross-validation-technique-for-a-regression-problem
     gkf = GroupKFold(n_splits=folds)
     groups = df["ward_code"]
+    split = list(gkf.split(df, groups=groups))
 
     fold_scores = []
-    for index, (train_index, val_index) in enumerate(gkf.split(df, groups=groups)):
+    for index, (train_index, val_index) in enumerate(split):
         fold = index
         logger.info(f"Training for fold: {fold}")
 
@@ -250,6 +257,11 @@ def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
     final_model = Path(f"{result_dir}/final.h5")
     os.replace(fold_model, final_model)
 
+    # Save the train, validation split
+    selected_split = next(fold for idx, fold in enumerate(split) if idx == min_loss_fold)
+    selected_validation = selected_split[1]
+    save_updated_splits(selected_validation)
+
     # TODO: Retrain the model, but this time with all the data
     #  - i.e., without making the train/test split.
     #  Save that model, and use it for generating predictions.
@@ -287,6 +299,9 @@ def data_split_ward_grouped(df: pd.DataFrame) -> None:
     # Run model
     run_model(train, val)
 
+    # Save updated train split
+    save_updated_splits(val.index)
+
 
 def data_split_simple(df: pd.DataFrame) -> None:
     """
@@ -317,6 +332,9 @@ def data_split_simple(df: pd.DataFrame) -> None:
 
     # Run model
     run_model(train, val)
+
+    # Save updated train split
+    save_updated_splits(val.index)
 
 
 def log_train_val_statistics(train, val):

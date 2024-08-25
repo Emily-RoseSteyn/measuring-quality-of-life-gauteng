@@ -27,3 +27,6 @@ crop_size = params["preprocessing"]["crop_size"]
 channels = params["preprocessing"]["channels"]
 TILE_SIZE = (crop_size, crop_size)
 TILE_SIZE_WITH_CHANNELS = (crop_size, crop_size, channels)
+
+# FOLDERS
+RESULTS_DIR = "outputs/results"
