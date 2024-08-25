@@ -36,6 +36,7 @@ def main():
     logger = get_logger()
     logger.info("Predicting and plotting things")
     predict_and_plot("train")
+    predict_and_plot("validation")
     predict_and_plot("test")
 
 
