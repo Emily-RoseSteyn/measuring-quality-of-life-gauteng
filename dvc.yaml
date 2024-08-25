@@ -206,10 +206,8 @@ artifacts:
     path: outputs/model/final.h5
     type: model
 metrics:
-- outputs/eval/metrics.json
-- outputs/eval/metrics.json
-- outputs/eval/metrics.json
 - dvclive/metrics.json
+- outputs/eval/metrics.json
 plots:
 - dvclive/plots/metrics:
     x: step
