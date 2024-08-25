@@ -57,6 +57,11 @@ stages:
       hash: md5
       md5: 79c1ffa8734f3d5b2ed2c300e2e7fc2d
       size: 530470
+    - path: src/models
+      hash: md5
+      md5: 5f9a0c9279bf24ea5a8d888d4436b341.dir
+      size: 9420
+      nfiles: 12
     - path: src/modules/8_training/train.py
       hash: md5
       md5: ad0b0ce96fcaf4395c69b441c0d30555
@@ -80,12 +85,12 @@ stages:
     outs:
     - path: outputs/model/final.h5
       hash: md5
-      md5: b08b8b399a76f22f2e1c5944f7c67e39
-      size: 120023344
+      md5: 269e38308e717d06d0d4e71f9aa6c203
+      size: 283375488
     - path: outputs/model/model_summary.txt
       hash: md5
-      md5: ea0203e877d67bdc96228af4775c7e4a
-      size: 54160
+      md5: 16ac0948f8540a63167898b1d5398bc3
+      size: 53464
     - path: outputs/model/train-validation-test-split.geojson
       hash: md5
       md5: 3e367ee89dc7b9af03a7fdad0f0625cd
@@ -95,8 +100,8 @@ stages:
     deps:
     - path: outputs/model/final.h5
       hash: md5
-      md5: b08b8b399a76f22f2e1c5944f7c67e39
-      size: 120023344
+      md5: 269e38308e717d06d0d4e71f9aa6c203
+      size: 283375488
     - path: outputs/model/train-test-split.geojson
       hash: md5
       md5: 79c1ffa8734f3d5b2ed2c300e2e7fc2d
@@ -108,15 +113,15 @@ stages:
     outs:
     - path: outputs/eval/test_scores.pkl
       hash: md5
-      md5: b9b377408c8e9c61f99f9cf56ee7436a
+      md5: d64666aca0b7db57268a7553769a0154
       size: 198
     - path: outputs/eval/train_scores.pkl
       hash: md5
-      md5: 543be9a39bb3a8220f985b21a8a8ad13
+      md5: 6bc421c7f1bf7b43515b4068840cdaf3
       size: 198
     - path: outputs/eval/validation_scores.pkl
       hash: md5
-      md5: 5c3f6b275037758446b798c7721b5604
+      md5: e8b4e14b96f39c4b5ec39cbe58a5fe04
       size: 198
   shapefile_processing:
     cmd: python src/modules/1_shapefile_processing/shapefile_process.py
@@ -500,8 +505,8 @@ stages:
     deps:
     - path: outputs/model/final.h5
       hash: md5
-      md5: b08b8b399a76f22f2e1c5944f7c67e39
-      size: 120023344
+      md5: 269e38308e717d06d0d4e71f9aa6c203
+      size: 283375488
     - path: outputs/model/train-test-split.geojson
       hash: md5
       md5: 79c1ffa8734f3d5b2ed2c300e2e7fc2d
@@ -521,6 +526,6 @@ stages:
     outs:
     - path: outputs/results
       hash: md5
-      md5: 26941476d34a315a16c950a8c8bec48e.dir
-      size: 707864
+      md5: c4b33f882955f7afa85e2527d7ce8ac7.dir
+      size: 679382
       nfiles: 6
