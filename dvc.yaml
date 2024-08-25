@@ -146,6 +146,7 @@ stages:
     - outputs/model/final.h5
     outs:
     - outputs/eval/train_scores.pkl
+    - outputs/eval/validation_scores.pkl
     - outputs/eval/test_scores.pkl
 
   results:

@@ -16,7 +16,7 @@ logger = get_logger()
 params = params_show()
 
 
-def evaluate(model: keras.Model, dataset, split, eval_dir: str, live: int = 0):
+def evaluate(model: keras.Model, split, eval_dir: str, live: int = 0):
     """
     Dump all evaluation metrics and plots for given datasets.
 
@@ -27,7 +27,7 @@ def evaluate(model: keras.Model, dataset, split, eval_dir: str, live: int = 0):
         eval_dir (str): the directory to save results to
         live (int): Whether to start a dvclive instance.
     """
-
+    dataset = load_dataset("split", post_training=1)
     # Training label
     training_label = params["train"]["label"]
 
@@ -63,14 +63,12 @@ def main() -> None:
         model_file, custom_objects={"custom_r_squared": custom_r_squared}
     )
 
-    # # Evaluate train dataset
-    # train = load_dataset("train")
-    # evaluate(model, train, "train", eval_path)
-    # # TODO: Is it evaluation on each fold?? Or in simple split, only on val?
-
-    # Evaluate test dataset
-    test = load_dataset("test")
-    evaluate(model, test, "test", eval_path, live=1)
+    # Evaluate all datasets
+    evaluate(model, "train", eval_path)
+    evaluate(model, "validation", eval_path)
+    evaluate(model, "test", eval_path, live=1)
+    # TODO: Is it evaluation on each fold?? Or in simple split, only on val?
+    # For now just doing validation/train (selected from best fold in k-fold
 
 
 if __name__ == "__main__":
