@@ -184,9 +184,9 @@ def run_model(
 
 
 def save_updated_splits(selected_validation):
-    dataset = load_dataset("train")
+    dataset = load_dataset("all")
     dataset.loc[selected_validation, "split"] = "validation"
-    dataset.to_file("outputs/model/train-test-split.geojson", driver="GeoJSON")
+    dataset.to_file("outputs/model/train-validation-test-split.geojson", driver="GeoJSON")
 
 
 def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
@@ -300,7 +300,7 @@ def data_split_ward_grouped(df: pd.DataFrame) -> None:
     run_model(train, val)
 
     # Save updated train split
-    save_updated_splits(val)
+    save_updated_splits(val.index)
 
 
 def data_split_simple(df: pd.DataFrame) -> None:
@@ -334,7 +334,7 @@ def data_split_simple(df: pd.DataFrame) -> None:
     run_model(train, val)
 
     # Save updated train split
-    save_updated_splits(val)
+    save_updated_splits(val.index)
 
 
 def log_train_val_statistics(train, val):

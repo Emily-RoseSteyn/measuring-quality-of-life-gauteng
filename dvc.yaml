@@ -136,6 +136,7 @@ stages:
     #      - outputs/model/folds
     - outputs/model/final.h5
     - outputs/model/model_summary.txt
+    - outputs/model/train-validation-test-split.geojson
 
   evaluate:
     cmd: python src/modules/9_evaluation/evaluate.py
@@ -205,9 +206,9 @@ artifacts:
     type: model
 metrics:
 - outputs/eval/metrics.json
+- outputs/eval/metrics.json
+- outputs/eval/metrics.json
 - dvclive/metrics.json
-- outputs/eval/metrics.json
-- outputs/eval/metrics.json
 plots:
 - dvclive/plots/metrics:
     x: step

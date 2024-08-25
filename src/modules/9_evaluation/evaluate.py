@@ -63,10 +63,10 @@ def main() -> None:
         model_file, custom_objects={"custom_r_squared": custom_r_squared}
     )
 
-    # Evaluate train dataset
-    train = load_dataset("train")
-    evaluate(model, train, "train", eval_path)
-    # TODO: Is it evaluation on each fold?? Or in simple split, only on val?
+    # # Evaluate train dataset
+    # train = load_dataset("train")
+    # evaluate(model, train, "train", eval_path)
+    # # TODO: Is it evaluation on each fold?? Or in simple split, only on val?
 
     # Evaluate test dataset
     test = load_dataset("test")

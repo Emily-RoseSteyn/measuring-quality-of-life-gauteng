@@ -6,15 +6,18 @@ from utils.env_variables import RESULTS_DIR
 from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
 
+logger = get_logger()
+
 
 def predict_and_plot(split: str):
+    logger.info(f"Predicting and plotting {split}")
     # Make results folder
     os.makedirs(RESULTS_DIR, exist_ok=True)
 
     # Load full dataset
     # TODO: Modify load to load everything rather and then can group by train/test?
     # TODO: Should save folds?? To save train, val, and test
-    data_split = load_dataset(split)
+    data_split = load_dataset(split, post_training=1)
 
     # Make predictions
     data_predictions = make_predictions(data_split)
@@ -33,7 +36,6 @@ def predict_and_plot(split: str):
 
 
 def main():
-    logger = get_logger()
     logger.info("Predicting and plotting things")
     predict_and_plot("train")
     predict_and_plot("validation")
