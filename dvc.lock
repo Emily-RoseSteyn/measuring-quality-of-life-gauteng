@@ -78,14 +78,14 @@ stages:
           label: qol_index
           augment_training_data: 0
           loss: mean_squared_error
-          learning_rate: 0.0001
+          learning_rate: 0.01
           cross_val: false
-          epochs: 10
+          epochs: 500
           model_name: resnet50v2
     outs:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 269e38308e717d06d0d4e71f9aa6c203
+      md5: 20323fc6c6114276a1031f88da56006e
       size: 283375488
     - path: outputs/model/model_summary.txt
       hash: md5
@@ -100,7 +100,7 @@ stages:
     deps:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 269e38308e717d06d0d4e71f9aa6c203
+      md5: 20323fc6c6114276a1031f88da56006e
       size: 283375488
     - path: outputs/model/train-test-split.geojson
       hash: md5
@@ -113,15 +113,15 @@ stages:
     outs:
     - path: outputs/eval/test_scores.pkl
       hash: md5
-      md5: d64666aca0b7db57268a7553769a0154
+      md5: b32e83d30dbb3f236ade1dbc9f7804a6
       size: 198
     - path: outputs/eval/train_scores.pkl
       hash: md5
-      md5: 6bc421c7f1bf7b43515b4068840cdaf3
+      md5: a5fef065e6893f6da00ee676e8402638
       size: 198
     - path: outputs/eval/validation_scores.pkl
       hash: md5
-      md5: e8b4e14b96f39c4b5ec39cbe58a5fe04
+      md5: f725b8ac2dd7b7545d976a0d1ee8091e
       size: 198
   shapefile_processing:
     cmd: python src/modules/1_shapefile_processing/shapefile_process.py
@@ -505,7 +505,7 @@ stages:
     deps:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 269e38308e717d06d0d4e71f9aa6c203
+      md5: 20323fc6c6114276a1031f88da56006e
       size: 283375488
     - path: outputs/model/train-test-split.geojson
       hash: md5
@@ -526,6 +526,6 @@ stages:
     outs:
     - path: outputs/results
       hash: md5
-      md5: c4b33f882955f7afa85e2527d7ce8ac7.dir
-      size: 679382
+      md5: 9fd11be017ee5981490f512163790bcf.dir
+      size: 669985
       nfiles: 6
