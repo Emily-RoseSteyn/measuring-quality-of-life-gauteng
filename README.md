@@ -100,6 +100,8 @@ with DVC Studio if enabled.
 
 ## Pipeline
 
+[//]: # (TODO: Document this more https://dvc.org/doc/user-guide/experiment-management)
+
 1. [Data download](./data/README.md)
 2. Data preprocessing
 3. Training
