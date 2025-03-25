@@ -29,7 +29,7 @@ train:
   # Loss to use for training
   loss: mean_squared_error
   # Learning rate to use for training
-  learning_rate: 0.001
+  learning_rate: 0.01
   # Whether to implement k-fold cross validation
   cross_val: true
   # Number epochs
