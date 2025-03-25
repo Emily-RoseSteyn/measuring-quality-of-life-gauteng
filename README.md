@@ -43,7 +43,18 @@ You can then run the following in the root directory to install all required dep
 poetry install
 ```
 
-[//]: # (TODO: Addnote about poetry run or otherwise install poetry shell)
+Whenever you want to activate your shell to make use of the venv associated, you'll need to run poetry shell. To
+install:
+
+```shell
+poetry self add poetry-plugin-shell
+```
+
+Then you can run:
+
+```shell
+poetry shell
+```
 
 #### Pre-commit Hooks
 
