@@ -1,8 +1,8 @@
 {
-    "test_loss": 5276.3935546875,
-    "test_mean_absolute_error": 72.61591339111328,
-    "test_mean_absolute_percentage_error": 98.02603912353516,
-    "test_mean_squared_error": 5276.3935546875,
-    "test_root_mean_squared_error": 72.63878631591797,
-    "test_custom_r_squared": -2197.293701171875
+    "test_loss": 3429.077880859375,
+    "test_mean_absolute_error": 58.28563690185547,
+    "test_mean_absolute_percentage_error": 98.29817199707031,
+    "test_mean_squared_error": 3429.077880859375,
+    "test_root_mean_squared_error": 58.55832290649414,
+    "test_custom_r_squared": -118.24360656738281
 }

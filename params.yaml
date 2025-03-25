@@ -3,35 +3,35 @@ constants:
 
 preprocessing:
   # Whether to drop tiles that overlap across wards
-  drop_overlap: false
+  drop_overlap: true
   # Crop size of tile
-  crop_size: 128
+  crop_size: 256
   # Number of channels expected in image (RGB => 3)
   channels: 3
   # Select year during data split
   # One of all, 2018, 2021
-  year: '2021'
+  year: 'all'
   # Select specific wards
-  custom_wards: true
+  custom_wards: false
 
 split:
   test_size: 0.2
   val_size: 0.2
   folds: 5
-  group_by_ward: false
+  group_by_ward: true
 
 train:
   # One of services, socioeconomic_status, government_satisfaction,
   # life_satisfaction, health, safety, participation, qol_index
   label: qol_index
   # Augment training data?
-  augment_training_data: 0
+  augment_training_data: 1
   # Loss to use for training
-  loss: "mean_squared_error"
+  loss: mean_squared_error
   # Learning rate to use for training
   learning_rate: 0.01
   # Whether to implement k-fold cross validation
-  cross_val: false
+  cross_val: true
   # Number epochs
   epochs: 500
   # Model name. One of: resnet50v2, vgg16
@@ -39,7 +39,7 @@ train:
 
 model:
   resnet50v2:
-    train_base: true
+    train_base: false
   vgg16:
     fc_units: 256
     dropout_rate: 0.2

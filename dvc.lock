@@ -14,8 +14,8 @@ stages:
     deps:
     - path: .env
       hash: md5
-      md5: 4ecbc9087d821964b029547e49daff3f
-      size: 248
+      md5: daae4acc00328a6abd3018baaa900ccf
+      size: 242
     - path: src/utils/load_env.py
       hash: md5
       md5: 0fe59705b0ae888a1d316aa68d209324
@@ -41,8 +41,8 @@ stages:
       size: 8499821
     - path: src/modules/3_data_download/data_download.py
       hash: md5
-      md5: a2dd4827715a7b2a83d2c55ba0d9d556
-      size: 2178
+      md5: 41b444189b121adb6f4394df1b2deb96
+      size: 2099
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
     deps:
@@ -55,12 +55,17 @@ stages:
     deps:
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: c04abfdcd3c51230cc5d66d0e922ff6e
-      size: 530332
+      md5: bb623455603a8971cca01db322fae586
+      size: 73963429
+    - path: src/models
+      hash: md5
+      md5: 5f9a0c9279bf24ea5a8d888d4436b341.dir
+      size: 9420
+      nfiles: 12
     - path: src/modules/8_training/train.py
       hash: md5
-      md5: 720e057cc8c6b31ef0ccbd601396cac1
-      size: 13447
+      md5: ad0b0ce96fcaf4395c69b441c0d30555
+      size: 13047
     params:
       params.yaml:
         constants.random_seed: 42
@@ -68,51 +73,55 @@ stages:
           test_size: 0.2
           val_size: 0.2
           folds: 5
-          group_by_ward: false
+          group_by_ward: true
         train:
           label: qol_index
-          augment_training_data: 0
+          augment_training_data: 1
           loss: mean_squared_error
-          learning_rate: 0.0001
-          cross_val: false
-          epochs: 10
+          learning_rate: 0.001
+          cross_val: true
+          epochs: 500
           model_name: resnet50v2
     outs:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 76dec44a449d4347a99877f813cba932
-      size: 120023344
+      md5: 3a582d5f8e20ce1684b3592675a8669c
+      size: 94808920
     - path: outputs/model/model_summary.txt
       hash: md5
-      md5: e62bcdbd12dbf8d28b4a364ec385fe45
-      size: 54710
+      md5: 9edb4be02d051cf062cde17ee81d5bcd
+      size: 53760
     - path: outputs/model/train-validation-test-split.geojson
       hash: md5
-      md5: 81f7512997d01a37785f84e489ac3940
-      size: 531105
+      md5: dbe451d114a628544e5d179a0790b182
+      size: 74033744
   evaluate:
     cmd: python src/modules/9_evaluation/evaluate.py
     deps:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 2cf915cee6d68400143362ab4b2c8e1b
-      size: 120023344
+      md5: 3a582d5f8e20ce1684b3592675a8669c
+      size: 94808920
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: 4798a452ae43b91891b243d0d22af916
-      size: 1061257
+      md5: bb623455603a8971cca01db322fae586
+      size: 73963429
     - path: src/modules/9_evaluation/evaluate.py
       hash: md5
-      md5: 5222ecec0b33eb9793f40e6ccb89a015
-      size: 2132
+      md5: 1fc2f3a845f95bc0ec698be89774daf9
+      size: 2109
     outs:
     - path: outputs/eval/test_scores.pkl
       hash: md5
-      md5: 95d1fc2c235ddedc0f959447c96c9baf
+      md5: 59e73f8093d81efd8f17f7b7225e0e27
       size: 198
     - path: outputs/eval/train_scores.pkl
       hash: md5
-      md5: 48a7ec1ca0bc6f0ddab39aa182a84da7
+      md5: 5a40914a47f8fac35ddca40b6f366373
+      size: 198
+    - path: outputs/eval/validation_scores.pkl
+      hash: md5
+      md5: 9186ef70cede3e6a663182f3ff12a4e7
       size: 198
   shapefile_processing:
     cmd: python src/modules/1_shapefile_processing/shapefile_process.py
@@ -134,8 +143,8 @@ stages:
       nfiles: 6
     - path: src/modules/1_shapefile_processing/shapefile_process.py
       hash: md5
-      md5: 2e1fba6905850c14a8763ef4fe1126aa
-      size: 2685
+      md5: 56b5efbf41c7cfbca2e3fb4aa0dc35ad
+      size: 2607
     outs:
     - path: outputs/processed-shapefile/2011/gauteng-boundary-unprocessed.geojson
       hash: md5
@@ -143,15 +152,15 @@ stages:
       size: 249343
     - path: outputs/processed-shapefile/2011/gauteng-boundary-unprocessed.png
       hash: md5
-      md5: 1d41ef64e3941fdec8798e361d7f49f4
+      md5: 44f6ed54ace4492aff9edcb8a20d3988
       size: 35866
     - path: outputs/processed-shapefile/2011/gauteng-boundary.geojson
       hash: md5
-      md5: c643147980c934fcecca74ece72bce48
-      size: 685444
+      md5: 82b19a9e18ee60b77bb19438399ec25e
+      size: 685424
     - path: outputs/processed-shapefile/2011/gauteng-boundary.png
       hash: md5
-      md5: 10e2a8e058698c11dbfdccd575bf1db3
+      md5: ea2a4f31c87fbf5ce87added6c5d6c5e
       size: 34110
     - path: outputs/processed-shapefile/2011/gauteng-wards.geojson
       hash: md5
@@ -159,11 +168,11 @@ stages:
       size: 10783731
     - path: outputs/processed-shapefile/2011/gauteng-wards.png
       hash: md5
-      md5: 9a686e53b5d1b219962736b4561cb3d4
+      md5: 346d7ffba72f13f7099f0a08d36efe35
       size: 51300
     - path: outputs/processed-shapefile/2011/za-wards.png
       hash: md5
-      md5: 6f81966edd5ef1b51bdfc85b674c589e
+      md5: 5db8b8773da5c529059f16debc72e02b
       size: 82345
     - path: outputs/processed-shapefile/2016/gauteng-boundary-unprocessed.geojson
       hash: md5
@@ -171,15 +180,15 @@ stages:
       size: 242617
     - path: outputs/processed-shapefile/2016/gauteng-boundary-unprocessed.png
       hash: md5
-      md5: 732d51105a25f1a4b2971ecb616c318c
+      md5: f7e5e7b6fc605fcd287c46c309147de9
       size: 34101
     - path: outputs/processed-shapefile/2016/gauteng-boundary.geojson
       hash: md5
-      md5: 7f7dd407b7d8f29c83d9cf0ba7d6f4f2
-      size: 691662
+      md5: f1406122f930644e2fe98e3021fbeb29
+      size: 691663
     - path: outputs/processed-shapefile/2016/gauteng-boundary.png
       hash: md5
-      md5: fb35fb0734f94413a84919fed35a66bc
+      md5: 4bf56ae997d01b72270f6b83a03a6883
       size: 34113
     - path: outputs/processed-shapefile/2016/gauteng-wards.geojson
       hash: md5
@@ -187,11 +196,11 @@ stages:
       size: 5370316
     - path: outputs/processed-shapefile/2016/gauteng-wards.png
       hash: md5
-      md5: 5c4f7d41673aae8b8560b45d78afc857
+      md5: 7819983a2490fdb481cdefc4943e2a62
       size: 65880
     - path: outputs/processed-shapefile/2016/za-wards.png
       hash: md5
-      md5: 3a779c15b692b10324f086e59be81122
+      md5: 92d7b19b7adcc5ac4450482a83f90ac3
       size: 115145
     - path: outputs/processed-shapefile/2020/gauteng-boundary-unprocessed.geojson
       hash: md5
@@ -199,15 +208,15 @@ stages:
       size: 339134
     - path: outputs/processed-shapefile/2020/gauteng-boundary-unprocessed.png
       hash: md5
-      md5: 28b7dfe95b03649b0ceb3ce1960b5397
+      md5: 2faa207daa46c0afda75939de61eae0a
       size: 39593
     - path: outputs/processed-shapefile/2020/gauteng-boundary.geojson
       hash: md5
-      md5: 08b6f572773d67322c8968a40bb365ff
-      size: 692032
+      md5: f16b4ab5a22d5bdc011699a4bef537a1
+      size: 692033
     - path: outputs/processed-shapefile/2020/gauteng-boundary.png
       hash: md5
-      md5: 70195155f52ab69cf1309c56465e746c
+      md5: 45e254eb5b9db7af7105cbdff4dea7f5
       size: 34114
     - path: outputs/processed-shapefile/2020/gauteng-wards.geojson
       hash: md5
@@ -215,11 +224,11 @@ stages:
       size: 5298461
     - path: outputs/processed-shapefile/2020/gauteng-wards.png
       hash: md5
-      md5: 571cea396db29a3d4f6ef35fa44b6030
+      md5: 923a9ab67081126d24f1a09077caf96d
       size: 65338
     - path: outputs/processed-shapefile/2020/za-wards.png
       hash: md5
-      md5: 7f27c3720ebfb02088e5aeffced55d30
+      md5: 896ce51f0711e44ea35ffc05a919ea01
       size: 116221
   gcro_processing:
     cmd: python src/modules/2_gcro_processing/gcro_process.py
@@ -238,13 +247,13 @@ stages:
       size: 8499821
     - path: src/modules/2_gcro_processing/gcro_process.py
       hash: md5
-      md5: 145782053a9932eaed48c4105ac9b679
-      size: 3408
+      md5: 1194eb2cdcea8788ab72e0999b582ed5
+      size: 3307
     outs:
     - path: outputs/processed-gcro/2016/gcro-clustered-data.csv
       hash: md5
-      md5: 93d2d1dfb010c45f355c3dfdd62ec130
-      size: 78505
+      md5: 45fbab64c5a143fb32a0bb25f2b38b1e
+      size: 77996
     - path: outputs/processed-gcro/2016/gcro-column-datatypes.json
       hash: md5
       md5: 6fac0434a3a0b2827f22af8c6dd0c96a
@@ -255,8 +264,8 @@ stages:
       size: 106
     - path: outputs/processed-gcro/2018/gcro-clustered-data.csv
       hash: md5
-      md5: 3fb03f0161db1bda5fee4561bc0544ac
-      size: 81633
+      md5: 260f46a2baaf1c7e4b38e5177edb46f8
+      size: 81103
     - path: outputs/processed-gcro/2018/gcro-column-datatypes.json
       hash: md5
       md5: 9629553ee8ac8ed6f9331dda0f8a51f6
@@ -267,8 +276,8 @@ stages:
       size: 106
     - path: outputs/processed-gcro/2021/gcro-clustered-data.csv
       hash: md5
-      md5: 0b3b9f8abd1324f6ff20aab63e2bc87a
-      size: 81724
+      md5: 86a7f71bcbbfd936e5c80588e4b76846
+      size: 81194
     - path: outputs/processed-gcro/2021/gcro-column-datatypes.json
       hash: md5
       md5: 639dacf242b430f397437fde557da6d5
@@ -282,16 +291,16 @@ stages:
     deps:
     - path: outputs/processed-gcro/2016/gcro-clustered-data.csv
       hash: md5
-      md5: 93d2d1dfb010c45f355c3dfdd62ec130
-      size: 78505
+      md5: 45fbab64c5a143fb32a0bb25f2b38b1e
+      size: 77996
     - path: outputs/processed-gcro/2018/gcro-clustered-data.csv
       hash: md5
-      md5: 3fb03f0161db1bda5fee4561bc0544ac
-      size: 81633
+      md5: 260f46a2baaf1c7e4b38e5177edb46f8
+      size: 81103
     - path: outputs/processed-gcro/2021/gcro-clustered-data.csv
       hash: md5
-      md5: 0b3b9f8abd1324f6ff20aab63e2bc87a
-      size: 81724
+      md5: 86a7f71bcbbfd936e5c80588e4b76846
+      size: 81194
     - path: outputs/processed-shapefile/2011/gauteng-wards.geojson
       hash: md5
       md5: cd39f3b48bf05d8dc27cbe16deea56d0
@@ -306,8 +315,8 @@ stages:
       size: 5298461
     - path: src/modules/4_gcro_shapefile_merge/gcro_shapefile_merge.py
       hash: md5
-      md5: 9c05cc9fcea05c5fea76aa10b95b4965
-      size: 3261
+      md5: 447631d3c4995f963fb748202306c605
+      size: 3168
     outs:
     - path: outputs/merged/2016/gauteng-qol.geojson
       hash: md5
@@ -406,27 +415,27 @@ stages:
     deps:
     - path: src/modules/5_tiling/tile.sbatch
       hash: md5
-      md5: 2822636be97c49e23c47b74355cb73ab
-      size: 1613
+      md5: 2772263e628a3192d7fc0d28ceef901b
+      size: 1561
     - path: src/modules/5_tiling/tile_image.py
       hash: md5
-      md5: 1b0bfcb15a124856eac5d81831f41440
-      size: 3563
+      md5: a54ac7cad4197689869588fbf87120b4
+      size: 3468
     - path: src/modules/5_tiling/tile_images.py
       hash: md5
-      md5: a315da51ee01492e139b149d668df1a1
-      size: 1374
+      md5: 5cd2eaabb6bd17dbbb26638424556573
+      size: 1327
     - path: src/modules/5_tiling/tile_slurm.py
       hash: md5
-      md5: 4a571eedb458a0c01129c0ff369eafa3
-      size: 3168
+      md5: 075127b4916cf5cd72c70c661b3f7cea
+      size: 3070
     params:
       params.yaml:
         preprocessing.crop_size: 128
     outs:
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
-      md5: ffd17cf43c66a8633a46134627f5bdab
+      md5: 331c387acea8b1a8a2835d777ed63f8f
       size: 79730691
   tile_cluster_matching:
     cmd: python src/modules/6_tile_cluster_matching/match_tiles.py
@@ -437,39 +446,39 @@ stages:
       size: 21603283
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
-      md5: ffd17cf43c66a8633a46134627f5bdab
+      md5: 331c387acea8b1a8a2835d777ed63f8f
       size: 79730691
     - path: src/modules/6_tile_cluster_matching/match_tiles.py
       hash: md5
-      md5: 15820cfefa207481c6a51fb5da04136c
-      size: 2362
+      md5: 0513c87ad6eeb94c110e4f20a1ce604f
+      size: 2293
     params:
       params.yaml:
-        preprocessing.drop_overlap: false
+        preprocessing.drop_overlap: true
     outs:
     - path: outputs/matched/2018-gauteng-qol-cluster-tiles.png
       hash: md5
-      md5: d9c94096133f9e69ceb67f789b02225d
-      size: 37769
+      md5: 65380bd3c88a8281ad05f3e1824dd8af
+      size: 39949
     - path: outputs/matched/2021-gauteng-qol-cluster-tiles.png
       hash: md5
-      md5: 07748301a130cd3647934c1375b165d6
-      size: 38204
+      md5: beaac4b67a547ae2cfa24ba0ff9d5487
+      size: 40519
     - path: outputs/matched/gauteng-qol-cluster-tiles.geojson
       hash: md5
-      md5: 6dd1f16fdf53248f3abd7030b01ddff5
-      size: 103546920
+      md5: fd59fec7dd4a49d790307504d5ef828c
+      size: 70558761
   train_test_split:
     cmd: python src/modules/7_data_splitting/split_data.py
     deps:
     - path: outputs/matched/gauteng-qol-cluster-tiles.geojson
       hash: md5
-      md5: 6dd1f16fdf53248f3abd7030b01ddff5
-      size: 103546920
+      md5: fd59fec7dd4a49d790307504d5ef828c
+      size: 70558761
     - path: src/modules/7_data_splitting/split_data.py
       hash: md5
-      md5: e554cb9bb00c6599bb8f69fb1d122773
-      size: 1952
+      md5: 0baae544cedd04073a96d811bb9bfdb0
+      size: 1885
     params:
       params.yaml:
         constants.random_seed: 42
@@ -477,46 +486,46 @@ stages:
           test_size: 0.2
           val_size: 0.2
           folds: 5
-          group_by_ward: false
+          group_by_ward: true
     outs:
     - path: outputs/model/test-stats.csv
       hash: md5
-      md5: 97583106841dfce4f5db8511de30787e
-      size: 1304
+      md5: 6872ee7c17a4f8fe7bdfb0a6f2f297a7
+      size: 1307
     - path: outputs/model/train-stats.csv
       hash: md5
-      md5: 4d645b09206f1e3f56930bce732fbac5
-      size: 1307
+      md5: 68e978261899e6cdc44c93cfe3843f3f
+      size: 1303
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: c04abfdcd3c51230cc5d66d0e922ff6e
-      size: 530332
+      md5: bb623455603a8971cca01db322fae586
+      size: 73963429
   results:
     cmd: python src/modules/10_predictions_and_plots/main.py
     deps:
     - path: outputs/model/final.h5
       hash: md5
-      md5: 76dec44a449d4347a99877f813cba932
-      size: 120023344
+      md5: 3a582d5f8e20ce1684b3592675a8669c
+      size: 94808920
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: c04abfdcd3c51230cc5d66d0e922ff6e
-      size: 530332
+      md5: bb623455603a8971cca01db322fae586
+      size: 73963429
     - path: src/modules/10_predictions_and_plots/main.py
       hash: md5
-      md5: 47fe5989d5a3aa0d94a12e7db4e51c18
-      size: 1283
+      md5: 6c6095e065d379990b6da2f9bfda9618
+      size: 1237
     - path: src/modules/10_predictions_and_plots/plot.py
       hash: md5
-      md5: ba0a6b01e7ec627552eb312e2bd9bc2c
-      size: 1089
+      md5: 59c273ce7e194c8d3f8df5b5e4c050db
+      size: 1056
     - path: src/modules/10_predictions_and_plots/predict.py
       hash: md5
-      md5: be6f704d4504f4196ff2e0f8eb256937
-      size: 696
+      md5: 8ad5baa0dd8dfc3b252ac5e73bd65ebb
+      size: 672
     outs:
     - path: outputs/results
       hash: md5
-      md5: 9262405ef9f3e30c58af6fdd69b5ea18.dir
-      size: 707399
-      nfiles: 6
+      md5: 4b17e629fff129b7cb6265de9ea33f1c.dir
+      size: 85179749
+      nfiles: 9
