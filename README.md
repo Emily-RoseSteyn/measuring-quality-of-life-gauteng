@@ -43,6 +43,8 @@ You can then run the following in the root directory to install all required dep
 poetry install
 ```
 
+[//]: # (TODO: Addnote about poetry run or otherwise install poetry shell)
+
 #### Pre-commit Hooks
 
 [Pre-commit](https://pre-commit.com/) is used to keep code clean and to make use
@@ -132,6 +134,8 @@ with DVC Studio if enabled.
     - However, this means that it is imperative to ensure experiments are pushed from remote locations
 
 #### Poetry
+
+[//]: # (TODO: Mpi4py)
 
 - **Reinstall poetry packages**
     - [Reinstalling poetry environment](https://stackoverflow.com/questions/70064449/how-to-force-reinstall-poetry-environment)
