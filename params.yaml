@@ -5,7 +5,7 @@ preprocessing:
   # Whether to drop tiles that overlap across wards
   drop_overlap: true
   # Crop size of tile
-  crop_size: 128
+  crop_size: 256
   # Number of channels expected in image (RGB => 3)
   channels: 3
   # Select year during data split
