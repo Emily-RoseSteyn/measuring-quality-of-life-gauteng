@@ -209,6 +209,7 @@ artifacts:
 metrics:
 - outputs/eval/metrics.json
 - dvclive/metrics.json
+- outputs/eval/metrics.json
 plots:
 - dvclive/plots/metrics:
     x: step

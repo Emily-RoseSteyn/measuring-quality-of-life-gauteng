@@ -14,8 +14,8 @@ stages:
     deps:
     - path: .env
       hash: md5
-      md5: daae4acc00328a6abd3018baaa900ccf
-      size: 242
+      md5: 4ecbc9087d821964b029547e49daff3f
+      size: 248
     - path: src/utils/load_env.py
       hash: md5
       md5: 0fe59705b0ae888a1d316aa68d209324
@@ -41,8 +41,8 @@ stages:
       size: 8499821
     - path: src/modules/3_data_download/data_download.py
       hash: md5
-      md5: 41b444189b121adb6f4394df1b2deb96
-      size: 2099
+      md5: a2dd4827715a7b2a83d2c55ba0d9d556
+      size: 2178
   preprocess:
     cmd: python src/modules/preprocessing/preprocess.py
     deps:
@@ -64,8 +64,8 @@ stages:
       nfiles: 12
     - path: src/modules/8_training/train.py
       hash: md5
-      md5: bc64bc733c91f5897bb0569a6730e521
-      size: 13608
+      md5: b546e9707fbfd6830279e52f39b02e3b
+      size: 13620
     params:
       params.yaml:
         constants.random_seed: 42
@@ -83,10 +83,10 @@ stages:
           epochs: 1
           model_name: resnet50v2
     outs:
-    - path: outputs/model/final.h5
+    - path: outputs/model/final.keras
       hash: md5
-      md5: e9ef4cddeeab9611de52aa891e0459ef
-      size: 94871832
+      md5: 13ccb1863d46511aa77fdf0a5cc6787c
+      size: 94958110
     - path: outputs/model/model_summary.txt
       hash: md5
       md5: 733f4ec701f4ccd050840122c0d7b1df
@@ -98,31 +98,31 @@ stages:
   evaluate:
     cmd: python src/modules/9_evaluation/evaluate.py
     deps:
-    - path: outputs/model/final.h5
+    - path: outputs/model/final.keras
       hash: md5
-      md5: 3a582d5f8e20ce1684b3592675a8669c
-      size: 94808920
+      md5: 13ccb1863d46511aa77fdf0a5cc6787c
+      size: 94958110
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: bb623455603a8971cca01db322fae586
-      size: 73963429
+      md5: 2d176c1fa5dfc9b65ca9f325fbaa50d8
+      size: 15920343
     - path: src/modules/9_evaluation/evaluate.py
       hash: md5
-      md5: 1fc2f3a845f95bc0ec698be89774daf9
-      size: 2109
+      md5: 1bf262f736ce61ed1defe9daa328f098
+      size: 2025
     outs:
     - path: outputs/eval/test_scores.pkl
       hash: md5
-      md5: 59e73f8093d81efd8f17f7b7225e0e27
-      size: 198
+      md5: c5cd5016e0b5242bf2c16a33e2c5a99f
+      size: 59
     - path: outputs/eval/train_scores.pkl
       hash: md5
-      md5: 5a40914a47f8fac35ddca40b6f366373
-      size: 198
+      md5: 50c8b58061619a3e61f0a92a4a858a94
+      size: 59
     - path: outputs/eval/validation_scores.pkl
       hash: md5
-      md5: 9186ef70cede3e6a663182f3ff12a4e7
-      size: 198
+      md5: c7f752531afd02f2e6ec2d371fae3227
+      size: 59
   shapefile_processing:
     cmd: python src/modules/1_shapefile_processing/shapefile_process.py
     deps:
@@ -503,29 +503,29 @@ stages:
   results:
     cmd: python src/modules/10_predictions_and_plots/main.py
     deps:
-    - path: outputs/model/final.h5
+    - path: outputs/model/final.keras
       hash: md5
-      md5: 3a582d5f8e20ce1684b3592675a8669c
-      size: 94808920
+      md5: 13ccb1863d46511aa77fdf0a5cc6787c
+      size: 94958110
     - path: outputs/model/train-test-split.geojson
       hash: md5
-      md5: bb623455603a8971cca01db322fae586
-      size: 73963429
+      md5: 2d176c1fa5dfc9b65ca9f325fbaa50d8
+      size: 15920343
     - path: src/modules/10_predictions_and_plots/main.py
       hash: md5
-      md5: 6c6095e065d379990b6da2f9bfda9618
-      size: 1237
+      md5: 47fe5989d5a3aa0d94a12e7db4e51c18
+      size: 1283
     - path: src/modules/10_predictions_and_plots/plot.py
       hash: md5
-      md5: 59c273ce7e194c8d3f8df5b5e4c050db
-      size: 1056
+      md5: ba0a6b01e7ec627552eb312e2bd9bc2c
+      size: 1089
     - path: src/modules/10_predictions_and_plots/predict.py
       hash: md5
-      md5: 8ad5baa0dd8dfc3b252ac5e73bd65ebb
-      size: 672
+      md5: 86fc98fe06af21ffc0b13e4e0cfaa202
+      size: 599
     outs:
     - path: outputs/results
       hash: md5
-      md5: 4b17e629fff129b7cb6265de9ea33f1c.dir
-      size: 85179749
+      md5: c8d6039fbac80a17d6d58b13ec8120ac.dir
+      size: 18354479
       nfiles: 9
