@@ -31,9 +31,9 @@ train:
   # Learning rate to use for training
   learning_rate: 0.01
   # Whether to implement k-fold cross validation
-  cross_val: true
+  cross_val: false
   # Number epochs
-  epochs: 500
+  epochs: 1
   # Model name. One of: resnet50v2, vgg16
   model_name: resnet50v2
 

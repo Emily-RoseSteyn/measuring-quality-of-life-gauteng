@@ -14,7 +14,7 @@ from keras.src.losses import (
     MeanAbsolutePercentageError,
     MeanSquaredError,
 )
-from keras.src.metrics import PearsonCorrelation, RootMeanSquaredError
+from keras.src.metrics import R2Score, RootMeanSquaredError
 from keras.src.optimizers import Adam
 from models.model_factory import ModelFactory
 from sklearn.model_selection import GroupKFold
@@ -154,7 +154,7 @@ def run_model(
             MeanAbsolutePercentageError(),
             MeanSquaredError(),
             RootMeanSquaredError(),
-            PearsonCorrelation()
+            R2Score()
         ],
     )
 
