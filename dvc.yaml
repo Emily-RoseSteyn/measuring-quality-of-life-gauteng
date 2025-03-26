@@ -208,7 +208,6 @@ artifacts:
     type: model
 metrics:
 - dvclive/metrics.json
-- dvclive/fold_0/metrics.json
 - dvclive/fold_1/metrics.json
 - dvclive/fold_2/metrics.json
 - dvclive/fold_3/metrics.json
@@ -216,8 +215,6 @@ metrics:
 - outputs/eval/metrics.json
 plots:
 - dvclive/plots/metrics:
-    x: step
-- dvclive/fold_0/plots/metrics:
     x: step
 - dvclive/fold_1/plots/metrics:
     x: step
