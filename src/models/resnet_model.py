@@ -1,8 +1,7 @@
 from dvc.api import params_show
-from keras import layers, Model
-from keras.applications import ResNet50V2
-from keras.layers import Dense
-
+from keras import Model, layers
+from keras.src.applications.resnet_v2 import ResNet50V2
+from keras.src.layers import Dense
 from models.base_model import BaseModel
 from models.model_types import ModelType
 from utils.env_variables import TILE_SIZE_WITH_CHANNELS

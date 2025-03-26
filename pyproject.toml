@@ -35,6 +35,7 @@ dvclive = "^3.48.0"
 tensorflow-io-gcs-filesystem = { version = "< 0.32.0", platform = "win32" }
 tensorflow = "~2.18"
 tensorflow-intel = { version = "~2.18.0", platform = "win32" }
+tensorflow-datasets = "^4.9.8"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.5.1"

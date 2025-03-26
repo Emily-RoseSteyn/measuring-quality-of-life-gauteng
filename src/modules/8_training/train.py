@@ -8,28 +8,27 @@ import pandas as pd
 import pytz
 import tensorflow as tf
 from dvc.api import params_show
-from dvclive import Live
-from dvclive.keras import DVCLiveCallback
-from keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint
-from keras.metrics import (
-    MeanSquaredError,
-    RootMeanSquaredError,
+from keras.src.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
+from keras.src.losses import (
     MeanAbsoluteError,
     MeanAbsolutePercentageError,
+    MeanSquaredError,
 )
-from keras.optimizers import Adam
-from sklearn.model_selection import GroupKFold
-
+from keras.src.metrics import PearsonCorrelation, RootMeanSquaredError
+from keras.src.optimizers import Adam
 from models.model_factory import ModelFactory
-from utils import custom_r_squared
+from sklearn.model_selection import GroupKFold
 from utils.keras_data_format import create_generator
 from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
 from utils.tensorflow_utils import log_tf_gpu
 from utils.test_data_split import (
-    test_data_split_ward_group_shuffle_split,
     test_data_split_simple_random,
+    test_data_split_ward_group_shuffle_split,
 )
+
+from dvclive import Live
+from dvclive.keras import DVCLiveCallback
 
 logger = get_logger()
 
@@ -150,7 +149,7 @@ def run_model(
             MeanAbsolutePercentageError(),
             MeanSquaredError(),
             RootMeanSquaredError(),
-            custom_r_squared,  # Custom r_squared function because tf 2.11 did not have this available
+            PearsonCorrelation()
         ],
     )
 

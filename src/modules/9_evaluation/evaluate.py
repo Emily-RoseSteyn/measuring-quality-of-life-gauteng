@@ -2,13 +2,12 @@ import pickle
 
 import keras
 from dvc.api import params_show
-from dvclive import Live
-from tensorflow.keras.models import load_model
-
-from utils import custom_r_squared
+from keras.src.saving import load_model
 from utils.keras_data_format import create_generator
 from utils.load_processed_data import load_dataset
 from utils.logger import get_logger
+
+from dvclive import Live
 
 logger = get_logger()
 
@@ -22,7 +21,6 @@ def evaluate(model: keras.Model, split, eval_dir: str, live: int = 0):
 
     Args:
         model: Trained model
-        dataset: The input dataset to evaluate
         split (str): Dataset name.
         eval_dir (str): the directory to save results to
         live (int): Whether to start a dvclive instance.
@@ -59,9 +57,7 @@ def main() -> None:
     model_file = "outputs/model/final.h5"
 
     # Load model
-    model = load_model(
-        model_file, custom_objects={"custom_r_squared": custom_r_squared}
-    )
+    model = load_model(model_file)
 
     # Evaluate all datasets
     evaluate(model, "train", eval_path)

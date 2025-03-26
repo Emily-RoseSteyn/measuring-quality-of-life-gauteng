@@ -1,7 +1,7 @@
 from dvc.api import params_show
 from keras import layers, Model
-from keras.applications import VGG16
-from keras.layers import Dense, BatchNormalization, Dropout
+from keras.src.applications.vgg16 import VGG16
+from keras.src.layers import Dense, BatchNormalization, Dropout
 
 from models.base_model import BaseModel
 from models.model_types import ModelType

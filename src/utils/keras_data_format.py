@@ -2,9 +2,8 @@ import os
 from pathlib import Path
 
 import pandas as pd
-from keras.preprocessing.image import ImageDataGenerator, Iterator
+from keras.src.legacy.preprocessing.image import ImageDataGenerator, Iterator
 from matplotlib import pyplot as plt
-
 from utils.env_variables import TILE_SIZE
 
 

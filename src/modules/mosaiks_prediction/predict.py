@@ -15,9 +15,7 @@ from plotnine import (
 )
 from sklearn import metrics
 from sklearn.linear_model import LinearRegression, Ridge
-from sklearn.linear_model._base import LinearModel
 from sklearn.model_selection import train_test_split
-
 from utils.logger import get_logger
 
 ModelResult = tuple[str, Any, Any, float | Any]
@@ -132,7 +130,7 @@ def main() -> None:
     plot_results(plotting_coords, plotting_coords_train, y_test, y_train, ridge_result)
 
 
-def regress(reg: LinearModel, x_test: dict, x_train: dict, y_train: dict) -> tuple:
+def regress(reg, x_test: dict, x_train: dict, y_train: dict) -> tuple:
     # Train the model
     reg.fit(x_train, y_train)
     # Make predictions
