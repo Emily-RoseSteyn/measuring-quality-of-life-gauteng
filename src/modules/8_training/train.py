@@ -57,8 +57,13 @@ def get_callbacks(model_path: str) -> list:
             + "_"
             + datetime.now(tz=pytz.utc).strftime("%Y%m%d-%H%M%S")
     )  # create a folder for each model.
-    # TODO: Write gradients deprecated?
-    tensorboard_callback = TensorBoard(log_dir=logdir, write_grads=True)
+    tensorboard_callback = TensorBoard(log_dir=logdir,
+                             histogram_freq=1,
+                             write_graph=True,
+                             write_images=True,
+                             update_freq="epoch",
+                             profile_batch=2,
+                             embeddings_freq=1)
     # use tensorboard --logdir logs in your command line to startup tensorboard with the correct logs
 
     # TODO: Something wrong with early stopping?
