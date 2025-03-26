@@ -431,12 +431,12 @@ stages:
       size: 3070
     params:
       params.yaml:
-        preprocessing.crop_size: 128
+        preprocessing.crop_size: 256
     outs:
     - path: outputs/tiles/tile-transforms.geojson
       hash: md5
-      md5: 331c387acea8b1a8a2835d777ed63f8f
-      size: 79730691
+      md5: cdd690b0f52c5cc44ec2fac8fac27e38
+      size: 50
   tile_cluster_matching:
     cmd: python src/modules/6_tile_cluster_matching/match_tiles.py
     deps:
