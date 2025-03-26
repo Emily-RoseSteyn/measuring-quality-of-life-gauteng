@@ -207,7 +207,6 @@ artifacts:
     path: outputs/model/final.keras
     type: model
 metrics:
-- outputs/eval/metrics.json
 - dvclive/metrics.json
 - outputs/eval/metrics.json
 plots:
