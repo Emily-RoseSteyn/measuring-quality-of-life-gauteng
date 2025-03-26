@@ -11,7 +11,7 @@ def make_predictions(df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     generator = create_generator(df, label)
 
     # Results directory where everything is
-    model_file = "outputs/model/final.h5"
+    model_file = "outputs/model/final.keras"
 
     # Load model
     model = load_model(model_file)

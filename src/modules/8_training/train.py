@@ -124,7 +124,7 @@ def run_model(
     # Set model name
     # TODO: put this in params? Put it in class?
     output_dir = "./outputs/model"
-    model_path = f"{output_dir}/final.h5"
+    model_path = f"{output_dir}/final.keras"
     exp_dir = "dvclive"
 
     # If cross-validation, set model to current fold
@@ -132,7 +132,7 @@ def run_model(
         fold_dir = Path(f"{output_dir}/folds")
         if not os.path.isdir(fold_dir):
             os.makedirs(fold_dir)
-        model_path = f"{fold_dir}/fold_{fold}.h5"
+        model_path = f"{fold_dir}/fold_{fold}.keras"
         exp_dir += f"/fold_{fold}"
 
     # Dynamically create model class from model name
@@ -257,8 +257,8 @@ def data_split_ward_group_stratified_k_fold(df: pd.DataFrame) -> None:
     # TODO: Load the best performing model instance
 
     result_dir = "./outputs/model"
-    fold_model = Path(f"{result_dir}/folds/fold_{min_loss_fold}.h5")
-    final_model = Path(f"{result_dir}/final.h5")
+    fold_model = Path(f"{result_dir}/folds/fold_{min_loss_fold}.keras")
+    final_model = Path(f"{result_dir}/final.keras")
     os.replace(fold_model, final_model)
 
     # Save the train, validation split

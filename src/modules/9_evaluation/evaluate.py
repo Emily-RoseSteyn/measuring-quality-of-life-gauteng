@@ -54,7 +54,7 @@ def main() -> None:
     logger.info("In evaluate")
 
     eval_path = "outputs/eval"
-    model_file = "outputs/model/final.h5"
+    model_file = "outputs/model/final.keras"
 
     # Load model
     model = load_model(model_file)

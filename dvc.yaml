@@ -135,7 +135,7 @@ stages:
     - constants.random_seed
     outs:
     #      - outputs/model/folds
-    - outputs/model/final.h5
+    - outputs/model/final.keras
     - outputs/model/model_summary.txt
     - outputs/model/train-validation-test-split.geojson
 
@@ -144,7 +144,7 @@ stages:
     deps:
     - src/modules/9_evaluation/evaluate.py
     - outputs/model/train-test-split.geojson
-    - outputs/model/final.h5
+    - outputs/model/final.keras
     outs:
     - outputs/eval/train_scores.pkl
     - outputs/eval/validation_scores.pkl
@@ -157,7 +157,7 @@ stages:
     - src/modules/10_predictions_and_plots/predict.py
     - src/modules/10_predictions_and_plots/plot.py
     - outputs/model/train-test-split.geojson
-    - outputs/model/final.h5
+    - outputs/model/final.keras
     outs:
     - outputs/results
 
@@ -189,22 +189,22 @@ artifacts:
     path: resnet
     type: model
   fold_0:
-    path: outputs/model/folds/fold_0.h5
+    path: outputs/model/folds/fold_0.keras
     type: model
   fold_1:
-    path: outputs/model/folds/fold_1.h5
+    path: outputs/model/folds/fold_1.keras
     type: model
   fold_2:
-    path: outputs/model/folds/fold_2.h5
+    path: outputs/model/folds/fold_2.keras
     type: model
   fold_3:
-    path: outputs/model/folds/fold_3.h5
+    path: outputs/model/folds/fold_3.keras
     type: model
   fold_4:
-    path: outputs/model/folds/fold_4.h5
+    path: outputs/model/folds/fold_4.keras
     type: model
   final:
-    path: outputs/model/final.h5
+    path: outputs/model/final.keras
     type: model
 metrics:
 - outputs/eval/metrics.json
