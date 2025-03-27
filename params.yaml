@@ -27,7 +27,7 @@ train:
   # Augment training data?
   augment_training_data: 1
   # Loss to use for training
-  loss: mean_squared_error
+  loss: root_mean_squared_error
   # Learning rate to use for training
   learning_rate: 0.01
   # Whether to implement k-fold cross validation
@@ -40,6 +40,8 @@ train:
 model:
   resnet50v2:
     train_base: false
+    #    Activation: softmax, sigmoid
+    activation: "softmax"
   vgg16:
     fc_units: 256
     dropout_rate: 0.2

@@ -8,13 +8,8 @@ import pandas as pd
 import pytz
 import tensorflow as tf
 from dvc.api import params_show
+from keras.src import metrics
 from keras.src.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
-from keras.src.losses import (
-    MeanAbsoluteError,
-    MeanAbsolutePercentageError,
-    MeanSquaredError,
-)
-from keras.src.metrics import R2Score, RootMeanSquaredError
 from keras.src.optimizers import Adam
 from models.model_factory import ModelFactory
 from sklearn.model_selection import GroupKFold
@@ -150,11 +145,11 @@ def run_model(
         optimizer=Adam(learning_rate=learning_rate),
         loss=loss,
         metrics=[
-            MeanAbsoluteError(),
-            MeanAbsolutePercentageError(),
-            MeanSquaredError(),
-            RootMeanSquaredError(),
-            R2Score()
+            metrics.MeanAbsoluteError(),
+            metrics.MeanAbsolutePercentageError(),
+            metrics.MeanSquaredError(),
+            metrics.RootMeanSquaredError(),
+            metrics.R2Score()
         ],
     )
 
@@ -178,9 +173,7 @@ def run_model(
         live.log_artifact(model_path, type="model")
 
     # Generate generalization metrics
-    score = model.evaluate(validation_generator, callbacks=callbacks)
-
-    score_dictionary = dict(zip(model.metrics_names, score))
+    score_dictionary = model.evaluate(validation_generator, callbacks=callbacks, return_dict=True)
     logger.info("Validation scores")
     logger.info(score_dictionary)
 

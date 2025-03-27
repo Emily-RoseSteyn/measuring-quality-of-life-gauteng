@@ -27,8 +27,9 @@ class ResnetModel(BaseModel):
         # Get outputs of base model
         x = base_keras_model.output
 
-        # Add a fully connected layer with a single output unit for binary classification
-        predictions = Dense(1, activation="sigmoid", name="pred")(x)
+        # Add a fully connected layer with an output unit
+        activation = params["activation"]
+        predictions = Dense(1, activation=activation, name="pred")(x)
 
         # Create the new model
         return Model(inputs, outputs=predictions, name=self.name)
