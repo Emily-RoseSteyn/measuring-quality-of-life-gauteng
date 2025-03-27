@@ -64,8 +64,8 @@ stages:
       nfiles: 12
     - path: src/modules/8_training/train.py
       hash: md5
-      md5: 5fb589a05b2579cbe827a96d79624a6f
-      size: 13082
+      md5: b3a0e2657db1086f5bd6445d4c9155b3
+      size: 13040
     params:
       params.yaml:
         constants.random_seed: 42
@@ -85,12 +85,12 @@ stages:
     outs:
     - path: logs
       hash: md5
-      md5: bb6bb61093f4c2a887e530ee8d0f3ecc.dir
-      size: 6358122900
-      nfiles: 94
+      md5: 756efd295aba34be02c9836bb333f9a1.dir
+      size: 21558089478
+      nfiles: 248
     - path: outputs/model/final.keras
       hash: md5
-      md5: bf85b9d6a09ff17ed9d77bc9cc43a7a1
+      md5: 2e0cf650a376ce3fdd648a396ce64c58
       size: 94958451
     - path: outputs/model/model_summary.txt
       hash: md5
@@ -105,7 +105,7 @@ stages:
     deps:
     - path: outputs/model/final.keras
       hash: md5
-      md5: bf85b9d6a09ff17ed9d77bc9cc43a7a1
+      md5: 2e0cf650a376ce3fdd648a396ce64c58
       size: 94958451
     - path: outputs/model/train-test-split.geojson
       hash: md5
@@ -118,15 +118,15 @@ stages:
     outs:
     - path: outputs/eval/test_scores.pkl
       hash: md5
-      md5: 4b17329e4e7c125b8d7cbb4b1556fcea
+      md5: ba58a9176a966f967e974ff1860d9744
       size: 59
     - path: outputs/eval/train_scores.pkl
       hash: md5
-      md5: a3846ac873314624d416800153a8b51c
+      md5: cc91f0864a19bf4885079cd6d1272a2a
       size: 59
     - path: outputs/eval/validation_scores.pkl
       hash: md5
-      md5: 7eafbc66040447b01bdc9450c0083f0e
+      md5: d611f48215e14ea1ee3a26cb06f0da9d
       size: 59
   shapefile_processing:
     cmd: python src/modules/1_shapefile_processing/shapefile_process.py
@@ -510,7 +510,7 @@ stages:
     deps:
     - path: outputs/model/final.keras
       hash: md5
-      md5: bf85b9d6a09ff17ed9d77bc9cc43a7a1
+      md5: 2e0cf650a376ce3fdd648a396ce64c58
       size: 94958451
     - path: outputs/model/train-test-split.geojson
       hash: md5
@@ -531,6 +531,6 @@ stages:
     outs:
     - path: outputs/results
       hash: md5
-      md5: 14bd281696878ddc32cd1d00c885452a.dir
-      size: 18379229
+      md5: a93e99c9af66a737c391978dd21e16f6.dir
+      size: 18126842
       nfiles: 9
