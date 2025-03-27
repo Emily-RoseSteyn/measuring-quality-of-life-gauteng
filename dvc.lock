@@ -59,13 +59,13 @@ stages:
       size: 15923209
     - path: src/models
       hash: md5
-      md5: 3c47f569cfcd8520f0a852a1160d3fc6.dir
-      size: 12194
+      md5: cbde528a1edcadd05d86ddb691ce3559.dir
+      size: 12232
       nfiles: 12
     - path: src/modules/8_training/train.py
       hash: md5
-      md5: 0f34fca5fe06c48f94abb7bfd8c81082
-      size: 13216
+      md5: 5fb589a05b2579cbe827a96d79624a6f
+      size: 13082
     params:
       params.yaml:
         constants.random_seed: 42
@@ -78,30 +78,35 @@ stages:
           label: qol_index
           augment_training_data: 1
           loss: mean_squared_error
-          learning_rate: 0.01
-          cross_val: false
-          epochs: 1
+          learning_rate: 0.0001
+          cross_val: true
+          epochs: 100
           model_name: resnet50v2
     outs:
+    - path: logs
+      hash: md5
+      md5: bb6bb61093f4c2a887e530ee8d0f3ecc.dir
+      size: 6358122900
+      nfiles: 94
     - path: outputs/model/final.keras
       hash: md5
-      md5: 5e311c20f35c9af0e88258fc9d0f2358
-      size: 94958489
+      md5: bf85b9d6a09ff17ed9d77bc9cc43a7a1
+      size: 94958451
     - path: outputs/model/model_summary.txt
       hash: md5
-      md5: 7e230ad42a7d76482a6e3e5b96e08fd4
-      size: 101815
+      md5: 8b41a9197c8e523ed4119118294fb062
+      size: 101934
     - path: outputs/model/train-validation-test-split.geojson
       hash: md5
-      md5: 53b6170abfb20fd0cabe21e2982e461f
-      size: 15943147
+      md5: 2ae98ac091bd36c06b075b127c718fc7
+      size: 15940155
   evaluate:
     cmd: python src/modules/9_evaluation/evaluate.py
     deps:
     - path: outputs/model/final.keras
       hash: md5
-      md5: 5e311c20f35c9af0e88258fc9d0f2358
-      size: 94958489
+      md5: bf85b9d6a09ff17ed9d77bc9cc43a7a1
+      size: 94958451
     - path: outputs/model/train-test-split.geojson
       hash: md5
       md5: 66db92e59316f08c5e91afe418655de3
@@ -113,15 +118,15 @@ stages:
     outs:
     - path: outputs/eval/test_scores.pkl
       hash: md5
-      md5: b642f2ccd0f91ef898234f2ec6c632f3
+      md5: 4b17329e4e7c125b8d7cbb4b1556fcea
       size: 59
     - path: outputs/eval/train_scores.pkl
       hash: md5
-      md5: aeeb321ee9efe4ad952f1c9052a6833b
+      md5: a3846ac873314624d416800153a8b51c
       size: 59
     - path: outputs/eval/validation_scores.pkl
       hash: md5
-      md5: a5ade6f4dc258a6f7d23101ad154c98b
+      md5: 7eafbc66040447b01bdc9450c0083f0e
       size: 59
   shapefile_processing:
     cmd: python src/modules/1_shapefile_processing/shapefile_process.py
@@ -505,8 +510,8 @@ stages:
     deps:
     - path: outputs/model/final.keras
       hash: md5
-      md5: 5e311c20f35c9af0e88258fc9d0f2358
-      size: 94958489
+      md5: bf85b9d6a09ff17ed9d77bc9cc43a7a1
+      size: 94958451
     - path: outputs/model/train-test-split.geojson
       hash: md5
       md5: 66db92e59316f08c5e91afe418655de3
@@ -526,6 +531,6 @@ stages:
     outs:
     - path: outputs/results
       hash: md5
-      md5: 1380898d33aafa1011f31115a84a9af4.dir
-      size: 18568211
+      md5: 14bd281696878ddc32cd1d00c885452a.dir
+      size: 18379229
       nfiles: 9
