@@ -63,10 +63,9 @@ def get_callbacks(model_path: str) -> list:
 
     # TODO: Something wrong with early stopping?
     early_stopping_callback = EarlyStopping(
-        min_delta=1,  # model should improve by at least 1%
+        min_delta=0,  # model should not be getting worse
         patience=10,  # amount of epochs  with improvements worse than 1% until the model stops
         verbose=2,
-        mode="min",
         restore_best_weights=True,  # restore the best model with the lowest validation error
     )
 
@@ -75,7 +74,6 @@ def get_callbacks(model_path: str) -> list:
         model_path,
         verbose=0,
         save_best_only=True,  # save the best model
-        mode="min",
         save_freq="epoch",  # save every epoch
     )
 
