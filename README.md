@@ -43,6 +43,19 @@ You can then run the following in the root directory to install all required dep
 poetry install
 ```
 
+Whenever you want to activate your shell to make use of the venv associated, you'll need to run poetry shell. To
+install:
+
+```shell
+poetry self add poetry-plugin-shell
+```
+
+Then you can run:
+
+```shell
+poetry shell
+```
+
 #### Pre-commit Hooks
 
 [Pre-commit](https://pre-commit.com/) is used to keep code clean and to make use
@@ -91,7 +104,16 @@ from GCP. Again, please contact [emilyrosesteyn@gmail.com](mailto:emilyrosesteyn
 Alternatively, if you are forking this repository, follow the instructions on the DVC docs
 to [add a remote](https://dvc.org/doc/command-reference/remote/add).
 
+**DVC Studio**
+
+In order to track experiments, DVC Studio can be used. To set this up, one can run `dvc studio login --no-open` and
+follow
+the instructions. The code in train and evaluation steps uses Live to track and save metrics and plots. This is synced
+with DVC Studio if enabled.
+
 ## Pipeline
+
+[//]: # (TODO: Document this more https://dvc.org/doc/user-guide/experiment-management)
 
 1. [Data download](./data/README.md)
 2. Data preprocessing
@@ -114,8 +136,17 @@ to [add a remote](https://dvc.org/doc/command-reference/remote/add).
       ```
     - To resolve, delete the [`gdrive credentials`](/.dvc/gdrive-credentials.json) file and retry `git push`. This will
       regenerate a new credentials file and the push should work.
+- **DVC exp config error**
+    - I had the following error when I first started using DVC experiments
+      ```text
+        ERROR: configuration error - config file error: extra keys not allowed @ data['exp']['auto_push']
+      ```
+    - I resolved it by switching off autopush `dvc config --global -u exp.auto_push`
+    - However, this means that it is imperative to ensure experiments are pushed from remote locations
 
 #### Poetry
+
+[//]: # (TODO: Mpi4py)
 
 - **Reinstall poetry packages**
     - [Reinstalling poetry environment](https://stackoverflow.com/questions/70064449/how-to-force-reinstall-poetry-environment)
@@ -154,3 +185,37 @@ to [add a remote](https://dvc.org/doc/command-reference/remote/add).
       machine:
         - `ssh -fNL 8888:<NODE_NAME>:8888 <user>@<cluster-ip>`
         - Where `NODE_NAME` is the node name as seen from the head node that you connect to at `user@cluster-ip`
+
+#### Tensorflow
+
+- **Tensorboard**
+    - To view logs from tensorflow and access tensorboard functionality, you can run:
+      `tensorboard --logdir logs/scalars --host=0.0.0.0`
+    - This must be run on the node where the logs are generated as logs are not committed
+- **Multiple processes with GPU**
+    - If you are running multiple processes with a GPU in parallel, you want to ensure that each process has sufficient
+      memory allocated. By default, tensorflow seems to allocate all the GPU memory to a running process and so
+      subsequent processes that are started in parallel will have insufficient memory.
+    - To solve this, you can make use of the memory growth flag for tensorflow which "attempts to allocate only as much
+      GPU memory as needed for the runtime allocations". Minimum memory is initially allocated and as more GPU memory is
+      needed, the GPU memory is extended for the specific tensorflow process. See
+      more [here](https://www.tensorflow.org/guide/gpu#limiting_gpu_memory_growth).
+    - Code:
+
+```python
+import tensorflow as tf
+
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    try:
+        # Currently, memory growth needs to be the same across GPUs
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+        logical_gpus = tf.config.list_logical_devices('GPU')
+        print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+    except RuntimeError as e:
+        # Memory growth must be set before GPUs have been initialized
+        print(e)
+```
+
+[//]: # (TODO: Rename outputs -> output)

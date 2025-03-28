@@ -15,7 +15,6 @@ from plotnine import (
 )
 from sklearn import metrics
 from sklearn.linear_model import LinearRegression, Ridge
-from sklearn.linear_model._base import LinearModel
 from sklearn.model_selection import train_test_split
 from utils.logger import get_logger
 
@@ -80,9 +79,7 @@ def main() -> None:
     features = cleaned_labelled_features.drop(
         [
             label_value,
-            "index_right",
             "ward_code",
-            "counts",
             "services",
             "socioeconomic_status",
             "government_satisfaction",
@@ -133,7 +130,7 @@ def main() -> None:
     plot_results(plotting_coords, plotting_coords_train, y_test, y_train, ridge_result)
 
 
-def regress(reg: LinearModel, x_test: dict, x_train: dict, y_train: dict) -> tuple:
+def regress(reg, x_test: dict, x_train: dict, y_train: dict) -> tuple:
     # Train the model
     reg.fit(x_train, y_train)
     # Make predictions
@@ -152,7 +149,7 @@ def calc_r2(model_type: str, y_test: dict, y_pred: dict) -> Any:
 
 
 def ols_regression(
-    x_test: dict, x_train: dict, y_test: dict, y_train: dict
+        x_test: dict, x_train: dict, y_test: dict, y_train: dict
 ) -> ModelResult:
     model_type = "ols"
     reg = LinearRegression()
@@ -162,7 +159,7 @@ def ols_regression(
 
 
 def ridge_regression(
-    x_test: dict, x_train: dict, y_test: dict, y_train: dict
+        x_test: dict, x_train: dict, y_test: dict, y_train: dict
 ) -> ModelResult:
     model_type = "ridge"
     reg = Ridge(alpha=1)  # alpha is the hyperparameter equivalent to lambda
@@ -172,11 +169,11 @@ def ridge_regression(
 
 
 def plot_results(
-    plotting_coords: dict,
-    plotting_coords_train: dict,
-    y_test: dict,
-    y_train: dict,
-    result: ModelResult,
+        plotting_coords: dict,
+        plotting_coords_train: dict,
+        y_test: dict,
+        y_train: dict,
+        result: ModelResult,
 ) -> None:
     model_type, y_pred, y_pred_train, r2 = result
 
@@ -195,11 +192,11 @@ def plot_results(
     )
     # Scatterplot observed vs predicted
     fig = (
-        ggplot(map_plot, aes(x=y_pred, y=y_test))
-        + geom_point(alpha=0.5)
-        + geom_abline(intercept=0, slope=1, size=0.8, alpha=0.3)
-        + labs(x="Predicted", y="Observed")
-        + ggtitle(f"Predicted vs Observed: r2 = {round(r2, 4)}")
+            ggplot(map_plot, aes(x=y_pred, y=y_test))
+            + geom_point(alpha=0.5)
+            + geom_abline(intercept=0, slope=1, size=0.8, alpha=0.3)
+            + labs(x="Predicted", y="Observed")
+            + ggtitle(f"Predicted vs Observed: r2 = {round(r2, 4)}")
     )
     fig.save(f"{results_dir}/{model_type}-observed-vs-predicted.png", dpi=300)
     map_plot_train = pd.DataFrame(
@@ -214,30 +211,30 @@ def plot_results(
     # noinspection PyTypeChecker
     #   - Warning is incorrect
     observed = (
-        ggplot()
-        + geom_point(
-            data=map_plot_train,
-            mapping=aes(x="longitude", y="latitude", color="observed"),
-            size=0.3,
-            alpha=0.8,
-        )
-        + scale_color_cmap(cmap_name="Spectral")
-        + labs(x="Longitude", y="Latitude", title="Observed", color="QoL")
+            ggplot()
+            + geom_point(
+        data=map_plot_train,
+        mapping=aes(x="longitude", y="latitude", color="observed"),
+        size=0.3,
+        alpha=0.8,
+    )
+            + scale_color_cmap(cmap_name="Spectral")
+            + labs(x="Longitude", y="Latitude", title="Observed", color="QoL")
     )
     observed.save(f"{results_dir}/{model_type}-observed.png", dpi=300)
     # Plot predicted
     # noinspection PyTypeChecker
     #   - Warning is incorrect
     predicted = (
-        ggplot()
-        + geom_point(
-            data=map_plot_train,
-            mapping=aes(x="longitude", y="latitude", color="predicted"),
-            size=0.3,
-            alpha=0.8,
-        )
-        + scale_color_cmap(cmap_name="Spectral")
-        + labs(x="Longitude", y="Latitude", title="Predicted", color="QoL")
+            ggplot()
+            + geom_point(
+        data=map_plot_train,
+        mapping=aes(x="longitude", y="latitude", color="predicted"),
+        size=0.3,
+        alpha=0.8,
+    )
+            + scale_color_cmap(cmap_name="Spectral")
+            + labs(x="Longitude", y="Latitude", title="Predicted", color="QoL")
     )
     predicted.save(f"{results_dir}/{model_type}-predicted.png", dpi=300)
 

@@ -6,12 +6,16 @@ from typing import Any
 
 import geopandas as gpd
 import rasterio as rio
+from dvc.api import params_show
 from rasterio import windows
 from shapely import box
 
 from utils.logger import get_logger
 
 logger = get_logger()
+
+# Get DVC params
+params = params_show()
 
 
 # TODO: Understand this more
@@ -39,9 +43,7 @@ def get_tiles(image: Any, crop_size: int) -> Any:
         yield window, transform
 
 
-def tile_image(
-        file_path: str, output_dir: str, crop_size: int = 256, thread: int = 0
-) -> None:
+def tile_image(file_path: str, output_dir: str, thread: int = 0) -> None:
     logger.info("Tiling %s", file_path)
     path = Path(file_path)
     # Extract date of tiff
@@ -49,6 +51,9 @@ def tile_image(
     basename = Path(os.path.basename(path))
     file_name = basename.stem
     suffix = basename.suffix
+
+    # Crop size from params
+    crop_size = params["preprocessing"]["crop_size"]
 
     tile_transforms = []
     with rio.open(file_path) as img_object:

@@ -75,6 +75,23 @@ data
 
 ## Satellite Images
 
+### Planet Access
+
+This work was carried out using
+the [Planet Education & Research Programme](https://www.planet.com/industries/education-and-research/). One can apply
+via [their website](https://www.planet.com/industries/education-and-research/#apply-now) for a license with basic
+access. This can take up to 2 weeks to obtain.
+
+In order to download images from Planet, you need to find your personal API key
+under [user settings](https://www.planet.com/account/#/user-settings). Copy the API key and paste it in
+the [.env](../.env). Your .env file should now at minimum look like:
+
+```
+PLANET_API_KEY=PLAK**********
+```
+
+### Actual Download
+
 If you have access to the DVC remote store, you can execute the `data_download` step in the DVC pipeline without any
 additional work.
 This step uses [basemap quad](https://developers.planet.com/docs/basemaps/#basemap-quads) identifiers stored
@@ -120,3 +137,14 @@ be ~91 quads for Gauteng.
 
 In the future, the step for searching and selecting basemap quads will potentially be automated using Planet's API so
 that one does not have to get the ids from the web interface.
+
+## Custom Data
+
+Some custom data was manually created. This can be retrieved from the DVC data store by running `dvc fetch` or
+`dvc pull`. You should then see data populated under [custom](custom)
+
+#### Custom Training Wards
+
+A custom CSV file exists for selecting specific wards manually during data splitting for
+training/testing [train_wards.csv](custom/train_wards.csv). See more in
+the [select_data](../src/modules/7_data_splitting/select_data.py) function.
