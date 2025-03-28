@@ -1,0 +1,24 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Measuring Quality of Life from Satellite Images in
+  Gauteng, South Africa
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Emily-Rose S.
+    family-names: Steyn
+    email: emily-rose.steyn@students.wits.ac.za
+    affiliation: University of the Witwatersrand
+    orcid: 'https://orcid.org/0000-0002-1007-7891'
+repository-code: >-
+  https://github.com/Emily-RoseSteyn/measuring-quality-of-life-gauteng
+abstract: >-
+  This research explores how well can a local quality of
+  life index be measured from satellite images using machine
+  learning methods in Gauteng, South Africa.
+license: GPL-3.0
